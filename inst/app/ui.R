@@ -1,7 +1,7 @@
 basic_ui <-
 	tagList(
 	  navbarMenu("Basic",
-	    "----", "Probability",
+	    "Probability",
 	    tabPanel("Probability calculator", uiOutput("prob_calc")),
 	    tabPanel("Central Limit Theorem", uiOutput("clt")),
 	    "----", "Means",
