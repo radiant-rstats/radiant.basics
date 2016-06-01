@@ -1,4 +1,4 @@
-Name: Radiant - Quant / BA
-Description: Start Radiant - Quant / BA app
-Binding: radiant.quant
+Name: Radiant - Basic
+Description: Start Radiant - Basic analysis app
+Binding: radiant.basic
 Interactive: true

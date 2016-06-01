@@ -19,8 +19,6 @@
 #' @seealso \code{\link{summary.correlation_}} to summarize results
 #' @seealso \code{\link{plot.correlation_}} to plot results
 #'
-#' @importFrom psych corr.test
-#'
 #' @export
 correlation <- function(dataset, vars,
                         method = "pearson",
@@ -55,6 +53,8 @@ correlation <- function(dataset, vars,
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{plot.correlation_}} to plot results
 #'
+#' @importFrom psych corr.test
+#'
 #' @export
 summary.correlation_ <- function(object,
                                  cutoff = 0,
@@ -63,9 +63,6 @@ summary.correlation_ <- function(object,
 
 	## using correlation_ to avoid print method conflict with nlme
 	## calculate the correlation matrix with p.values using the psych package
-	# object <- result
-	# library(psych)
-	# cutoff <- 0
 
 	cmat <- sshhr( corr.test(object$dat, method = object$method) )
 	dec <- object$dec
