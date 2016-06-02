@@ -1,7 +1,25 @@
 shinyServer(function(input, output, session) {
 
   ## source shared functions
-  source("init.R", encoding = getOption("radiant.encoding"), local = TRUE)
+  source(file.path(getOption("radiant.path.data"),"app/init.R"), encoding = getOption("radiant.encoding"), local = TRUE)
+  source(file.path(getOption("radiant.path.data"),"app/radiant.R"), encoding = getOption("radiant.encoding"), local = TRUE)
+  source("help.R", encoding = getOption("radiant.encoding"), local = TRUE)
+
+  ## help ui
+  output$help_basic_ui <- renderUI({
+    sidebarLayout(
+      sidebarPanel(
+        help_data_panel,
+        help_basic_panel,
+        uiOutput("help_text")
+      ),
+      mainPanel(
+        HTML(paste0("<h2>Select help files to show and search</h2><hr>")),
+        htmlOutput("help_data"),
+        htmlOutput("help_basic")
+      )
+    )
+  })
 
   ## packages to use for example data
   options(radiant.example.data = c("radiant.data","radiant.basic"))

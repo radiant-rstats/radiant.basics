@@ -1,38 +1,35 @@
-## source shared files
-source(file.path(getOption("radiant.path.data"),"app/init.R"), encoding = getOption("radiant.encoding"), local = TRUE)
-source(file.path(getOption("radiant.path.data"),"app/radiant.R"), encoding = getOption("radiant.encoding"), local = TRUE)
+## urls for menu
+r_url_list <- getOption("radiant.url.list")
+r_url_list[["Single mean"]] <-
+  list("tabs_single_mean" = list("Summary" = "basic/single-mean/", "Plot" = "basic/single-mean/plot/"))
+r_url_list[["Compare means"]] <-
+  list("tabs_compare_means" = list("Summary" = "basic/compare-means/", "Plot" = "basic/compare-means/plot/"))
+r_url_list[["Single proportion"]] <-
+  list("tabs_single_prop" = list("Summary" = "basic/single-prop/","Plot" = "basic/single-prop/plot/"))
+r_url_list[["Compare proportions"]] <-
+  list("tabs_compare_props" = list("Summary" = "basic/compare-props/", "Plot" = "basic/compare-props/plot/"))
+r_url_list[["Cross-tabs"]] <-
+  list("tabs_cross_tabs" = list("Summary" = "basic/cross-tabs/", "Plot" = "basic/cross-tabs/plot/"))
+r_url_list[["Correlation"]] <-
+  list("tabs_correlation" = list("Summary" = "basic/correlation/", "Plot" = "basic`/correlation/plot/"))
+options(radiant.url.list = r_url_list); rm(r_url_list)
 
-help_basic <- c("Probability calculator" = "prob_calc.md", "Central limit theorem" = "clt.md",
-                "Single mean" = "single_mean.md", "Compare means" = "compare_means.md",
-                "Single proportion" = "single_prop.md", "Compare proportions" = "compare_props.md",
-                "Goodness of fit" = "goodness.md", "Cross-tabs" = "cross_tabs.md",
-                "Correlation" = "correlation.md")
-
-output$help_basic <- reactive(append_help("help_basic", "tools/help/", Rmd = TRUE))
-
-observeEvent(input$help_basic_all, {help_switch(input$help_basic_all, "help_basic")})
-observeEvent(input$help_basic_none,{help_switch(input$help_basic_none, "help_basic", help_on = FALSE)})
-
-help_basic_panel <- tagList(
-  wellPanel(
-    HTML("<label>Basic menu: <i id='help_basic_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
-    <i id='help_basic_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
-    checkboxGroupInput("help_basic", NULL, help_basic,
-       selected = state_init("help_basic"), inline = TRUE)
-  )
-)
-
-output$help_basic_ui <- renderUI({
-  sidebarLayout(
-    sidebarPanel(
-      help_data_panel,
-      help_basic_panel,
-      uiOutput("help_text")
-    ),
-    mainPanel(
-      HTML(paste0("<h2>Select help files to show and search</h2><hr>")),
-      htmlOutput("help_data"),
-      htmlOutput("help_basic")
+## design menu
+basic_ui <-
+	tagList(
+	  navbarMenu("Basic",
+	    "Probability",
+	    tabPanel("Probability calculator", uiOutput("prob_calc")),
+	    tabPanel("Central Limit Theorem", uiOutput("clt")),
+	    "----", "Means",
+	    tabPanel("Single mean", uiOutput("single_mean")),
+	    tabPanel("Compare means", uiOutput("compare_means")),
+	    "----", "Proportions",
+	    tabPanel("Single proportion", uiOutput("single_prop")),
+	    tabPanel("Compare proportions", uiOutput("compare_props")),
+	    "----", "Tables",
+	    tabPanel("Goodness of fit", uiOutput("goodness")),
+	    tabPanel("Cross-tabs", uiOutput("cross_tabs")),
+	    tabPanel("Correlation", uiOutput("correlation"))
     )
   )
-})
