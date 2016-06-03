@@ -16,6 +16,7 @@ globalVariables(c(".","..count..","matches","n","se","Freq","ci","col1","n","y")
 #' @importFrom graphics pairs par points strwidth text
 #' @importFrom stats na.omit binom.test chisq.test cor.test cov dbinom dchisq dexp df dnorm dpois dt dunif p.adjust pbinom pchisq pexp pf pnorm ppois prop.test pt punif qbinom qchisq qexp qf qpois qt qunif qnorm rbinom relevel sd setNames symnum t.test wilcox.test
 #' @importFrom utils combn
+#' @importFrom import from
 NULL
 
 #' Newspaper readership
