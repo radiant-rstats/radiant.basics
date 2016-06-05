@@ -28,15 +28,6 @@ NULL
 #' @format A data frame with 580 rows and 2 variables
 NULL
 
-#' Survival data for the Titanic
-#' @details Survival data for the Titanic. Description provided in attr(titanic,"description")
-#' @docType data
-#' @keywords datasets
-#' @name titanic
-#' @usage data(titanic)
-#' @format A data frame with 1043 rows and 10 variables
-NULL
-
 #' Car brand consideration
 #' @details Survey data of consumer purchase intentions. Description provided in attr(consider,"description")
 #' @docType data

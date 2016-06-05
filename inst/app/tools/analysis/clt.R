@@ -87,7 +87,7 @@ output$clt <- renderUI({
       )
     )
 
-    stat_tab_panel(menu = "Base",
+    stat_tab_panel(menu = "Basic > Probability",
                    tool = "Central Limit Theorem",
                    data = NULL,
                    tool_ui = "ui_clt",

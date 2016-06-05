@@ -64,7 +64,7 @@ summary.correlation_ <- function(object,
 	## using correlation_ to avoid print method conflict with nlme
 	## calculate the correlation matrix with p.values using the psych package
 
-	cmat <- sshhr( corr.test(object$dat, method = object$method) )
+	cmat <- sshhr( psych::corr.test(object$dat, method = object$method) )
 	dec <- object$dec
 
 	cr <- format(round(cmat$r, dec))

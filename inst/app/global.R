@@ -1,14 +1,8 @@
-## loading required packages
-# library(radiant.data)
-
-## import functions rather than the full package
-import::from("psych","corr.test")
-
 ## sourcing from radiant.data
 options(radiant.path.data = system.file(package = "radiant.data"))
 source(file.path(getOption("radiant.path.data"), "app/global.R"), encoding = getOption("radiant.encoding", default = "UTF-8"), local = TRUE)
 
-ifelse (grepl("radiant.basic", getwd()) && file.exists("../inst") , "..", system.file(package = "radiant.basic")) %>%
+ifelse (grepl("radiant.basic", getwd()) && file.exists("../../inst") , "..", system.file(package = "radiant.basic")) %>%
   options(radiant.path.basic = .)
 
 ## setting path for figures in help files

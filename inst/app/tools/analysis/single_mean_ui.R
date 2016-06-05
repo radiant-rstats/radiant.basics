@@ -87,7 +87,7 @@ output$single_mean <- renderUI({
 	  #    tabPanel("Plot", plotOutput("plot_single_mean", height = "100%"))
 	  # )
 
-		stat_tab_panel(menu = "Base",
+		stat_tab_panel(menu = "Basic > Means",
 		              tool = "Single mean",
 		              tool_ui = "ui_single_mean",
 		             	output_panels = sm_output_panels)

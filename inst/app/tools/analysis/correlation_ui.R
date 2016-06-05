@@ -90,7 +90,7 @@ output$correlation <- renderUI({
              plotOutput("plot_correlation", width = "100%", height = "100%"))
   )
 
-	stat_tab_panel(menu = "Basic",
+	stat_tab_panel(menu = "Basic > Tables",
 	              tool = "Correlation",
 	              tool_ui = "ui_correlation",
 	             	output_panels = cor_output_panels)

@@ -138,7 +138,7 @@ output$compare_props <- renderUI({
                plotOutput("plot_compare_props", height = "100%"))
     )
 
-    stat_tab_panel(menu = "Base",
+    stat_tab_panel(menu = "Basis > Proportion",
                   tool = "Compare proportions",
                   tool_ui = "ui_compare_props",
                   output_panels = cp_output_panels)

@@ -161,7 +161,7 @@ output$compare_means <- renderUI({
                plotOutput("plot_compare_means", height = "100%"))
     )
 
-    stat_tab_panel(menu = "Base",
+    stat_tab_panel(menu = "Basic > Means",
                   tool = "Compare means",
                   tool_ui = "ui_compare_means",
                   output_panels = cm_output_panels)
