@@ -36,7 +36,7 @@ cross_tabs <- function(dataset, var1, var2,
 	cst <- sshhr( chisq.test(tab, correct = FALSE) )
 
 	## adding the % deviation table
-	cst$deviation <- with(cst, (observed-expected) / expected)
+	# cst$deviation <- with(cst, (observed-expected) / expected)
 	cst$chi_sq	<- with(cst, (observed - expected)^2 / expected)
 
 	## dat not needed in summary or plot
@@ -208,7 +208,7 @@ plot.cross_tabs <- function(x,
 			{sshhr( gather_(., "variable", "values", setdiff(colnames(.),"rnames")) )}
 	}
 
-	plots <- list()
+	plot_list <- list()
 
 	if ("observed" %in% check) {
 
@@ -218,7 +218,7 @@ plot.cross_tabs <- function(x,
  	  tab[[1]] %<>% as.factor %>% factor(levels = fact_names[[1]])
 		tab[[2]] %<>% as.factor %>% factor(levels = fact_names[[2]])
 
-		plots[['observed']] <-
+		plot_list[['observed']] <-
 		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
 		    geom_bar(stat="identity", position = "fill", alpha = .7) +
 		    labs(list(title = paste("Observed frequencies for ",object$var2," versus ",object$var1, sep = ""),
@@ -231,7 +231,7 @@ plot.cross_tabs <- function(x,
   	tab <- gather_table(object$cst$expected)
 		tab$rnames %<>% as.factor %>% factor(levels = fact_names[[1]])
 		tab$variable %<>% as.factor %>% factor(levels = fact_names[[2]])
-		plots[['expected']] <-
+		plot_list[['expected']] <-
 		  # ggplot(tab, aes_string(x = "rnames", y = "values", fill = "variable")) +
 		  ggplot(tab, aes_string(x = "variable", y = "values", fill = "rnames")) +
 		    geom_bar(stat="identity", position = "fill", alpha = .7) +
@@ -243,7 +243,7 @@ plot.cross_tabs <- function(x,
 	if ("chi_sq" %in% check) {
   	tab <- as.data.frame(object$cst$chi_sq, check.names = FALSE)
 		colnames(tab)[1:2] <- c(object$var1, object$var2)
-		plots[['chi_sq']] <-
+		plot_list[['chi_sq']] <-
 		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
 		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 		    labs(list(title = paste("Contribution to chi-squared for ",object$var2," versus ",object$var1, sep = ""),
@@ -253,7 +253,7 @@ plot.cross_tabs <- function(x,
 	if ("dev_std" %in% check) {
   	tab <- as.data.frame(object$cst$residuals, check.names = FALSE)
 		colnames(tab)[1:2] <- c(object$var1, object$var2)
-		plots[['dev_std']] <-
+		plot_list[['dev_std']] <-
 		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
 		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 		    geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = 'black', linetype = 'longdash', size = .5) +
@@ -268,7 +268,7 @@ plot.cross_tabs <- function(x,
 	# 	colnames(tab)[1:2] <- c(object$var1, object$var2)
 	# 	ymax <- max(abs(tab$Freq))
 	# 	ylim <- if (ymax < 1) c(-1,1) else c(-ymax, ymax)
-	# 	plots[['dev_prec']] <-
+	# 	plot_list[['dev_prec']] <-
 	# 	  ggplot(tab, aes_string(x = object$var1, y = "Freq", fill = object$var2)) +
 	# 	    geom_bar(stat="identity", position = "dodge", alpha = .7) +
 	# 	    labs(list(title = paste("Deviation % for ",object$var2," versus ",object$var1, sep = ""),
@@ -277,7 +277,7 @@ plot.cross_tabs <- function(x,
  #  }
 
 	if ("row_perc" %in% check) {
-		plots[['row_perc']] <-
+		plot_list[['row_perc']] <-
 	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
 	  	  group_by_("Var1") %>%
 	  	  mutate(perc = Freq / sum(Freq)) %>%
@@ -290,7 +290,7 @@ plot.cross_tabs <- function(x,
 	}
 
 	if ("col_perc" %in% check) {
-		plots[['col_perc']] <-
+		plot_list[['col_perc']] <-
 	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
 	  	  group_by_("Var2") %>%
 	  	  mutate(perc = Freq / sum(Freq)) %>%
@@ -303,7 +303,7 @@ plot.cross_tabs <- function(x,
 	}
 
 	if ("perc" %in% check) {
-		plots[['perc']] <-
+		plot_list[['perc']] <-
 	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
 	  	  mutate(perc = Freq / sum(Freq)) %>%
 			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
@@ -314,6 +314,6 @@ plot.cross_tabs <- function(x,
 			    ggtitle("Table percentages")
 	}
 
-	sshhr( do.call(gridExtra::arrangeGrob, c(plots, list(ncol = 1))) ) %>%
+	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
 	  { if (shiny) . else print(.) }
 }

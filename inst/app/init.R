@@ -8,6 +8,8 @@ r_url_list[["Single proportion"]] <-
   list("tabs_single_prop" = list("Summary" = "basic/single-prop/","Plot" = "basic/single-prop/plot/"))
 r_url_list[["Compare proportions"]] <-
   list("tabs_compare_props" = list("Summary" = "basic/compare-props/", "Plot" = "basic/compare-props/plot/"))
+r_url_list[["Goodness of fit"]] <-
+  list("tabs_goodness" = list("Summary" = "basic/goodness/", "Plot" = "basic/goodness/plot/"))
 r_url_list[["Cross-tabs"]] <-
   list("tabs_cross_tabs" = list("Summary" = "basic/cross-tabs/", "Plot" = "basic/cross-tabs/plot/"))
 r_url_list[["Correlation"]] <-

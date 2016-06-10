@@ -1,5 +1,4 @@
 ## alternative hypothesis options
-base_alt <- list("Two sided" = "two.sided", "Less than" = "less", "Greater than" = "greater")
 ct_check <- c("Observed" = "observed", "Expected" = "expected",
               "Chi-squared" = "chi_sq", "Deviation std." = "dev_std",
               "Row percentages" = "row_perc",
