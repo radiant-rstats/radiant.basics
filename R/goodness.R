@@ -30,7 +30,7 @@ goodness <- function(dataset, var, p = NULL,
 	if (is_not(p) || p == "") {
 		p <- rep(1/length(tab), length(tab))
 	} else if (is.character(p)) {
-	  p <- unlist(strsplit(p, "\\s+")) %>% strsplit("/")
+	  p <- gsub(","," ", p) %>% strsplit("\\s+") %>% unlist %>% strsplit("/")
 		asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1])/as.numeric(x[2]), as.numeric(x[1]))
     p <- sshhr(sapply(p, asNum))
 
@@ -39,7 +39,10 @@ goodness <- function(dataset, var, p = NULL,
 	      paste0("Invalid inputs: ", paste0(p, collapse = ", ")) %>%
 	      set_class(c("goodness", class(.)))
 	    )
-    if (length(p) == 1) p <- rep(p, length(tab))
+
+	  lp <- length(p); lt <- length(tab)
+	  if (lt != lp && lt %% lp == 0) p <- rep(p, lt / lp)
+
 	  if (!is.numeric(p) || sum(p) != 1)
 	    return(
   		  paste0("Probabilities do not sum to 1 (",round(sum(p),3),")\nUse fractions if appropriate. Variable ", var, " has ", length(tab), " unique values.") %>%
@@ -66,6 +69,7 @@ if (getOption("radiant.testthat", default = FALSE)) {
     # p <- ".30 .70"
     # p <- ".2 .3 .3 .15 .05"
     # p <- "1/6    \n2/12 1/6 1/4 1/4"
+    # p <- "1/6,  2/12, 1/6, 1/4, 1/4"
     # p <- "1/6 1/12 1/6 abbb"
     # p <- "1/6 2/12 1/6 1/4 .25"
     ## Use simulated p-values when

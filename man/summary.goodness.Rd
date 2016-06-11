@@ -22,7 +22,7 @@ See \url{http://vnijs.github.io/radiant/quant/goodness} for an example in Radian
 \examples{
 result <- goodness("newspaper", "Income", c(.3, .7))
 summary(result, check = c("observed","expected","chi_sq"))
-newspaper \%>\% goodness("Income", c(.3, .7)) \%>\% summary("observed")
+newspaper \%>\% goodness("Income", "1/3 2/3") \%>\% summary("observed")
 
 }
 \seealso{

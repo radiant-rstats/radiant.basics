@@ -1460,37 +1460,26 @@ prob_disc <- function(v, p,
 
 	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
 	# expand.grid(height = 1:6, weight = 1:6)
-	# expand.grid(1, 1:6)
-	# Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
 
-	# library(radiant)
-	# v <- "1 2 3 4 5"
-	# p <- ".2 .3 .3 .15 .05"
-	# p <- "1/6    \n1/12 1/6 1/4"
-	# p <- "1/6 1/12 1/6 abbb"
+  v <- gsub(","," ", v) %>% strsplit("\\s+") %>% unlist
+  p <- gsub(","," ", p) %>% strsplit("\\s+") %>% unlist
 
-	v <- unlist(strsplit(v, "\\s+")) %>% as_numeric
-	p <- unlist(strsplit(p, "\\s+"))
+  lp <- length(p); lv <- length(v)
+  if (lv != lp && lv %% lp == 0) p <- rep(p, lv / lp)
 
-	cp <- c()
-	for (i in p) {
-		res <- try(eval(parse(text = i)), silent = TRUE)
-	  if (is(res, 'try-error')) {
-	    mess_probs <- mess_values <- paste0("Invalid inputs:\n\n", attr(res,"condition")$message)
-      return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
-	  }
-	  cp <- c(cp, res)
-	}
-	p <- cp %>% set_names(NULL)
-
-	if (any(is(p, 'try-error'))) {
-	  mess_probs <- mess_values <- paste0("Invalid inputs:\n\n", attr(res,"condition")$message)
-    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+  if (length(v) != length(p)) {
+		mess <- "The number of values must be the same or a multiple of the number of probabilities"
+		return(list(mess_probs = mess, mess_values = mess) %>% set_class(c("prob_disc",class(.))))
 	}
 
-	if(length(v) %% length(p) > 0) {
-		mess_probs <- mess_values <- "The number of values entered must be a multiple of the number of probabilities"
-    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+	asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1])/as.numeric(x[2]), as.numeric(x[1]))
+  p <- sshhr( strsplit(p, "/") %>% sapply(asNum) )
+  v <- sshhr( strsplit(v, "/") %>% sapply(asNum) )
+
+  if (anyNA(p) | anyNA(v)) {
+		mess <- "The number of probabilities entered must be a multiple of the number of values"
+	  mess <- paste0("Invalid inputs:\n\nv: ", paste0(v, collapse = " "), "\np: ", paste0(p, collapse = " "))
+		return(list(mess_probs = mess, mess_values = mess) %>% set_class(c("prob_disc",class(.))))
 	}
 
 	## make sure values and probabilities are ordered correctly

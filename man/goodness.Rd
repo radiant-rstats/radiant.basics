@@ -4,19 +4,19 @@
 \alias{goodness}
 \title{Evaluate if sample data for a categorical variable is consistent wtih a hypothesized distribution}
 \usage{
-goodness(dataset, var, p = c(), data_filter = "")
+goodness(dataset, var, p = NULL, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
 \item{var}{A categorical variable}
 
-\item{p}{Hypothesized distribution (either a numeric or character vector). If unspecified, defaults to an even distribution}
+\item{p}{Hypothesized distribution as a number, fraction, or numeric vector. If unspecified, defaults to an even distribution}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }
 \value{
-A list of all variables used in cross_tabs as an object of class cross_tabs
+A list of all variables used in goodness as an object of class goodness
 }
 \description{
 Evaluate if sample data for a categorical variable is consistent wtih a hypothesized distribution

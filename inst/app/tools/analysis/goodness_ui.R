@@ -26,8 +26,9 @@ output$ui_gd_var <- renderUI({
 
 output$ui_gd_p <- renderUI({
   req(input$gd_var != "None")
-  init <- .getdata()[[input$gd_var]] %>% unique %>% length %>% paste0("1/",.)
-  returnTextInput("gd_p", label = "Probabilities:", value = state_init("gd_p", init))
+  ## nice idea but but may end up being a hassle for the user
+  # init <- .getdata()[[input$gd_var]] %>% unique %>% length %>% paste0("1/",.)
+  returnTextInput("gd_p", label = "Probabilities:", value = state_init("gd_p", ""))
 })
 
 output$ui_goodness <- renderUI({
@@ -36,7 +37,6 @@ output$ui_goodness <- renderUI({
   	wellPanel(
 	    uiOutput("ui_gd_var"),
 	    uiOutput("ui_gd_p"),
-      # returnTextInput("gd_p", label = "Probabilities:", value = state_init("gd_p", "")),
       checkboxGroupInput("gd_check", NULL, gd_check,
         selected = state_init("gd_check"), inline = FALSE)
 		),
