@@ -182,6 +182,6 @@ observeEvent(input$compare_props_report, {
   update_report(inp_main = clean_args(cp_inputs(), cp_args),
                 fun_name = "compare_props",
                 inp_out = inp_out, outputs = outputs, figs = figs,
-                fig.width = round(7 * cp_plot_width()/650,2),
-                fig.height = round(7 * cp_plot_height()/650,2))
+                fig.width = cp_plot_width(),
+                fig.height = cp_plot_height())
 })

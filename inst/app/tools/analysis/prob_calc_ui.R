@@ -486,6 +486,6 @@ observeEvent(input$prob_calc_report, {
                 inp_out = inp_out,
                 outputs = outputs,
                 figs = TRUE,
-                fig.width = round(7 * pc_plot_width()/650,2),
-                fig.height = round(7 * pc_plot_height()/650,2))
+                fig.width = pc_plot_width(),
+                fig.height = pc_plot_height())
 })

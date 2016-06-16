@@ -112,6 +112,6 @@ observeEvent(input$goodness_report, {
 	             	fun_name = "goodness",
 	             	outputs = outputs,
 	             	figs = figs,
-	             	fig.width = round(7 * gd_plot_width()/650,2),
-	             	fig.height = round(7 * gd_plot_height()/650,2))
+	             	fig.width = gd_plot_width(),
+	             	fig.height = gd_plot_height())
 })

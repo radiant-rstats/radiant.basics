@@ -119,6 +119,6 @@ observeEvent(input$cross_tabs_report, {
 	             	fun_name = "cross_tabs",
 	             	outputs = outputs,
 	             	figs = figs,
-	             	fig.width = round(7 * ct_plot_width()/650,2),
-	             	fig.height = round(7 * ct_plot_height()/650,2))
+	             	fig.width = ct_plot_width(),
+	             	fig.height = ct_plot_height())
 })

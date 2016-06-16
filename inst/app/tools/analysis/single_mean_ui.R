@@ -131,6 +131,6 @@ observeEvent(input$single_mean_report, {
   update_report(inp_main = clean_args(sm_inputs(), sm_args),
                 fun_name = "single_mean", inp_out = inp_out,
                 outputs = outputs, figs = figs,
-                fig.width = round(7 * sm_plot_width()/650,2),
-                fig.height = round(7 * sm_plot_height()/650,2))
+                fig.width = sm_plot_width(),
+                fig.height = sm_plot_height())
 })
