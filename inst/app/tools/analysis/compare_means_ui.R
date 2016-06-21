@@ -131,7 +131,7 @@ output$ui_compare_means <- renderUI({
     ),
     help_and_report(modal_title = "Compare means",
                     fun_name = "compare_means",
-                    help_file = inclMD(file.path(getOption("radiant.path.basic"),"app/tools/help/compare_means.md")))
+                    help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/compare_means.md")))
   )
 })
 

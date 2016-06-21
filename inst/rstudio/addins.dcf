@@ -1,4 +1,4 @@
-Name: Radiant - Basic
-Description: Start Radiant - Basic analysis app
-Binding: radiant.basic
+Name: Radiant - Basics
+Description: Start Radiant - Basics
+Binding: radiant.basics
 Interactive: true

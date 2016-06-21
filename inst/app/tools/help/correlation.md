@@ -2,7 +2,7 @@
 
 Create a correlation matrix of the selected variables. Correlations and p-values are provided for each variable pair. To show only those correlations above a certain (absolute) level, use the correlation cutoff box.
 
-![Summary](figures_basic/correlation_summary.png)
+![Summary](figures_basics/correlation_summary.png)
 
 A visual representation of the correlation matrix is provided in the Plot tab.
 
@@ -13,7 +13,7 @@ Stars shown in the Plot tab are interpreted as:
 - p.value between 0.01 and 0.05: *
 - p.value between 0.05 and 0.1: .
 
-![Plot](figures_basic/correlation_plot.png)
+![Plot](figures_basics/correlation_plot.png)
 
 The font-size used in the plot is proportional to the size and significance of the correlation between two variables.
 

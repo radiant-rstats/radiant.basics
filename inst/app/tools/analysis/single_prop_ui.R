@@ -66,7 +66,7 @@ output$ui_single_prop <- renderUI({
     ),
     help_and_report(modal_title = 'Single proportion',
                     fun_name = 'single_prop',
-                    help_file = inclMD(file.path(getOption("radiant.path.basic"),"app/tools/help/single_prop.md")))
+                    help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/single_prop.md")))
   )
 })
 

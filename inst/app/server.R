@@ -23,7 +23,7 @@ shinyServer(function(input, output, session) {
   })
 
   ## packages to use for example data
-  options(radiant.example.data = c("radiant.data","radiant.basic"))
+  options(radiant.example.data = c("radiant.data","radiant.basics"))
 
   ## source data & app tools from radiant.data
   for (file in list.files(c(file.path(getOption("radiant.path.data"),"app/tools/app"),
@@ -32,13 +32,13 @@ shinyServer(function(input, output, session) {
     source(file, encoding = getOption("radiant.encoding"), local = TRUE)
 
   ## 'sourcing' radiant's package functions in the server.R environment
-  if (!"package:radiant.basic" %in% search() && getOption("radiant.path.basic") == "..") {
+  if (!"package:radiant.basics" %in% search() && getOption("radiant.path.basics") == "..") {
     ## for shiny-server and development
     for (file in list.files("../../R", pattern="\\.(r|R)$", full.names = TRUE))
       source(file, encoding = getOption("radiant.encoding"), local = TRUE)
   } else {
     ## for use with launcher
-    radiant.data::copy_all(radiant.basic)
+    radiant.data::copy_all(radiant.basics)
   }
 
  	## source analysis tools for basic app

@@ -17,7 +17,7 @@ cor_inputs <- reactive({
 })
 
 cor_sum_args <- as.list(if (exists("summary.correlation_")) formals(summary.correlation_)
-                        else formals(radiant.basic::summary.correlation_))
+                        else formals(radiant.basics::summary.correlation_))
 
 ## list of function inputs selected by user
 cor_sum_inputs <- reactive({
@@ -58,7 +58,7 @@ output$ui_correlation <- renderUI({
 	  ),
   	help_and_report(modal_title = "Correlation",
   	                fun_name = "correlation",
-                    help_file = inclMD(file.path(getOption("radiant.path.basic"),"app/tools/help/correlation.md")))
+                    help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/correlation.md")))
 	)
 })
 

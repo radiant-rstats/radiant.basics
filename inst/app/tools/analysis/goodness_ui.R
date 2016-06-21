@@ -42,7 +42,7 @@ output$ui_goodness <- renderUI({
 		),
   	help_and_report(modal_title = "Goodness of fit",
   	                fun_name = "goodness",
-                    help_file = inclMD(file.path(getOption("radiant.path.basic"),"app/tools/help/goodness.md")))
+                    help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/goodness.md")))
   )
 })
 

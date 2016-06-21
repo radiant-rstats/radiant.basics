@@ -323,7 +323,7 @@ output$ui_prob_calc <- renderUI({
                    value = state_init("pc_dec", 3), min = 0)
     ),
     help_and_report(modal_title = 'Probability calculator', fun_name = 'prob_calc',
-                    help_file = inclMD(file.path(getOption("radiant.path.basic"),"app/tools/help/prob_calc.md")))
+                    help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/prob_calc.md")))
 
   )
 })

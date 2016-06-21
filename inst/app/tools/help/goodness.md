@@ -1,4 +1,4 @@
-> A goodness-of-fit test is used to evaluate if 
+> A goodness-of-fit test is used to evaluate if
 
 ### Example
 
@@ -11,7 +11,7 @@ The data were collected to examine if there is a relationship between income lev
 
 If we cannot reject the null hypothesis based on the available sample there is a "good fit" between the observed data and the assumed population shares or probabilities. In Radiant (_Basic > Goodness_) choose Newspaper as the categorical variable. If we leave the `Probabilities` input field empty (or enter 1/2) we would be testing if the shares are equal. However, to test H0 and Ha we need to enter `0.45 and 0.55` and then press `Enter`. First, compare the observed and expected frequencies. The expected frequencies are calculated using H0 (i.e., no deviation from the stated shares) total $\times$ $p$ where $p$ is the share (or probility) assumed for a cell.
 
-![Summary](figures_basic/goodness_summary.png)
+![Summary](figures_basics/goodness_summary.png)
 
 The (Pearson) chi-squared test evaluates if we can reject the null-hypothesis that the observed and expected values are the same. It does so by comparing the observed frequencies (i.e., what we actually see in the data) to the expected frequencies (i.e., what we would expect to see if distribution of shares is as we assumed). If there are big differences between the table of expected and observed frequencies the chi-square value will be _large_. The chi-square value for each cell is calculated as `(o - e)^2 / e`, where `o` is the observed frequency in a cell and `e` is the expected frequency in that cell if the null hypothesis holds. These values can be shown by clicking the `Chi-squared` check box. The overall chi-square value is obtained by summing across all cells, i.e., it is the sum of the values shown in the _Contribution to chi-square_ table.
 
@@ -21,13 +21,13 @@ Remember to check the expected values: All expected frequencies are larger than 
 
 We can use the provided p.value associated with the Chi-squared value of 0.028 to evaluate the null hypothesis. However, we can also calculate the critical Chi-squared value using the probability calculator. As we can see from the output below that value is 3.841 if we choose a 95% confidence level. Because the calculated Chi-square value is smaller than the critical value (0.028 < 3.841) we cannot reject null hypothesis stated above.
 
-![Critical value](figures_basic/cross_tabs_chi_critical.png)
+![Critical value](figures_basics/cross_tabs_chi_critical.png)
 
 We can also use the probability calculator to determine the p.value associated with the calculated Chi-square value. Consistent with the output from the _Summary_ tab this `p.value` is `< .001`.
 
-![Critical value](figures_basic/goodness_chi_pvalue.png)
+![Critical value](figures_basics/goodness_chi_pvalue.png)
 
-In addition to the numerical output provided in the _Summary_ tab we can evaluate the hypothesis visually (see the _Plot_ tab). 
+In addition to the numerical output provided in the _Summary_ tab we can evaluate the hypothesis visually (see the _Plot_ tab).
 
 ### Technical note
 

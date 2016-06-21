@@ -3,8 +3,8 @@
 #' @details See \url{http://vnijs.github.io/radiant} for documentation and tutorials
 #'
 #' @export
-radiant.basic <- function() {
-  if (!"package:radiant.basic" %in% search())
-    if (!require(radiant.basic)) stop("Calling radiant.basic start function but radiant.basic is not installed.")
-  runApp(system.file("app", package = "radiant.basic"), launch.browser = TRUE)
+radiant.basics <- function() {
+  if (!"package:radiant.basics" %in% search())
+    if (!require(radiant.basics)) stop("Calling radiant.basics start function but radiant.basics is not installed.")
+  runApp(system.file("app", package = "radiant.basics"), launch.browser = TRUE)
 }

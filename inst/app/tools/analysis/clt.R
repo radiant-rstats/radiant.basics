@@ -63,7 +63,7 @@ output$ui_clt <- renderUI({
                    inline = TRUE)
     ),
     help_modal("Central Limit Theorem", "clt_help",
-               help_file = inclMD(file.path(getOption("radiant.path.basic"),"app/tools/help/clt.md")))
+               help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/clt.md")))
  	)
 })
 

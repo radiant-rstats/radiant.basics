@@ -65,7 +65,7 @@ goodness <- function(dataset, var, p = NULL,
 if (getOption("radiant.testthat", default = FALSE)) {
   main__ <- function() {
     # options(radiant.testthat = TRUE)
-    # library(radiant.basic)
+    # library(radiant.basics)
     # p <- ".30 .70"
     # p <- ".2 .3 .3 .15 .05"
     # p <- "1/6    \n2/12 1/6 1/4 1/4"
