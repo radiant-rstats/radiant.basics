@@ -33,7 +33,7 @@ There are three approaches we can use to evaluate the null hypothesis. We will c
 
 Because the p.value is **larger** than the conventional significance level ($0.249 > 0.05$) we **cannot** reject the null hypothesis and **do not suggest** that management should commit resources to increase brand awareness.
 
-We can also obtain the p.value by using the probability calculator in the _Base_ menu. Enter the number of successes in the data (93) as the lower bound (value) for a binomial-distribution with $n = 1000$ and $p = 0.1$. The p.value is the probability of observing a number of successes as or more extreme than the 93 we got in our sample. We see that $P(X <= 93) = 0.249$ which is the same value we got from _Base > Single proportion_.
+We can also obtain the p.value by using the probability calculator in the _Basics_ menu. Enter the number of successes in the data (93) as the lower bound (value) for a binomial-distribution with $n = 1000$ and $p = 0.1$. The p.value is the probability of observing a number of successes as or more extreme than the 93 we got in our sample. We see that $P(X <= 93) = 0.249$ which is the same value we got from _Basics > Single proportion_.
 
 ![prob_calc](figures_basics/single_prop_prob_calc_v.png)
 
@@ -43,7 +43,7 @@ Because the `comparison value` **is** contained in the confidence interval (i.e.
 
 #### number of successes
 
-We can obtain the critical value by using the probability calculator in the _Base_ menu. For a binomial-distribution with $n = 1000$ and $p = 0.1$ the critical value is 85. We have to enter 0.05 as the lower probability bound because the alternative hypothesis is `Less than`.<sup>2</sup>
+We can obtain the critical value by using the probability calculator in the _Basics_ menu. For a binomial-distribution with $n = 1000$ and $p = 0.1$ the critical value is 85. We have to enter 0.05 as the lower probability bound because the alternative hypothesis is `Less than`.<sup>2</sup>
 
 ![prob_calc](figures_basics/single_prop_prob_calc_p.png)
 

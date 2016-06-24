@@ -6,18 +6,18 @@ shinyServer(function(input, output, session) {
   source("help.R", encoding = getOption("radiant.encoding"), local = TRUE)
 
   ## help ui
-  output$help_basic_ui <- renderUI({
+  output$help_basics_ui <- renderUI({
     sidebarLayout(
       sidebarPanel(
         help_data_panel,
-        help_basic_panel,
+        help_basics_panel,
         uiOutput("help_text"),
         width = 3
       ),
       mainPanel(
         HTML(paste0("<h2>Select help files to show and search</h2><hr>")),
         htmlOutput("help_data"),
-        htmlOutput("help_basic")
+        htmlOutput("help_basics")
       )
     )
   })

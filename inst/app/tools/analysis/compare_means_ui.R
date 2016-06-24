@@ -44,13 +44,6 @@ output$ui_cm_var2 <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
   vars <- varnames()[isNum]
 
-  ## if possible, keep current indep value when depvar changes
-  ## after storing residuals or predictions
-  # isolate({
-  #   init <- input$cm_var2 %>%
-  #     {if (!is_empty(.) && . %in% vars) . else character(0)}
-  # })
-
   if (input$cm_var1 %in% vars) {
     ## when cm_var1 is numeric comparisons for multiple variables are possible
     vars <- vars[-which(vars == input$cm_var1)]
@@ -161,7 +154,7 @@ output$compare_means <- renderUI({
                plotOutput("plot_compare_means", height = "100%"))
     )
 
-    stat_tab_panel(menu = "Basic > Means",
+    stat_tab_panel(menu = "Basics > Means",
                   tool = "Compare means",
                   tool_ui = "ui_compare_means",
                   output_panels = cm_output_panels)

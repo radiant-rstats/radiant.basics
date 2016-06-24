@@ -71,7 +71,7 @@ output$goodness <- renderUI({
              plotOutput("plot_goodness", width = "100%", height = "100%"))
   )
 
-	stat_tab_panel(menu = "Basic > Tables",
+	stat_tab_panel(menu = "Basics > Tables",
 	              tool = "Goodness of fit",
 	              tool_ui = "ui_goodness",
 	             	output_panels = gd_output_panels)

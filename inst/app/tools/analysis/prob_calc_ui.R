@@ -406,7 +406,7 @@ output$prob_calc <- renderUI({
                plotOutput("plot_prob_calc", width = "100%", height = "100%"))
     )
 
-    stat_tab_panel(menu = "Basic > Probability",
+    stat_tab_panel(menu = "Basics > Probability",
                    tool = "Probability calculator",
                    data = NULL,
                    tool_ui = "ui_prob_calc",

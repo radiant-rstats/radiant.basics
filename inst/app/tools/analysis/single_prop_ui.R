@@ -95,7 +95,7 @@ output$single_prop <- renderUI({
                plot_downloader("single_prop", height = sp_plot_height()))
 	  )
 
-		stat_tab_panel(menu = "Basic > Proportion",
+		stat_tab_panel(menu = "Basics > Proportion",
 		              tool = "Single proportion",
 		              tool_ui = "ui_single_prop",
 		             	output_panels = sp_output_panels)

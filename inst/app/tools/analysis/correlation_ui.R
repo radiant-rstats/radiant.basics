@@ -90,7 +90,7 @@ output$correlation <- renderUI({
              plotOutput("plot_correlation", width = "100%", height = "100%"))
   )
 
-	stat_tab_panel(menu = "Basic > Tables",
+	stat_tab_panel(menu = "Basics > Tables",
 	              tool = "Correlation",
 	              tool_ui = "ui_correlation",
 	             	output_panels = cor_output_panels)
@@ -99,7 +99,7 @@ output$correlation <- renderUI({
 
 cor_available <- reactive({
   if (not_available(input$cor_vars) || length(input$cor_vars) < 2)
-    return("This analysis requires two or more variables or type numeric,\ninteger,or factor. If these variable types are not available\nplease select another dataset.\n\n" %>% suggest_data("diamonds"))
+    return("This analysis requires two or more variables or type numeric,\ninteger,or factor. If these variable types are not available\nplease select another dataset.\n\n" %>% suggest_data("salary"))
 
   # req(input$cor_pause == FALSE)
   "available"

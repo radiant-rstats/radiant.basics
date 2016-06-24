@@ -50,7 +50,7 @@ Because zero is **not** contained in any of the confidence intervals we reject t
 
 #### t.value
 
-Because the calculated t.values (-6.561, -23.334, and -13.569) are **smaller** than the corresponding _critical_ t.value we reject the null hypothesis for each evaluated combination of ranks. We can obtain the critical t.value by using the probability calculator in the _Base_ menu. Using the test for assistant versus associate professors as an example, we find that for a t-distribution with 101.286 degrees of freedom (see `df`) the critical t.value is 1.66. We choose 0.05 as the lower probability bound because the alternative hypothesis is `Less than`.
+Because the calculated t.values (-6.561, -23.334, and -13.569) are **smaller** than the corresponding _critical_ t.value we reject the null hypothesis for each evaluated combination of ranks. We can obtain the critical t.value by using the probability calculator in the _Basics_ menu. Using the test for assistant versus associate professors as an example, we find that for a t-distribution with 101.286 degrees of freedom (see `df`) the critical t.value is 1.66. We choose 0.05 as the lower probability bound because the alternative hypothesis is `Less than`.
 
 ![prob_calc](figures_basics/compare_means_prob_calc.png)
 

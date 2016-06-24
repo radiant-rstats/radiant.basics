@@ -35,7 +35,7 @@ Because the `comparison value` is **not** contained in the confidence interval w
 
 #### t.value
 
-Because the calculated t.value (5.967) is **larger** than the _critical_ t.value we reject the null hypothesis and suggest that management should enter the UK market. We can obtain the critical t.value by using the probability calculator in the _Base_ menu. For a t-distribution with 571 degrees of freedom (see `df`) the critical t.value is 1.648. We have to enter 0.95 as the upper probability bound (i.e., 1 - 0.05) because the alternative hypothesis is `Greater than`.<sup>2</sup>
+Because the calculated t.value (5.967) is **larger** than the _critical_ t.value we reject the null hypothesis and suggest that management should enter the UK market. We can obtain the critical t.value by using the probability calculator in the _Basics_ menu. For a t-distribution with 571 degrees of freedom (see `df`) the critical t.value is 1.648. We have to enter 0.95 as the upper probability bound (i.e., 1 - 0.05) because the alternative hypothesis is `Greater than`.<sup>2</sup>
 
 ![prob_calc](figures_basics/single_mean_prob_calc.png)
 

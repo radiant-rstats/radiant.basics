@@ -1,25 +1,25 @@
 ## urls for menu
 r_url_list <- getOption("radiant.url.list")
 r_url_list[["Single mean"]] <-
-  list("tabs_single_mean" = list("Summary" = "basic/single-mean/", "Plot" = "basic/single-mean/plot/"))
+  list("tabs_single_mean" = list("Summary" = "basics/single-mean/", "Plot" = "basics/single-mean/plot/"))
 r_url_list[["Compare means"]] <-
-  list("tabs_compare_means" = list("Summary" = "basic/compare-means/", "Plot" = "basic/compare-means/plot/"))
+  list("tabs_compare_means" = list("Summary" = "basics/compare-means/", "Plot" = "basics/compare-means/plot/"))
 r_url_list[["Single proportion"]] <-
-  list("tabs_single_prop" = list("Summary" = "basic/single-prop/","Plot" = "basic/single-prop/plot/"))
+  list("tabs_single_prop" = list("Summary" = "basics/single-prop/","Plot" = "basics/single-prop/plot/"))
 r_url_list[["Compare proportions"]] <-
-  list("tabs_compare_props" = list("Summary" = "basic/compare-props/", "Plot" = "basic/compare-props/plot/"))
+  list("tabs_compare_props" = list("Summary" = "basics/compare-props/", "Plot" = "basics/compare-props/plot/"))
 r_url_list[["Goodness of fit"]] <-
-  list("tabs_goodness" = list("Summary" = "basic/goodness/", "Plot" = "basic/goodness/plot/"))
+  list("tabs_goodness" = list("Summary" = "basics/goodness/", "Plot" = "basics/goodness/plot/"))
 r_url_list[["Cross-tabs"]] <-
-  list("tabs_cross_tabs" = list("Summary" = "basic/cross-tabs/", "Plot" = "basic/cross-tabs/plot/"))
+  list("tabs_cross_tabs" = list("Summary" = "basics/cross-tabs/", "Plot" = "basics/cross-tabs/plot/"))
 r_url_list[["Correlation"]] <-
-  list("tabs_correlation" = list("Summary" = "basic/correlation/", "Plot" = "basic`/correlation/plot/"))
+  list("tabs_correlation" = list("Summary" = "basics/correlation/", "Plot" = "basics`/correlation/plot/"))
 options(radiant.url.list = r_url_list); rm(r_url_list)
 
 ## design menu
-basic_ui <-
+basics_ui <-
 	tagList(
-	  navbarMenu("Basic",
+	  navbarMenu("Basics",
 	    "Probability",
 	    tabPanel("Probability calculator", uiOutput("prob_calc")),
 	    tabPanel("Central Limit Theorem", uiOutput("clt")),

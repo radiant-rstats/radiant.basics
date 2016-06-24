@@ -77,7 +77,7 @@ output$cross_tabs <- renderUI({
              plotOutput("plot_cross_tabs", width = "100%", height = "100%"))
   )
 
-	stat_tab_panel(menu = "Basic > Tables",
+	stat_tab_panel(menu = "Basics > Tables",
 	              tool = "Cross-tabs",
 	              tool_ui = "ui_cross_tabs",
 	             	output_panels = ct_output_panels)
