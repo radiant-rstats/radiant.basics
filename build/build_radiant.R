@@ -1,6 +1,8 @@
 ## building radiant packages for mac and windows
 setwd("~/gh/")
-rv <- "3.3"
+
+rv <- R.Version()
+rv <- paste0(rv$major,".", strsplit(rv$minor,".", fixed = TRUE)[[1]][1])
 dirsrc <- file.path("minicran/src/contrib")
 dirmac <- file.path("minicran/bin/macosx/mavericks/contrib",rv)
 dirwin <- file.path("minicran/bin/windows/contrib",rv)
@@ -18,9 +20,8 @@ rem_old <- function(app) {
 
 sapply("radiant.basics", rem_old)
 
-## probably need to restart Rstudion before building
 ## avoid 'loaded namespace' stuff when building for mac
-system(paste0(Sys.which("R"), " -e \"source('radiant/build/build_mac.R')\""))
+system(paste0(Sys.which("R"), " -e \"source('~/gh/radiant.basics/build/build_mac.R')\""))
 
 win <- readline(prompt = "Did you build on Windows? y/n: ")
 if (grepl("[yY]", win)) {
@@ -41,7 +42,7 @@ if (grepl("[yY]", win)) {
 	# commit to repo
 	setwd("~/gh/minicran")
 	system("git add --all .")
-	mess <- paste0("radiant package updates: ", format(Sys.Date(), format="%m-%d-%Y"))
+	mess <- paste0("radiant package update: ", format(Sys.Date(), format="%m-%d-%Y"))
 	system(paste0("git commit -m '",mess,"'"))
 	system("git push")
 
