@@ -95,7 +95,10 @@ summary.single_mean <- function(object, ...) {
 	           se = object$dat_summary[["se"]]
 	         ),
 	         res[,-1]
-	       ) %>% as.data.frame
+	       ) %>% as.data.frame %>%
+	       select(-matches("method"),-matches("alternative")) %>%
+	       mutate(parameter = as.integer(parameter))
+
 	names(res) <- c("diff","se","t.value","p.value","df", ci_perc[1], ci_perc[2])
 	res %<>% round(dec) 	# restrict the number of decimals
 	res$` ` <- sig_stars(res$p.value)

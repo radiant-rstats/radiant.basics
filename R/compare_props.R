@@ -26,13 +26,24 @@
 #'
 #' @export
 compare_props <- function(dataset, var1, var2,
-                         levs = "",
-                         alternative = "two.sided",
-                         conf_lev = .95,
-                         comb = "",
-                         adjust = "none",
-                         dec = 3,
-                         data_filter = "") {
+                          levs = "",
+                          alternative = "two.sided",
+                          conf_lev = .95,
+                          comb = "",
+                          adjust = "none",
+                          dec = 3,
+                          data_filter = "") {
+
+# dataset = "titanic"
+# var1 = "pclass"
+# var2 = "survived"
+# levs = ""
+# alternative = "two.sided"
+# conf_lev = .95
+# comb = ""
+# adjust = "none"
+# dec = 3
+# data_filter = ""
 
 	vars <- c(var1, var2)
 	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
@@ -115,7 +126,7 @@ compare_props <- function(dataset, var1, var2,
 						 se = (p * (1 - p) / n) %>% sqrt,
 	       		 ci = ci_calc(se, conf_lev)) %>%
 			set_rownames({rownames(prop_input)}) %>%
-			add_rownames(var = var1)
+			rownames_to_column(var = var1)
 
 	dat_summary[[var1]] %<>% factor(., levels = .)
 

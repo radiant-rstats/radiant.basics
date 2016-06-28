@@ -1,12 +1,13 @@
 # to avoid 'no visible binding for global variable' NOTE
-globalVariables(c(".","..count..","matches","n","se","Freq","ci","col1","n","y"))
+globalVariables(c(".","..count..","matches","n","se","Freq","ci","col1","n","y","parameter"))
 
 #' radiant.basics
 #'
 #' @name radiant.basics
 #' @docType package
 #' @import radiant.data shiny ggplot2
-#' @importFrom dplyr summarise_each funs rename_ bind_cols select filter filter_ group_by_ summarise add_rownames arrange mutate count
+#' @importFrom dplyr summarise_each funs rename_ bind_cols select filter filter_ group_by_ summarise arrange mutate count
+#' @importFrom tibble rownames_to_column
 #' @importFrom tidyr gather_
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom scales percent

@@ -1,18 +1,19 @@
 Package: radiant.basics
 Type: Package
 Title: Basic analysis menu for Radiant. Builds on the radiant.data package
-Version: 0.5.0
-Date: 2016-6-24
+Version: 0.5.1
+Date: 2016-6-27
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description: Basic analysis menu for Radiant.
 Depends:
     R (>= 3.2.0),
-    radiant.data (>= 0.5)
+    radiant.data (>= 0.5.1)
 Imports:
     ggplot2 (>= 2.0.0),
     gridExtra (>= 2.0.0),
     scales (>= 0.3.0),
-    dplyr (>= 0.4.3),
+    dplyr (>= 0.5),
+    tibble (>= 1.0),
     tidyr (>= 0.4.1),
     magrittr (>= 1.5),
     broom (>= 0.4.0),

@@ -111,11 +111,8 @@ summary.single_prop <- function(object, ...) {
 	cat("\n")
 
 	res <- object$res
-	res <- bind_cols(
-	         data.frame(diff = object$dat_summary[["diff"]]),
-	         res[,-1]
-	       ) %>%
-	       select(-matches("parameter")) %>%
+	res <- bind_cols(data.frame(diff = object$dat_summary[["diff"]]), res[,-1])  %>%
+	       select(-matches("parameter"),-matches("method"),-matches("alternative")) %>%
 	       as.data.frame
 
 	names(res) <- c("diff","ns","p.value", ci_perc[1], ci_perc[2])
