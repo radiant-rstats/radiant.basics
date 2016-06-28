@@ -1,3 +1,3 @@
 ## build for windows
-devtools::install("~/gh/radiant.basics")
-devtools::build("~/gh/radiant.basics", binary = TRUE)
+devtools::install("../radiant.basics")
+devtools::build("../radiant.basics", binary = TRUE)
