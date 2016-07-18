@@ -35,10 +35,7 @@ goodness <- function(dataset, var, p = NULL,
     p <- sshhr(sapply(p, asNum))
 
 	  if (anyNA(p))
-	    return(
-	      paste0("Invalid inputs: ", paste0(p, collapse = ", ")) %>%
-	      set_class(c("goodness", class(.)))
-	    )
+	    return(paste0("Invalid inputs: ", paste0(p, collapse = ", ")) %>% add_class("goodness"))
 
 	  lp <- length(p); lt <- length(tab)
 	  if (lt != lp && lt %% lp == 0) p <- rep(p, lt / lp)
@@ -46,7 +43,7 @@ goodness <- function(dataset, var, p = NULL,
 	  if (!is.numeric(p) || sum(p) != 1)
 	    return(
   		  paste0("Probabilities do not sum to 1 (",round(sum(p),3),")\nUse fractions if appropriate. Variable ", var, " has ", length(tab), " unique values.") %>%
-  		  set_class(c("goodness", class(.)))
+  		  add_class("goodness")
 		  )
 	}
 
@@ -58,32 +55,7 @@ goodness <- function(dataset, var, p = NULL,
 	## dat not needed in summary or plot
 	rm(dat)
 
-  environment() %>% as.list %>% set_class(c("goodness",class(.)))
-}
-
-## Test settings for simulater goodness, will not be run when sourced
-if (getOption("radiant.testthat", default = FALSE)) {
-  main__ <- function() {
-    # options(radiant.testthat = TRUE)
-    # library(radiant.basics)
-    # p <- ".30 .70"
-    # p <- ".2 .3 .3 .15 .05"
-    # p <- "1/6    \n2/12 1/6 1/4 1/4"
-    # p <- "1/6,  2/12, 1/6, 1/4, 1/4"
-    # p <- "1/6 1/12 1/6 abbb"
-    # p <- "1/6 2/12 1/6 1/4 .25"
-    ## Use simulated p-values when
-    # http://stats.stackexchange.com/questions/100976/n-1-pearsons-chi-square-in-r
-    # http://stats.stackexchange.com/questions/14226/given-the-power-of-computers-these-days-is-there-ever-a-reason-to-do-a-chi-squa/14230#14230
-    # http://stats.stackexchange.com/questions/62445/rules-to-apply-monte-carlo-simulation-of-p-values-for-chi-squared-test
-    # dat <- diamonds
-    # levels(dat$cut)
-    # var <- "cut"
-    # p <- "1/5"
-    # # result <- simulater(const = const, norm = normstr, discrete = discrete, form = form, seed = seed)
-    # stopifnot(sum(round(result[1000,],5) == c(3,-141.427660,5,-282.85532)) == 4)
-  }
-  main__()
+  as.list(environment()) %>% add_class("goodness")
 }
 
 #' Summary method for the goodness function
@@ -92,6 +64,7 @@ if (getOption("radiant.testthat", default = FALSE)) {
 #'
 #' @param object Return value from \code{\link{goodness}}
 #' @param check Show table(s) for the selected variable (var). "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)
+#' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
@@ -103,9 +76,8 @@ if (getOption("radiant.testthat", default = FALSE)) {
 #' @seealso \code{\link{plot.goodness}} to plot results
 #'
 #' @export
-summary.goodness <- function(object, check = "", ...) {
+summary.goodness <- function(object, check = "", dec = 2, ...) {
 
-  # object <- result
   if (is.character(object)) return(object)
 
   cat("Goodness of fit test\n")
@@ -124,17 +96,17 @@ summary.goodness <- function(object, check = "", ...) {
 
 	if ("expected" %in% check) {
 		cat("\nExpected: total x p\n")
-		object$cst$expected %>% {.["Total"] <- sum(.); .} %>% round(2) %>% print
+		object$cst$expected %>% {.["Total"] <- sum(.); .} %>% round(dec) %>% print
 	}
 
 	if ("chi_sq" %in% check) {
 		cat("\nContribution to chi-squared: (o - e)^2 / e\n")
-		object$cst$chi_sq %>% {.["Total"] <- sum(.); .} %>% round(2) %>% print
+		object$cst$chi_sq %>% {.["Total"] <- sum(.); .} %>% round(dec) %>% print
 	}
 
 	if ("dev_std" %in% check) {
 		cat("\nDeviation standardized: (o - e) / sqrt(e)\n")
-		print(round(object$cst$residuals, 2)) 	# these seem to be the correct std.residuals
+		print(round(object$cst$residuals, dec))
 	}
 
 	res <- object$cst %>% tidy
@@ -146,7 +118,7 @@ summary.goodness <- function(object, check = "", ...) {
   }
 
   round_fun <- function(x) is.na(x) || is.character(x)
-	res[!sapply(res, round_fun)] %<>% round(3)
+	res[!sapply(res, round_fun)] %<>% round(dec + 1)
 
 	if (res$p.value < .001) res$p.value  <- "< .001"
 	cat(paste0("\nChi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value), "\n\n")

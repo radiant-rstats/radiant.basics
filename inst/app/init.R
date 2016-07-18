@@ -17,7 +17,7 @@ r_url_list[["Correlation"]] <-
 options(radiant.url.list = r_url_list); rm(r_url_list)
 
 ## design menu
-basics_ui <-
+options(radiant.basics_ui =
 	tagList(
 	  navbarMenu("Basics",
 	    "Probability",
@@ -35,3 +35,4 @@ basics_ui <-
 	    tabPanel("Correlation", uiOutput("correlation"))
     )
   )
+)

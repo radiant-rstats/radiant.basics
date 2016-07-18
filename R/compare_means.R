@@ -11,7 +11,6 @@
 #' @param comb Combinations to evaluate
 #' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #' @param test t-test ("t") or Wilcox ("wilcox")
-#' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of all variables defined in the function as an object of class compare_means
@@ -31,7 +30,6 @@ compare_means <- function(dataset, var1, var2,
                           comb = "",
                           adjust = "none",
                           test = "t",
-                          dec = 3,
                           data_filter = "") {
 
 	vars <- c(var1, var2)
@@ -57,7 +55,7 @@ compare_means <- function(dataset, var1, var2,
 	## check there is variation in the data
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
   	return("Test could not be calculated (no variation). Please select another variable." %>%
-  	       set_class(c("compare_means",class(.))))
+  	       add_class("compare_means"))
 
 	## resetting option to independent if the number of observations is unequal
   ## summary on factor gives counts
@@ -97,7 +95,7 @@ compare_means <- function(dataset, var1, var2,
   	if (test != "t") {
 			  res[i,"p.value"] <-
 			    wilcox.test(x, y, paired = samples == "paired", alternative = alternative,
-			                conf.int = TRUE, conf.level = conf_lev) %>%
+			                conf.int = FALSE, conf.level = conf_lev) %>%
 			    tidy %>% .[1,"p.value"]
 		}
 
@@ -106,11 +104,10 @@ compare_means <- function(dataset, var1, var2,
 		# nr_x <- length(x)
 		# nr_y <- length(y)
 
-  #   sim_ci <-
-  #     replicate(1000,
-  #               mean(sample(x, nr_x, replace = TRUE)) -
-  #               mean(sample(y, nr_y, replace = TRUE))) %>%
-		# 						quantile(probs = {(1-conf_lev)/2} %>% c(., 1 - .))
+		# sim_ci <-
+		# 	replicate(1000, mean(sample(x, nr_x, replace = TRUE)) -
+		# 	                mean(sample(y, nr_y, replace = TRUE))) %>%
+		# 	quantile(probs = {(1-conf_lev)/2} %>% c(., 1 - .))
 
 		# res[i, c("cis_low", "cis_high")] <- sim_ci
 
@@ -127,13 +124,12 @@ compare_means <- function(dataset, var1, var2,
 	dat_summary <-
 	  dat %>%
 		group_by_("variable") %>%
-    summarise_each(funs(mean, n = length(.), sd,
-                   			se = sd/sqrt(n),
-                   			ci = ci_calc(se,n,conf_lev))) %>%
+    summarise_each(funs(mean, n = length(.), sd, se = sd/sqrt(n),
+                   			ci = ci_calc(se, n, conf_lev))) %>%
     rename_(.dots = setNames("variable", cname))
 
 	vars <- paste0(vars, collapse = ", ")
-  environment() %>% as.list %>% set_class(c("compare_means",class(.)))
+  as.list(environment()) %>% add_class("compare_means")
 }
 
 #' Summary method for the compare_means function
@@ -142,6 +138,7 @@ compare_means <- function(dataset, var1, var2,
 #'
 #' @param object Return value from \code{\link{compare_means}}
 #' @param show Show additional output (i.e., t.value, df, and confidence interval)
+#' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -156,10 +153,9 @@ compare_means <- function(dataset, var1, var2,
 #' @seealso \code{\link{plot.compare_means}} to plot results
 #'
 #' @export
-summary.compare_means <- function(object, show = FALSE, ...) {
+summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
 
 	if (is.character(object)) return(object)
-	dec <- object$dec
 
   cat(paste0("Pairwise mean comparisons (", object$test, "-test)\n"))
 	cat("Data      :", object$dataset, "\n")
@@ -202,7 +198,7 @@ summary.compare_means <- function(object, show = FALSE, ...) {
 	}
 
 	mod$` ` <- sig_stars(mod$p.value)
-	mod$p.value <- round(mod$p.value,dec)
+	mod$p.value <- round(mod$p.value, dec)
 	mod$p.value[ mod$p.value < .001 ] <- "< .001"
 	print(mod, row.names = FALSE, right = FALSE)
 	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")

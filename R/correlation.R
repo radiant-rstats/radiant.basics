@@ -5,7 +5,6 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param vars Variables to include in the analysis
 #' @param method Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
-#' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list with all variables defined in the function as an object of class compare_means
@@ -22,7 +21,6 @@
 #' @export
 correlation <- function(dataset, vars,
                         method = "pearson",
-                        dec = 2,
                         data_filter = "") {
 
 	## data.matrix as the last step in the chain is about 25% slower using
@@ -33,7 +31,7 @@ correlation <- function(dataset, vars,
 	if (!is_string(dataset)) dataset <- "-----"
 
 	## using correlation_ to avoid print method conflict with nlme
-  environment() %>% as.list %>% set_class(c("correlation_",class(.)))
+  as.list(environment()) %>% add_class("correlation_")
 }
 
 #' Summary method for the correlation function
@@ -43,6 +41,7 @@ correlation <- function(dataset, vars,
 #' @param object Return value from \code{\link{correlation}}
 #' @param cutoff Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0
 #' @param covar Show the covariance matrix (default is FALSE)
+#' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
@@ -59,13 +58,13 @@ correlation <- function(dataset, vars,
 summary.correlation_ <- function(object,
                                  cutoff = 0,
                                  covar = FALSE,
+                                 dec = 2,
                                  ...) {
 
 	## using correlation_ to avoid print method conflict with nlme
 	## calculate the correlation matrix with p.values using the psych package
 
 	cmat <- sshhr( psych::corr.test(object$dat, method = object$method) )
-	dec <- object$dec
 
 	cr <- format(round(cmat$r, dec))
 	cr[is.na(cmat$r)] <- "-"

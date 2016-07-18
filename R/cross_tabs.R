@@ -42,7 +42,7 @@ cross_tabs <- function(dataset, var1, var2,
 	## dat not needed in summary or plot
 	rm(dat)
 
-  environment() %>% as.list %>% set_class(c("cross_tabs",class(.)))
+  as.list(environment()) %>% add_class("cross_tabs")
 }
 
 #' Summary method for the cross_tabs function
@@ -51,6 +51,7 @@ cross_tabs <- function(dataset, var1, var2,
 
 #' @param object Return value from \code{\link{cross_tabs}}
 #' @param check Show table(s) for variables var1 and var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)
+#' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
@@ -64,9 +65,8 @@ cross_tabs <- function(dataset, var1, var2,
 #' @export
 summary.cross_tabs <- function(object,
                                check = "",
+                               dec = 2,
                                ...) {
-
-  # object <- result
 
   cat("Cross-tabs\n")
 	cat("Data     :", object$dataset, "\n")
@@ -76,8 +76,8 @@ summary.cross_tabs <- function(object,
 	cat("Null hyp.: there is no association between", object$var1, "and", object$var2, "\n")
 	cat("Alt. hyp.: there is an association between", object$var1, "and", object$var2, "\n")
 
-	object$cst$observed %>% rownames %>% c(., "Total") -> rnames
-	object$cst$observed %>% colnames %>% c(., "Total") -> cnames
+	rnames <- object$cst$observed %>% rownames %>% c(., "Total")
+	cnames <- object$cst$observed %>% colnames %>% c(., "Total")
 
 	if ("observed" %in% check) {
 		cat("\nObserved:\n")
@@ -96,25 +96,24 @@ summary.cross_tabs <- function(object,
 			set_rownames(rnames) %>%
 			cbind(rowSums(.)) %>%
 			set_colnames(cnames) %>%
-			round(2) %>%
+			round(dec) %>%
 			print
 	}
 
 	if ("chi_sq" %in% check) {
 		cat("\nContribution to chi-squared: (o - e)^2 / e\n")
-		# ((object$cst$observed - object$cst$expected)^2 / object$cst$expected) %>%
 		object$cst$chi_sq %>%
 			rbind(colSums(.)) %>%
 			set_rownames(rnames) %>%
 			cbind(rowSums(.)) %>%
 			set_colnames(cnames) %>%
-			round(2) %>%
+			round(dec) %>%
 			print
 	}
 
 	if ("dev_std" %in% check) {
 		cat("\nDeviation standardized: (o - e) / sqrt(e)\n")
-		print(round(object$cst$residuals, 2)) 	# these seem to be the correct std.residuals
+		print(round(object$cst$residuals, dec)) 	## standardized residuals
 	}
 
 	if ("row_perc" %in% check) {
@@ -125,7 +124,7 @@ summary.cross_tabs <- function(object,
 			cbind(rowSums(.)) %>%
 			set_colnames(cnames) %>%
 			{. / .[,"Total"]} %>%
-			round(2) %>%
+			round(dec) %>%
 			print
 	}
 
@@ -137,7 +136,7 @@ summary.cross_tabs <- function(object,
 			cbind(rowSums(.)) %>%
 			set_colnames(cnames) %>%
 			{t(.) / .["Total",]} %>% t %>%
-			round(2) %>%
+			round(dec) %>%
 			print
 	}
 
@@ -149,7 +148,7 @@ summary.cross_tabs <- function(object,
 			cbind(rowSums(.)) %>%
 			set_colnames(cnames) %>%
 			{. / .["Total","Total"]} %>%
-			round(2) %>%
+			round(dec) %>%
 			print
 	}
 
@@ -168,7 +167,7 @@ summary.cross_tabs <- function(object,
   }
 
   round_fun <- function(x) is.na(x) || is.character(x)
-	res[!sapply(res, round_fun)] %<>% round(3)
+	res[!sapply(res, round_fun)] %<>% round(dec + 1)
 
 	if (res$p.value < .001) res$p.value  <- "< .001"
 	cat(paste0("\nChi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value), "\n\n")

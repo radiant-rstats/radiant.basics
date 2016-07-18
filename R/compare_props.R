@@ -10,7 +10,6 @@
 #' @param conf_lev Span of the confidence interval
 #' @param comb Combinations to evaluate
 #' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
-#' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of all variables defined in the function as an object of class compare_props
@@ -31,7 +30,6 @@ compare_props <- function(dataset, var1, var2,
                           conf_lev = .95,
                           comb = "",
                           adjust = "none",
-                          dec = 3,
                           data_filter = "") {
 
 # dataset = "titanic"
@@ -60,7 +58,7 @@ compare_props <- function(dataset, var1, var2,
   ## check there is variation in the data
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
   	return("One or more selected variables show no variation. Please select other variables." %>%
-  	       set_class(c("compare_props",class(.))))
+  	       add_class("compare_props"))
 
   rn <- ""
   prop_input <-
@@ -131,7 +129,7 @@ compare_props <- function(dataset, var1, var2,
 	dat_summary[[var1]] %<>% factor(., levels = .)
 
 	vars <- paste0(vars, collapse = ", ")
-  environment() %>% as.list %>% set_class(c("compare_props",class(.)))
+  as.list(environment()) %>% add_class("compare_props")
 }
 
 #' Summary method for the compare_props function
@@ -140,6 +138,7 @@ compare_props <- function(dataset, var1, var2,
 #'
 #' @param object Return value from \code{\link{compare_props}}
 #' @param show Show additional output (i.e., chisq.value, df, and confidence interval)
+#' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -151,10 +150,9 @@ compare_props <- function(dataset, var1, var2,
 #' @seealso \code{\link{plot.compare_props}} to plot results
 #'
 #' @export
-summary.compare_props <- function(object, show = FALSE, ...) {
+summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 
 	if (is.character(object)) return(object)
-	dec <- object$dec
 
   cat("Pairwise proportion comparisons\n")
 	cat("Data      :", object$dataset, "\n")

@@ -53,7 +53,7 @@ prob_norm <- function(mean,
 		}
   }
 
-  environment() %>% as.list %>% set_class(c("prob_norm",class(.)))
+  as.list(environment()) %>% add_class("prob_norm")
 }
 
 #' Plot method for the probability calculator (normal)
@@ -279,7 +279,7 @@ prob_tdist <- function(df,
 		}
   }
 
-  environment() %>% as.list %>% set_class(c("prob_tdist",class(.)))
+  as.list(environment()) %>% add_class("prob_tdist")
 }
 
 #' Plot method for the probability calculator (t-distribution)
@@ -501,7 +501,7 @@ prob_fdist <- function(df1, df2,
 		}
   }
 
-  environment() %>% as.list %>% set_class(c("prob_fdist",class(.)))
+  as.list(environment()) %>% add_class("prob_fdist")
 }
 
 #' Plot method for the probability calculator (F-distribution)
@@ -729,7 +729,7 @@ prob_chisq <- function(df,
 		}
   }
 
-  environment() %>% as.list %>% set_class(c("prob_chisq",class(.)))
+  as.list(environment()) %>% add_class("prob_chisq")
 }
 
 #' Plot method for the probability calculator (Chi-squared distribution)
@@ -949,7 +949,7 @@ prob_unif <- function(min,
 	mean <- (max+min) / 2
 	stdev <- sqrt((max-min)^2 / 12)
 
-  environment() %>% as.list %>% set_class(c("prob_unif",class(.)))
+  as.list(environment()) %>% add_class("prob_unif")
 }
 
 #' Plot method for the probability calculator (uniform)
@@ -1240,8 +1240,7 @@ prob_binom <- function(n,
 		}
   }
 
-
-  environment() %>% as.list %>% set_class(c("prob_binom",class(.)))
+  as.list(environment()) %>% add_class("prob_binom")
 }
 
 #' Plot method for the probability calculator function (binomial)
@@ -1469,7 +1468,7 @@ prob_disc <- function(v, p,
 
   if (length(v) != length(p)) {
 		mess <- "The number of values must be the same or a multiple of the number of probabilities"
-		return(list(mess_probs = mess, mess_values = mess) %>% set_class(c("prob_disc",class(.))))
+		return(list(mess_probs = mess, mess_values = mess) %>% add_class("prob_disc"))
 	}
 
 	asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1])/as.numeric(x[2]), as.numeric(x[1]))
@@ -1479,7 +1478,7 @@ prob_disc <- function(v, p,
   if (anyNA(p) | anyNA(v)) {
 		mess <- "The number of probabilities entered must be a multiple of the number of values"
 	  mess <- paste0("Invalid inputs:\n\nv: ", paste0(v, collapse = " "), "\np: ", paste0(p, collapse = " "))
-		return(list(mess_probs = mess, mess_values = mess) %>% set_class(c("prob_disc",class(.))))
+		return(list(mess_probs = mess, mess_values = mess) %>% add_class("prob_disc"))
 	}
 
 	## make sure values and probabilities are ordered correctly
@@ -1489,7 +1488,7 @@ prob_disc <- function(v, p,
 
 	if (sum(p) < .99 || sum(p) > 1.01) {
 		mess_probs <- mess_values <- paste0("Probabilities for a discrete variable do not sum to 1 (",round(sum(p),3),")")
-    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+    return(as.list(environment()) %>% add_class("prob_disc"))
 	}
 
 	ddisc <- function(b, df) filter(df, v == b)$p
@@ -1532,7 +1531,7 @@ prob_disc <- function(v, p,
 		plb <- vlb <- NA
 	} else if (length(qdisc(plb, df)) == 0) {
 		mess_probs <- "Lower bound is too low"
-    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+    return(as.list(environment()) %>% add_class("prob_disc"))
 	} else {
 		if (plb > 1) plb <- 1
 		if (plb < 0) plb <- 0
@@ -1546,7 +1545,7 @@ prob_disc <- function(v, p,
 		pub <- vub <- NA
 	} else if (length(qdisc(pub, df)) == 0) {
 		mess_probs <- "Upper bound is too low"
-    return(environment() %>% as.list %>% set_class(c("prob_disc",class(.))))
+    return(as.list(environment()) %>% add_class("prob_disc"))
 	} else {
 		if (pub > 1) pub <- 1
 		if (pub < 0) pub <- 0
@@ -1576,7 +1575,7 @@ prob_disc <- function(v, p,
 		}
   }
 
-  environment() %>% as.list %>% set_class(c("prob_disc",class(.)))
+  as.list(environment()) %>% add_class("prob_disc")
 }
 
 #' Plot method for the probability calculator function (discrete)
@@ -1844,7 +1843,7 @@ prob_expo <- function(rate,
 		}
   }
 
-  environment() %>% as.list %>% set_class(c("prob_expo",class(.)))
+  as.list(environment()) %>% add_class("prob_expo")
 }
 
 #' Plot method for the probability calculator (Exponential distribution)
@@ -2120,7 +2119,7 @@ prob_pois <- function(lambda,
 		}
   }
 
-  environment() %>% as.list %>% set_class(c("prob_pois",class(.)))
+  as.list(environment()) %>% add_class("prob_pois")
 }
 
 

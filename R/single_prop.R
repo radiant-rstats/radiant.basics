@@ -8,7 +8,6 @@
 #' @param comp_value Population value to compare to the sample proportion
 #' @param alternative The alternative hypothesis ("two.sided", "greater", or "less")
 #' @param conf_lev Span of the confidence interval
-#' @param dec Number of decimals to show
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of variables used in single_prop as an object of class single_prop
@@ -26,7 +25,6 @@ single_prop <- function(dataset, var,
                         comp_value = 0.5,
                         alternative = "two.sided",
                         conf_lev = .95,
-                        dec = 3,
                         data_filter = "") {
 
 	dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE) %>% mutate_each(funs(as.factor))
@@ -63,7 +61,7 @@ single_prop <- function(dataset, var,
 	res <- binom.test(ns, n, p = comp_value, alternative = alternative,
 	                  conf.level = conf_lev) %>% tidy
 
-  environment() %>% as.list %>% set_class(c("single_prop",class(.)))
+  as.list(environment()) %>% add_class("single_prop")
 }
 
 #' Summary method for the single_prop function
@@ -71,6 +69,7 @@ single_prop <- function(dataset, var,
 #' @details See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{single_prop}}
+#' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -82,9 +81,7 @@ single_prop <- function(dataset, var,
 #' @seealso \code{\link{plot.single_prop}} to plot the results
 #'
 #' @export
-summary.single_prop <- function(object, ...) {
-
-	dec <- object$dec
+summary.single_prop <- function(object, dec = 3, ...) {
 
   cat("Single proportion test (binomial exact)\n")
 	cat("Data      :", object$dataset, "\n")
