@@ -4,10 +4,12 @@
 \alias{summary.single_prop}
 \title{Summary method for the single_prop function}
 \usage{
-\method{summary}{single_prop}(object, ...)
+\method{summary}{single_prop}(object, dec = 3, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{single_prop}}}
+
+\item{dec}{Number of decimals to show}
 
 \item{...}{further arguments passed to or from other methods}
 }

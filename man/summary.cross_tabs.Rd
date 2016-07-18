@@ -4,12 +4,14 @@
 \alias{summary.cross_tabs}
 \title{Summary method for the cross_tabs function}
 \usage{
-\method{summary}{cross_tabs}(object, check = "", ...)
+\method{summary}{cross_tabs}(object, check = "", dec = 2, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{cross_tabs}}}
 
 \item{check}{Show table(s) for variables var1 and var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)}
+
+\item{dec}{Number of decimals to show}
 
 \item{...}{further arguments passed to or from other methods.}
 }

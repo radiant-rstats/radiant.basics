@@ -4,7 +4,8 @@
 \alias{summary.correlation_}
 \title{Summary method for the correlation function}
 \usage{
-\method{summary}{correlation_}(object, cutoff = 0, covar = FALSE, ...)
+\method{summary}{correlation_}(object, cutoff = 0, covar = FALSE, dec = 2,
+  ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{correlation}}}
@@ -12,6 +13,8 @@
 \item{cutoff}{Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0}
 
 \item{covar}{Show the covariance matrix (default is FALSE)}
+
+\item{dec}{Number of decimals to show}
 
 \item{...}{further arguments passed to or from other methods.}
 }

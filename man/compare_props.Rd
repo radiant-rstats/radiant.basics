@@ -5,8 +5,7 @@
 \title{Compare proportions across groups}
 \usage{
 compare_props(dataset, var1, var2, levs = "", alternative = "two.sided",
-  conf_lev = 0.95, comb = "", adjust = "none", dec = 3,
-  data_filter = "")
+  conf_lev = 0.95, comb = "", adjust = "none", data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -24,8 +23,6 @@ compare_props(dataset, var1, var2, levs = "", alternative = "two.sided",
 \item{comb}{Combinations to evaluate}
 
 \item{adjust}{Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)}
-
-\item{dec}{Number of decimals to show}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }

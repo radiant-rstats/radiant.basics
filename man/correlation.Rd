@@ -4,7 +4,7 @@
 \alias{correlation}
 \title{Calculate correlations for two or more variables}
 \usage{
-correlation(dataset, vars, method = "pearson", dec = 2, data_filter = "")
+correlation(dataset, vars, method = "pearson", data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -12,8 +12,6 @@ correlation(dataset, vars, method = "pearson", dec = 2, data_filter = "")
 \item{vars}{Variables to include in the analysis}
 
 \item{method}{Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default}
-
-\item{dec}{Number of decimals to show}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }

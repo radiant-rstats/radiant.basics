@@ -4,10 +4,12 @@
 \alias{summary.single_mean}
 \title{Summary method for the single_mean function}
 \usage{
-\method{summary}{single_mean}(object, ...)
+\method{summary}{single_mean}(object, dec = 3, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{single_mean}}}
+
+\item{dec}{Number of decimals to show}
 
 \item{...}{further arguments passed to or from other methods}
 }
