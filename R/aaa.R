@@ -7,12 +7,10 @@ globalVariables(c(".","..count..","matches","n","se","Freq","ci","col1","n","y",
 #' @docType package
 #' @import radiant.data shiny ggplot2
 #' @importFrom dplyr summarise_each funs rename_ bind_cols select filter filter_ group_by_ summarise arrange mutate count
-#' @importFrom tibble rownames_to_column
 #' @importFrom tidyr gather_
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom scales percent
 #' @importFrom magrittr %>% %<>% set_rownames set_colnames set_names divide_by
-#' @importFrom broom tidy
 #' @importFrom methods is
 #' @importFrom graphics pairs par points strwidth text
 #' @importFrom stats na.omit binom.test chisq.test cor.test cov dbinom dchisq dexp df dnorm dpois dt dunif p.adjust pbinom pchisq pexp pf pnorm ppois prop.test pt punif qbinom qchisq qexp qf qpois qt qunif qnorm rbinom relevel sd setNames symnum t.test wilcox.test
