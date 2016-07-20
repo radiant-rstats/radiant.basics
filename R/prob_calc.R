@@ -2008,7 +2008,6 @@ summary.prob_expo <- function(object, type = "values",  ...) {
 	}
 }
 
-
 #' Probability calculator for the poisson distribution
 #'
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
@@ -2028,20 +2027,11 @@ prob_pois <- function(lambda,
                       pub = NA,
                       dec = 3) {
 
-	if (!is.integer(lambda))
-	  mess_values <- "\nLambda must be a postivie integer value"
-
-	# lambda <- as_integer(lambda)
-
-	# lb <- 2
-	# dec <- 3
-	# lambda <- 3
-	# library(magrittr)
+	if (lambda <= 0) mess_values <- "\nLambda must be positive"
 
 	if (is.na(lb) || lb < 0) {
 		p_elb <- p_lb <- lb <- NA
 	} else {
-		# if (lb > n) lb <- n
 		p_elb <- dpois(lb, lambda) %>% round(dec)
 		p_lelb <- ppois(lb, lambda) %>% round(dec)
 		if (lb > 0)
@@ -2053,7 +2043,6 @@ prob_pois <- function(lambda,
 	if (is.na(ub) || ub < 0) {
 		p_eub <- p_ub <- ub <- NA
 	} else {
-		# if (ub > n) ub <- n
 		p_eub <- dpois(ub, lambda) %>% round(dec)
 		p_leub <- ppois(ub, lambda) %>% round(dec)
 		if (ub > 0)
@@ -2068,7 +2057,6 @@ prob_pois <- function(lambda,
 		p_int <- NA
 	}
 
-	# if (is.na(plb) || plb < 0) {
 	if (is.na(plb)) {
 		vlb <- NA
 	} else {
