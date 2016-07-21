@@ -12,17 +12,27 @@ output$ui_pc_input_pois   <- renderUI({
 
   if (input$pc_type == "values") {
     div(class="row",
-        div(class="col-xs-6", numericInput("pcp_lb", label = "Lower bound:",
-                              value = state_init("pcp_lb", NA))),
-        div(class="col-xs-6",numericInput("pcp_ub", label = "Upper bound:",
-                             value = state_init("pcp_ub", NA)))
+      div(class="col-xs-6",
+        numericInput("pcp_lb", label = "Lower bound:",
+                     value = state_init("pcp_lb", NA))
+      ),
+      div(class="col-xs-6",
+        numericInput("pcp_ub", label = "Upper bound:",
+                     value = state_init("pcp_ub", NA))
+      )
     )
   } else {
     div(class="row",
-        div(class="col-xs-6", numericInput("pcp_plb", label = "Lower bound:",
-                              value = state_init("pcp_plb", NA), step = .005)),
-        div(class="col-xs-6",numericInput("pcp_pub", label = "Upper bound:",
-                             value = state_init("pcp_pub", 0.95), step = .005))
+      div(class="col-xs-6",
+        numericInput("pcp_plb", label = "Lower bound:",
+                     value = state_init("pcp_plb", NA),
+                     min = 0, max = 1, step = .005)
+      ),
+      div(class="col-xs-6",
+        numericInput("pcp_pub", label = "Upper bound:",
+                     value = state_init("pcp_pub", 0.95),
+                     min = 0, max = 1, step = .005)
+      )
     )
   }
 })
@@ -35,17 +45,21 @@ output$ui_pc_input_expo   <- renderUI({
 
   if (input$pc_type == "values") {
     div(class="row",
-        div(class="col-xs-6", numericInput("pce_lb", label = "Lower bound:",
-                              value = state_init("pce_lb", NA))),
-        div(class="col-xs-6",numericInput("pce_ub", label = "Upper bound:",
-                             value = state_init("pce_ub", NA)))
+      div(class="col-xs-6",
+        numericInput("pce_lb", label = "Lower bound:",
+                     value = state_init("pce_lb", NA))
+      ),
+      div(class="col-xs-6",
+        numericInput("pce_ub", label = "Upper bound:",
+                     value = state_init("pce_ub", NA))
+      )
     )
   } else {
     div(class="row",
-        div(class="col-xs-6", numericInput("pce_plb", label = "Lower bound:",
-                              value = state_init("pce_plb", NA), step = .005)),
-        div(class="col-xs-6",numericInput("pce_pub", label = "Upper bound:",
-                             value = state_init("pce_pub", 0.95), step = .005))
+      div(class="col-xs-6", numericInput("pce_plb", label = "Lower bound:",
+                            value = state_init("pce_plb", NA), step = .005)),
+      div(class="col-xs-6",numericInput("pce_pub", label = "Upper bound:",
+                           value = state_init("pce_pub", 0.95), step = .005))
     )
   }
 })

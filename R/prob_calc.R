@@ -88,7 +88,6 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
 
   dnorm_limit <- function(x) {
     y <- dnorm(x, mean = mean, sd = stdev)
-    # y[x < lb | x > ub] <- NA
     y[x < lb | x > ub] <- 0
     y
   }
@@ -96,7 +95,6 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
   dnorm_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dnorm(x, mean = mean, sd = stdev)
-    # y[x > lb] <- NA
     y[x > lb] <- 0
     y
   }
@@ -104,7 +102,6 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
   dnorm_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dnorm(x, mean = mean, sd = stdev)
-    # y[x < ub] <- NA
     y[x < ub] <- 0
     y
   }
@@ -234,13 +231,6 @@ prob_tdist <- function(df,
                        pub = NA,
                        dec = 3) {
 
-	## transform ub and lb to t-stats
-	## values need to be transformed to regular units using sd and mean
-
-	# tstdev <- n/(n-2)
-	# r_pt <- pt(ub, df)
-
-
 	p_ub <- pt(ub, df)
 	p_lb <- pt(lb, df)
 	p_int <- max(p_ub - p_lb, 0)
@@ -311,7 +301,6 @@ plot.prob_tdist <- function(x, type = "values", shiny = FALSE, ...) {
   limits <- c(-3, 3)
   dt_limit <- function(x) {
     y <- dt(x, df = df)
-    # y[x < lb | x > ub] <- NA
     y[x < lb | x > ub] <- 0
     y
   }
@@ -319,7 +308,6 @@ plot.prob_tdist <- function(x, type = "values", shiny = FALSE, ...) {
   dt_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dt(x, df = df)
-    # y[x > lb] <- NA
     y[x > lb] <- 0
     y
   }
@@ -327,7 +315,6 @@ plot.prob_tdist <- function(x, type = "values", shiny = FALSE, ...) {
   dt_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dt(x, df = df)
-    # y[x < ub] <- NA
     y[x < ub] <- 0
     y
   }
@@ -442,7 +429,7 @@ summary.prob_tdist <- function(object, type = "values",  ...) {
 #'
 #' @param df1 Degrees of freedom
 #' @param df2 Degrees of freedom
-#' @param lb Lower bound (default is -Inf)
+#' @param lb Lower bound (default is 0)
 #' @param ub Upper bound (default is Inf)
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
@@ -456,12 +443,8 @@ prob_fdist <- function(df1, df2,
                        pub = NA,
                        dec = 3) {
 
-
-	# df1 <- 2
-	# df2 <- 2998
-	# ub <- 2.365
-
-	# lm(price ~ depth, data = diamonds) %>% summary
+	if (!is_not(lb) && lb < 0) lb <- 0
+	if (!is_not(ub) && ub < 0) ub <- 0
 
 	p_ub <- pf(ub, df1, df2)
 	p_lb <- pf(lb, df1, df2)
@@ -546,7 +529,6 @@ plot.prob_fdist <- function(x, type = "values", shiny = FALSE, ...) {
 
   df_limit <- function(x) {
     y <- df(x, df1 = df1, df2 = df2)
-    # y[x < lb | x > ub] <- NA
     y[x < lb | x > ub] <- 0
     y
   }
@@ -554,7 +536,6 @@ plot.prob_fdist <- function(x, type = "values", shiny = FALSE, ...) {
   df_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- df(x, df1 = df1, df2 = df2)
-    # y[x > lb] <- NA
     y[x > lb] <- 0
     y
   }
@@ -562,7 +543,6 @@ plot.prob_fdist <- function(x, type = "values", shiny = FALSE, ...) {
   df_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- df(x, df1 = df1, df2 = df2)
-    # y[x < ub] <- NA
     y[x < ub] <- 0
     y
   }
@@ -677,7 +657,7 @@ summary.prob_fdist <- function(object, type = "values",  ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
 #'
 #' @param df Degrees of freedom
-#' @param lb Lower bound (default is -Inf)
+#' @param lb Lower bound (default is 0)
 #' @param ub Upper bound (default is Inf)
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
@@ -690,6 +670,9 @@ prob_chisq <- function(df,
                        plb = NA,
                        pub = NA,
                        dec = 3) {
+
+	if (!is_not(lb) && lb < 0) lb <- 0
+	if (!is_not(ub) && ub < 0) ub <- 0
 
 	p_ub <- pchisq(ub, df)
 	p_lb <- pchisq(lb, df)
@@ -897,8 +880,8 @@ summary.prob_chisq <- function(object, type = "values",  ...) {
 #'
 #' @param min Minmum value
 #' @param max Maximum value
-#' @param lb Lower bound
-#' @param ub Upper bound
+#' @param lb Lower bound (default = 0)
+#' @param ub Upper bound (default = 1)
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
@@ -911,6 +894,11 @@ prob_unif <- function(min,
                       plb = NA,
                       pub = NA,
                       dec = 3) {
+
+	if (min > max) {
+		mess_values <- "\nThe maximum value must be larger than the minimum value"
+		mess_probs <- "\nThe maximum value must be larger than the minimum value"
+	}
 
 	if (!is.na(lb) && !is.na(ub)) {
 		if (lb > ub) {
@@ -984,7 +972,6 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
   limits <- c(min, max)
   dunif_limit <- function(x) {
     y <- dunif(x, min = min, max = max)
-    # y[x < lb | x > ub] <- NA
     y[x < lb | x > ub] <- 0
     y
   }
@@ -992,7 +979,6 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
   dunif_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dunif(x, min = min, max = max)
-    # y[x > lb] <- NA
     y[x > lb] <- 0
     y
   }
@@ -1000,7 +986,6 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
   dunif_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dunif(x, min = min, max = max)
-    # y[x < ub] <- NA
     y[x < ub] <- 0
     y
   }
@@ -1043,8 +1028,6 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
 #' @export
 summary.prob_unif <- function(object, type = "values",  ...) {
 
-	# suppressMessages(attach(object))
-
 	min <- object$min
 	max <- object$max
 	mean <- object$mean
@@ -1067,18 +1050,10 @@ summary.prob_unif <- function(object, type = "values",  ...) {
   cat("Distribution: Uniform\n")
 	cat("Min         :", min, "\n")
 	cat("Max         :", max, "\n")
-	cat("Mean        :", mean %>% round(dec), "\n")
-	cat("St. dev     :", stdev %>% round(dec), "\n")
-
-	# if (is.null(min) || is.na(min) || is.null(max) || is.na(max)) {
-	# 	cat("\nPlease specify both a minimum and maximum value\n")
-	# 	return(invisible())
-	# }
-
-	# if (min > max) {
-	# 	cat("\nThe maximum value must be larger than the minimum value\n")
-	# 	return(invisible())
-	# }
+	if (max > min) {
+		cat("Mean        :", mean %>% round(dec), "\n")
+		cat("St. dev     :", stdev %>% round(dec), "\n")
+	}
 
 	mess <- object[[paste0("mess_",type)]]
 	if (!is.null(mess)) return(mess)
@@ -1158,6 +1133,9 @@ prob_binom <- function(n,
 	## making sure n is integer
 	n <- as_integer(n)
 
+  if (!is_not(lb) && lb < 0) lb <- 0
+	if (!is_not(ub) && ub < 0) ub <- 0
+
 	if (is.na(lb) || lb < 0) {
 		p_elb <- p_lb <- lb <- NA
 	} else {
@@ -1188,7 +1166,6 @@ prob_binom <- function(n,
 		p_int <- NA
 	}
 
-	# if (is.na(plb) || plb < 0) {
 	if (is.na(plb)) {
 		vlb <- NA
 	} else {
@@ -1204,7 +1181,6 @@ prob_binom <- function(n,
 	  	vp_lb <- 0
 	}
 
-	# if (is.na(pub) || pub < 0) {
 	if (is.na(pub)) {
 		vub <- NA
 	} else {
@@ -1273,11 +1249,11 @@ plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
   limits <- 0:n
 
   k <- factor(rep("below",n+1), levels = c("below","equal","above"))
-  if (!is.null(ub) && !is.na(ub)) {
+  if (!is_not(ub)) {
   	k[ub+1] <- "equal"
     if (!is.na(lb)) k[(lb:ub)+1] <- "equal"
   	k[0:n > ub] <- "above"
-  } else if (!is.null(lb) && !is.na(lb)) {
+  } else if (!is_not(lb)) {
   	k[lb+1] <- "equal"
   	k[0:n > lb] <- "above"
   } else {
@@ -1321,7 +1297,6 @@ plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
 #' @export
 summary.prob_binom <- function(object, type = "values",  ...) {
 
-	# suppressMessages(attach(object))
 	n <- object$n
 	p <- object$p
 	dec <- object$dec
@@ -1493,7 +1468,6 @@ prob_disc <- function(v, p,
 
 	ddisc <- function(b, df) filter(df, v == b)$p
 	pdisc <- function(b, df) filter(df, v < b)$p  %>% sum
-	# qdisc <- function(prob, df) mutate(df, p = cumsum(df$p)) %>% filter(p <= prob) %>% tail(1) %>% .$v
 	## consistent with http://www.stat.umn.edu/geyer/old/5101/rlook.html#qbinom
 	qdisc <- function(prob, df) mutate(df, p = cumsum(df$p)) %>% filter(p >= prob) %>% .$v %>% min
 
@@ -1594,8 +1568,6 @@ prob_disc <- function(v, p,
 #' @export
 plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
 
-	# object <- result
-
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
 
@@ -1607,8 +1579,6 @@ plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
 		lb <- object$vlb
 		ub <- object$vub
 	}
-	# lb
-	# ub
 
 	v <- object$v
 	p <- object$p
@@ -1616,7 +1586,6 @@ plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
   limits <- v
 
   k <- factor(rep("below",length(v)), levels = c("below","equal","above"))
-  # if (!is.null(ub) && !is.na(ub)) {
   if (!is_empty(ub)) {
     if (!is.na(lb)) {
     	k[v >= lb & v <= ub] <- "equal"
@@ -1624,7 +1593,6 @@ plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
     	k[v == ub] <- "equal"
     }
   	k[v > ub] <- "above"
-  # } else if (!is.null(lb) && !is.na(lb)) {
   } else if (!is_empty(lb)) {
   	if (lb %in% v) k[v == lb] <- "equal"
   	k[v > lb] <- "above"
@@ -1676,7 +1644,6 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 	mess <- object[[paste0("mess_",type)]]
 	if (!is.null(mess)) return(mess)
 
-	# suppressMessages(attach(object))
 	v <- object$v
 	p <- object$p
 	dec <- object$dec
@@ -1794,7 +1761,7 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
 #'
 #' @param rate Rate
-#' @param lb Lower bound (default is -Inf)
+#' @param lb Lower bound (default is 0)
 #' @param ub Upper bound (default is Inf)
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
@@ -1807,6 +1774,9 @@ prob_expo <- function(rate,
                       plb = NA,
                       pub = NA,
                       dec = 3) {
+
+  if (!is_not(lb) && lb < 0) lb <- 0
+	if (!is_not(ub) && ub < 0) ub <- 0
 
 	p_ub <- pexp(ub, rate)
 	p_lb <- pexp(lb, rate)
@@ -1883,7 +1853,6 @@ plot.prob_expo <- function(x, type = "values", shiny = FALSE, ...) {
 
   dexp_limit <- function(x) {
     y <- dexp(x, rate = rate)
-    # y[x < lb | x > ub] <- NA
     y[x < lb | x > ub] <- 0
     y
   }
@@ -1891,7 +1860,6 @@ plot.prob_expo <- function(x, type = "values", shiny = FALSE, ...) {
   dexp_lb <- function(x) {
   	if (is.na(lb)) return(0)
     y <- dexp(x, rate = rate)
-    # y[x > lb] <- NA
     y[x > lb] <- 0
     y
   }
@@ -1899,7 +1867,6 @@ plot.prob_expo <- function(x, type = "values", shiny = FALSE, ...) {
   dexp_ub <- function(x) {
   	if (is.na(ub)) return(0)
     y <- dexp(x, rate = rate)
-    # y[x < ub] <- NA
     y[x < ub] <- 0
     y
   }
@@ -2013,7 +1980,7 @@ summary.prob_expo <- function(object, type = "values",  ...) {
 #' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
 #'
 #' @param lambda Rate
-#' @param lb Lower bound (default is -Inf)
+#' @param lb Lower bound (default is 0)
 #' @param ub Upper bound (default is Inf)
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
@@ -2028,6 +1995,9 @@ prob_pois <- function(lambda,
                       dec = 3) {
 
 	if (lambda <= 0) mess_values <- "\nLambda must be positive"
+
+  if (!is_not(lb) && lb < 0) lb <- 0
+	if (!is_not(ub) && ub < 0) ub <- 0
 
 	if (is.na(lb) || lb < 0) {
 		p_elb <- p_lb <- lb <- NA
@@ -2150,11 +2120,11 @@ plot.prob_pois <- function(x, type = "values", shiny = FALSE, ...) {
 	}
 
   k <- factor(rep("below",n+1), levels = c("below","equal","above"))
-  if (!is.null(ub) && !is.na(ub)) {
+  if (!is_not(ub)) {
   	k[ub+1] <- "equal"
     if (!is.na(lb)) k[(lb:ub)+1] <- "equal"
   	k[0:n > ub] <- "above"
-  } else if (!is.null(lb) && !is.na(lb)) {
+  } else if (!is_not(lb)) {
   	k[lb+1] <- "equal"
   	k[0:n > lb] <- "above"
   } else {
@@ -2198,7 +2168,6 @@ plot.prob_pois <- function(x, type = "values", shiny = FALSE, ...) {
 #' @export
 summary.prob_pois <- function(object, type = "values",  ...) {
 
-	# suppressMessages(attach(object))
 	lambda <- object$lambda
 	dec <- object$dec
 
@@ -2247,10 +2216,8 @@ summary.prob_pois <- function(object, type = "values",  ...) {
 					cat(paste0("P(X  < ", lb,") = ", p_lb, "\n"))
 				  cat(paste0("P(X <= ", lb,") = ", p_lelb, "\n"))
 				}
-				# if (lb < n) {
-				  cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
-			  	cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
-				# }
+			  cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
+			 	cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
 			}
 
 			if (!is.na(ub)) {
@@ -2259,10 +2226,8 @@ summary.prob_pois <- function(object, type = "values",  ...) {
 					cat(paste0("P(X  < ", ub,") = ", p_ub, "\n"))
 				  cat(paste0("P(X <= ", ub,") = ", p_leub, "\n"))
 				}
-				# if (ub < n) {
-				  cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
-				  cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
-				# }
+  		  cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
+	  	  cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
 			}
 
 			if (!is.na(lb) && !is.na(ub)) {
@@ -2285,10 +2250,8 @@ summary.prob_pois <- function(object, type = "values",  ...) {
 					cat(paste0("P(X  < ", vlb,") = ", vp_lb, "\n"))
 				  cat(paste0("P(X <= ", vlb,") = ", vp_lelb, "\n"))
 				}
-				# if (vlb < n) {
-				  cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
-			  	cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
-				# }
+				cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
+			  cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
 			}
 
 			if (!is.na(pub)) {
@@ -2297,10 +2260,8 @@ summary.prob_pois <- function(object, type = "values",  ...) {
 					cat(paste0("P(X  < ", vub,") = ", vp_ub, "\n"))
 				  cat(paste0("P(X <= ", vub,") = ", vp_leub, "\n"))
 				}
-				# if (vub < n) {
-				  cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
-		      cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
-				# }
+				cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
+		    cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
 			}
 
 			if (!is.na(plb) && !is.na(pub)) {

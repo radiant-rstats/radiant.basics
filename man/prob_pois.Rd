@@ -9,7 +9,7 @@ prob_pois(lambda, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 \arguments{
 \item{lambda}{Rate}
 
-\item{lb}{Lower bound (default is -Inf)}
+\item{lb}{Lower bound (default is 0)}
 
 \item{ub}{Upper bound (default is Inf)}
 

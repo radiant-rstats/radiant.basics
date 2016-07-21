@@ -11,7 +11,7 @@ prob_fdist(df1, df2, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 
 \item{df2}{Degrees of freedom}
 
-\item{lb}{Lower bound (default is -Inf)}
+\item{lb}{Lower bound (default is 0)}
 
 \item{ub}{Upper bound (default is Inf)}
 

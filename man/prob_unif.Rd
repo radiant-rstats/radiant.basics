@@ -11,9 +11,9 @@ prob_unif(min, max, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 
 \item{max}{Maximum value}
 
-\item{lb}{Lower bound}
+\item{lb}{Lower bound (default = 0)}
 
-\item{ub}{Upper bound}
+\item{ub}{Upper bound (default = 1)}
 
 \item{plb}{Lower probability bound}
 

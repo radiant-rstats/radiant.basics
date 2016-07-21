@@ -9,7 +9,7 @@ prob_chisq(df, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 \arguments{
 \item{df}{Degrees of freedom}
 
-\item{lb}{Lower bound (default is -Inf)}
+\item{lb}{Lower bound (default is 0)}
 
 \item{ub}{Upper bound (default is Inf)}
 
