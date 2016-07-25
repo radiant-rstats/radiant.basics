@@ -38,7 +38,7 @@ output$ui_goodness <- renderUI({
 	    uiOutput("ui_gd_var"),
 	    uiOutput("ui_gd_p"),
       checkboxGroupInput("gd_check", NULL, gd_check,
-        selected = state_init("gd_check"), inline = FALSE)
+        selected = state_group("gd_check"), inline = FALSE)
 		),
   	help_and_report(modal_title = "Goodness of fit",
   	                fun_name = "goodness",

@@ -14,6 +14,6 @@ help_basics_panel <- tagList(
     HTML("<label>Basics menu: <i id='help_basics_all' title='Check all' href='#' class='action-button glyphicon glyphicon-ok'></i>
     <i id='help_basics_none' title='Uncheck all' href='#' class='action-button glyphicon glyphicon-remove'></i></label>"),
     checkboxGroupInput("help_basics", NULL, help_basics,
-       selected = state_init("help_basics"), inline = TRUE)
+       selected = state_group("help_basics"), inline = TRUE)
   )
 )

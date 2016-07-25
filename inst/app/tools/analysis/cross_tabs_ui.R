@@ -44,7 +44,7 @@ output$ui_cross_tabs <- renderUI({
 	    uiOutput("ui_ct_var1"),
 	    uiOutput("ui_ct_var2"),
       checkboxGroupInput("ct_check", NULL, ct_check,
-        selected = state_init("ct_check"), inline = FALSE)
+        selected = state_group("ct_check"), inline = FALSE)
 		),
   	help_and_report(modal_title = "Cross-tabs",
   	                fun_name = "cross_tabs",
