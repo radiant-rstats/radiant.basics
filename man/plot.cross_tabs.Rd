@@ -19,7 +19,7 @@
 Plot method for the cross_tabs function
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/cross_tabs.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/cross_tabs.html} for an example in Radiant
 }
 \examples{
 result <- cross_tabs("newspaper", "Income", "Newspaper")

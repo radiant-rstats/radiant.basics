@@ -17,6 +17,6 @@
 Summary method for the probability calculator function (Exponential distribution)
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
 

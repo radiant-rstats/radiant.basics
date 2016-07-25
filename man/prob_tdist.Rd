@@ -28,6 +28,6 @@ prob_tdist(df, mean = 0, stdev = 1, lb = NA, ub = NA, plb = NA,
 Probability calculator for the t distribution
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
 

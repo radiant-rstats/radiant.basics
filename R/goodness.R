@@ -1,6 +1,6 @@
 #' Evaluate if sample data for a categorical variable is consistent wtih a hypothesized distribution
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/goodness.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/goodness.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param var A categorical variable
@@ -60,7 +60,7 @@ goodness <- function(dataset, var, p = NULL,
 
 #' Summary method for the goodness function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/goodness} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/goodness} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{goodness}}
 #' @param check Show table(s) for the selected variable (var). "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "dev_perc" for the percentage difference between the observed and expected frequencies (i.e., (o - e) / e)
@@ -128,7 +128,7 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 
 #' Plot method for the goodness function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/goodness} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/goodness} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{goodness}}
 #' @param check Show plots for variable var. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), and "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e))

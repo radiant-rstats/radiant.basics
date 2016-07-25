@@ -22,7 +22,7 @@ A list of all variables used in goodness as an object of class goodness
 Evaluate if sample data for a categorical variable is consistent wtih a hypothesized distribution
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/goodness.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/goodness.html} for an example in Radiant
 }
 \examples{
 result <- goodness("newspaper", "Income")

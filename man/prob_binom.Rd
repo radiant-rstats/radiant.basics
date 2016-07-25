@@ -25,6 +25,6 @@ prob_binom(n, p, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 Probability calculator for the binomial distribution (binomial)
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
 

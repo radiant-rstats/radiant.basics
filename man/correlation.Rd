@@ -22,7 +22,7 @@ A list with all variables defined in the function as an object of class compare_
 Calculate correlations for two or more variables
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/correlation.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 }
 \examples{
 result <- correlation("diamonds", c("price","carat"))

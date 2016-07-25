@@ -15,7 +15,7 @@
 Plot method for the correlation function
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/correlation.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 }
 \examples{
 result <- correlation("diamonds",c("price","carat","clarity"))

@@ -1,6 +1,6 @@
 #' Compare proportions across groups
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/compare_props.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param var1 A grouping variable to split the data for comparisons
@@ -134,7 +134,7 @@ compare_props <- function(dataset, var1, var2,
 
 #' Summary method for the compare_props function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/compare_props.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{compare_props}}
 #' @param show Show additional output (i.e., chisq.value, df, and confidence interval)
@@ -205,7 +205,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 
 #' Plot method for the compare_props function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/compare_props.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{compare_props}}
 #' @param plots One or more plots of proportions ("bar" or "dodge")

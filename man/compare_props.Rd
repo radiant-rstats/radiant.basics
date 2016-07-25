@@ -33,7 +33,7 @@ A list of all variables defined in the function as an object of class compare_pr
 Compare proportions across groups
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/compare_props.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/compare_props.html} for an example in Radiant
 }
 \examples{
 result <- compare_props("titanic", "pclass", "survived")

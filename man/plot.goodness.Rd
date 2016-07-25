@@ -19,7 +19,7 @@
 Plot method for the goodness function
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/goodness} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/goodness} for an example in Radiant
 }
 \examples{
 result <- goodness("newspaper", "Income")

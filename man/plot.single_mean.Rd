@@ -22,7 +22,7 @@
 Plot method for the single_mean function
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/single_mean.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/single_mean.html} for an example in Radiant
 }
 \examples{
 result <- single_mean("diamonds","price", comp_value = 3500)

@@ -1,6 +1,6 @@
 #' Probability calculator for the normal distribution
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param mean Mean
 #' @param stdev Standard deviation
@@ -58,7 +58,7 @@ prob_norm <- function(mean,
 
 #' Plot method for the probability calculator (normal)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_norm}}
 #' @param type Probabilities or values
@@ -124,7 +124,7 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
 
 #' Summary method for the probability calculator function (normal)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_norm}}
 #' @param type Probabilities or values
@@ -210,7 +210,7 @@ summary.prob_norm <- function(object, type = "values",  ...) {
 
 #' Probability calculator for the t distribution
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param df Degrees of freedom
 #' @param mean Mean
@@ -274,7 +274,7 @@ prob_tdist <- function(df,
 
 #' Plot method for the probability calculator (t-distribution)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_tdist}}
 #' @param type Probabilities or values
@@ -338,7 +338,7 @@ plot.prob_tdist <- function(x, type = "values", shiny = FALSE, ...) {
 
 #' Summary method for the probability calculator function (t-distribution)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_tdist}}
 #' @param type Probabilities or values
@@ -425,7 +425,7 @@ summary.prob_tdist <- function(object, type = "values",  ...) {
 
 #' Probability calculator for the F-distribution
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param df1 Degrees of freedom
 #' @param df2 Degrees of freedom
@@ -489,7 +489,7 @@ prob_fdist <- function(df1, df2,
 
 #' Plot method for the probability calculator (F-distribution)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_fdist}}
 #' @param type Probabilities or values
@@ -566,7 +566,7 @@ plot.prob_fdist <- function(x, type = "values", shiny = FALSE, ...) {
 
 #' Summary method for the probability calculator function (F-distribution)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_fdist}}
 #' @param type Probabilities or values
@@ -654,7 +654,7 @@ summary.prob_fdist <- function(object, type = "values",  ...) {
 
 #' Probability calculator for the chi-squared distribution
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param df Degrees of freedom
 #' @param lb Lower bound (default is 0)
@@ -717,7 +717,7 @@ prob_chisq <- function(df,
 
 #' Plot method for the probability calculator (Chi-squared distribution)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_chisq}}
 #' @param type Probabilities or values
@@ -790,7 +790,7 @@ plot.prob_chisq <- function(x, type = "values", shiny = FALSE, ...) {
 
 #' Summary method for the probability calculator function (Chi-squared distribution)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_chisq}}
 #' @param type Probabilities or values
@@ -876,7 +876,7 @@ summary.prob_chisq <- function(object, type = "values",  ...) {
 
 #' Probability calculator for the uniform distribution
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param min Minmum value
 #' @param max Maximum value
@@ -942,7 +942,7 @@ prob_unif <- function(min,
 
 #' Plot method for the probability calculator (uniform)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_unif}}
 #' @param type Probabilities or values
@@ -1019,7 +1019,7 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
 
 #' Summary method for the probability calculator function (uniform)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_unif}}
 #' @param type Probabilities or values
@@ -1111,7 +1111,7 @@ summary.prob_unif <- function(object, type = "values",  ...) {
 
 #' Probability calculator for the binomial distribution (binomial)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param n Number of trials
 #' @param p Probability
@@ -1221,7 +1221,7 @@ prob_binom <- function(n,
 
 #' Plot method for the probability calculator function (binomial)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_binom}}
 #' @param type Probabilities or values
@@ -1288,7 +1288,7 @@ plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
 
 #' Summary method for the probability calculator function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_binom}}
 #' @param type Probabilities or values
@@ -1413,7 +1413,7 @@ summary.prob_binom <- function(object, type = "values",  ...) {
 
 #' Probability calculator for the discrete distribution (discrete)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param v Values
 #' @param p Probabilities
@@ -1554,7 +1554,7 @@ prob_disc <- function(v, p,
 
 #' Plot method for the probability calculator function (discrete)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_disc}}
 #' @param type Probabilities or values
@@ -1628,7 +1628,7 @@ plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
 
 #' Summary method for the probability calculator function (discrete)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_disc}}
 #' @param type Probabilities or values
@@ -1758,7 +1758,7 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 
 #' Probability calculator for the exponential distribution
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param rate Rate
 #' @param lb Lower bound (default is 0)
@@ -1818,7 +1818,7 @@ prob_expo <- function(rate,
 
 #' Plot method for the probability calculator (Exponential distribution)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_expo}}
 #' @param type Probabilities or values
@@ -1891,7 +1891,7 @@ plot.prob_expo <- function(x, type = "values", shiny = FALSE, ...) {
 
 #' Summary method for the probability calculator function (Exponential distribution)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_expo}}
 #' @param type Probabilities or values
@@ -1977,7 +1977,7 @@ summary.prob_expo <- function(object, type = "values",  ...) {
 
 #' Probability calculator for the poisson distribution
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param lambda Rate
 #' @param lb Lower bound (default is 0)
@@ -2083,7 +2083,7 @@ prob_pois <- function(lambda,
 
 #' Plot method for the probability calculator function (Poisson distribution)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_pois}}
 #' @param type Probabilities or values
@@ -2159,7 +2159,7 @@ plot.prob_pois <- function(x, type = "values", shiny = FALSE, ...) {
 
 #' Summary method for the probability calculator function (Poisson distribution)
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/prob_calc.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_pois}}
 #' @param type Probabilities or values

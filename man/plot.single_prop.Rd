@@ -22,7 +22,7 @@
 Plot method for the single_prop function
 }
 \details{
-See \url{http://vnijs.github.io/radiant/quant/single_prop.html} for an example in Radiant
+See \url{https://radiant-rstats.github.io/docs/basics/single_prop.html} for an example in Radiant
 }
 \examples{
 result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)

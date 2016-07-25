@@ -1,6 +1,6 @@
 #' Calculate correlations for two or more variables
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/correlation.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param vars Variables to include in the analysis
@@ -36,7 +36,7 @@ correlation <- function(dataset, vars,
 
 #' Summary method for the correlation function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/correlation.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{correlation}}
 #' @param cutoff Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0
@@ -110,7 +110,7 @@ summary.correlation_ <- function(object,
 
 #' Plot method for the correlation function
 #'
-#' @details See \url{http://vnijs.github.io/radiant/quant/correlation.html} for an example in Radiant
+#' @details See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{correlation}}
 #' @param ... further arguments passed to or from other methods.
