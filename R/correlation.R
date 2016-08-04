@@ -11,9 +11,9 @@
 #'
 #' @examples
 #' result <- correlation("diamonds", c("price","carat"))
-#' result <- correlation("diamonds", c("price","carat","clarity"))
-#' result <- correlation("diamonds", "price:table")
-#' result <- diamonds %>% correlation("price:table")
+#' result <- correlation("diamonds", c("price","carat","table"))
+#' result <- correlation("diamonds", "price:carat")
+#' result <- diamonds %>% correlation("price:carat")
 #'
 #' @seealso \code{\link{summary.correlation_}} to summarize results
 #' @seealso \code{\link{plot.correlation_}} to plot results
@@ -26,6 +26,7 @@ correlation <- function(dataset, vars,
 	## data.matrix as the last step in the chain is about 25% slower using
 	## system.time but results (using diamonds and mtcars) are identical
 	dat <- getdata(dataset, vars, filt = data_filter) %>%
+		select(which(!sapply(., class) %in% c("character", "factor"))) %>%
 		mutate_each(funs(as.numeric))
 
 	if (!is_string(dataset)) dataset <- "-----"
@@ -45,9 +46,9 @@ correlation <- function(dataset, vars,
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
-#' result <- correlation("diamonds",c("price","carat","clarity"))
+#' result <- correlation("diamonds",c("price","carat","table"))
 #' summary(result, cutoff = .3)
-#' diamonds %>% correlation("price:clarity") %>% summary
+#' diamonds %>% correlation("price:carat") %>% summary
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{plot.correlation_}} to plot results
@@ -116,9 +117,9 @@ summary.correlation_ <- function(object,
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
-#' result <- correlation("diamonds",c("price","carat","clarity"))
+#' result <- correlation("diamonds",c("price","carat","table"))
 #' plot(result)
-#' diamonds %>% correlation("price:clarity") %>% plot
+#' diamonds %>% correlation("price:carat") %>% plot
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{summary.correlation_}} to summarize results
@@ -142,7 +143,7 @@ plot.correlation_ <- function(x, ...) {
 	    cex <- 0.5/strwidth(rt)
 
 	    text(.5, .5, rt, cex = cex * abs(r))
-	    text(.8, .8, sig, cex = cex, col = 'blue')
+	    text(.8, .8, sig, cex = cex, col = "blue")
 	}
 	panel.smooth <- function(x, y) {
     points(jitter(x,.3), jitter(y,.3), pch = 16, col = ggplot2::alpha("black", 0.5))
@@ -151,6 +152,13 @@ plot.correlation_ <- function(x, ...) {
 		# abline(lm(y~x), col="red")
 		# lines(stats::lowess(y~x), col="blue")
 	}
-	object$dat %>% {if (is.null(.)) object else .} %>%
+
+	# if (is.null(object$dat)) {
+	# 	object$dat <- select(object, which(!sapply(object, class) %in% c("character", "factor"))) %>%
+	# 	  mutate_each(funs(as.numeric))
+	# }
+	# pairs(object$dat, lower.panel = panel.smooth, upper.panel = panel.plot)
+
+	object$dat %>% {if (is.null(.)) object else . } %>%
 	  pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
 }

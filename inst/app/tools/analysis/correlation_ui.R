@@ -28,7 +28,7 @@ cor_sum_inputs <- reactive({
 })
 
 output$ui_cor_vars <- renderUI({
-	isChar <- "character" == .getclass()
+	isChar <- .getclass() %in% c("character", "factor")
 	vars <- varnames()[!isChar]
   if (length(vars) == 0) return()
   selectInput(inputId = "cor_vars", label = "Select variables:", choices = vars,
@@ -36,15 +36,10 @@ output$ui_cor_vars <- renderUI({
  		multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
 })
 
-# observeEvent(input$cor_pause, {
-#   r_state[["cor_pause"]] <<- input$cor_pause
-# })
-
 output$ui_correlation <- renderUI({
   req(input$dataset)
   tagList(
   	wellPanel(
-      # checkboxInput("cor_test", "Test", state_init("cor_test", FALSE)),
       checkboxInput("cor_pause", "Pause estimation", state_init("cor_pause", FALSE)),
 	    uiOutput("ui_cor_vars"),
 		  selectInput(inputId = "cor_type", label = "Method:", choices = cor_type,
@@ -99,12 +94,9 @@ output$correlation <- renderUI({
 
 cor_available <- reactive({
   if (not_available(input$cor_vars) || length(input$cor_vars) < 2)
-    return("This analysis requires two or more variables or type numeric,\ninteger,or factor. If these variable types are not available\nplease select another dataset.\n\n" %>% suggest_data("salary"))
-
-  # req(input$cor_pause == FALSE)
+    return("This analysis requires two or more variables or type numeric,\ninteger,or date. If these variable types are not available\nplease select another dataset.\n\n" %>% suggest_data("salary"))
   "available"
 })
-
 
 .correlation <- reactive({
   req(input$cor_pause == FALSE, cancelOutput = TRUE)

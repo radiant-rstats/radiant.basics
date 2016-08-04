@@ -18,9 +18,9 @@ Plot method for the correlation function
 See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 }
 \examples{
-result <- correlation("diamonds",c("price","carat","clarity"))
+result <- correlation("diamonds",c("price","carat","table"))
 plot(result)
-diamonds \%>\% correlation("price:clarity") \%>\% plot
+diamonds \%>\% correlation("price:carat") \%>\% plot
 
 }
 \seealso{
