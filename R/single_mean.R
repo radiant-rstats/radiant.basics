@@ -35,11 +35,9 @@ single_mean <- function(dataset, var,
 	              conf.level = conf_lev) %>% tidy
 
 	dat_summary <-
-	  dat %>% summarise_each(funs(diff = mean_rm(.) - comp_value, se = serr(.), mean = mean_rm(.),
+	  dat %>% summarise_each(funs(diff = mean_rm(.) - comp_value, se = se(.), mean = mean_rm(.),
 	                         sd = sd_rm(.), n = length(na.omit(.))))
 	dat_summary$n_missing <- miss
-
-	dat <- na.omit(dat)
 
   as.list(environment()) %>% add_class("single_mean")
 }
