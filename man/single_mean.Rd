@@ -4,7 +4,7 @@
 \alias{single_mean}
 \title{Compare a sample mean to a population mean}
 \usage{
-single_mean(dataset, var, comp_value = 0.5, alternative = "two.sided",
+single_mean(dataset, var, comp_value = 0, alternative = "two.sided",
   conf_lev = 0.95, data_filter = "")
 }
 \arguments{
