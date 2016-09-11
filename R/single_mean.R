@@ -19,7 +19,7 @@
 #'
 #' @export
 single_mean <- function(dataset, var,
-                        comp_value = 0,
+                        comp_value = 0.5,
                         alternative = "two.sided",
                         conf_lev = .95,
                         data_filter = "") {

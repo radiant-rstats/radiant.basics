@@ -171,7 +171,7 @@ clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
                   stat_function(fun = dnorm, args = list(mean = mean(sstat[[1]]),
                                 sd = sd(sstat[[1]])), color = "black", size = 1)
 
-  withProgress(message = 'Making plots', value = 0, {
+  withProgress(message = 'Making plots', value = 1, {
     do.call(gridExtra::arrangeGrob, c(plots, list(ncol = min(2,length(plots)))))
   })
 
