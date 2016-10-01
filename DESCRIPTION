@@ -16,7 +16,7 @@ Imports:
     tidyr (>= 0.4.1),
     magrittr (>= 1.5),
     shiny (>= 0.14),
-    psych (>= 1.5.8),
+    psych (>= 1.6.6),
     import (>= 1.1.0),
     methods
 Suggests:
