@@ -96,7 +96,7 @@ summary.correlation_ <- function(object,
   print(cp[-1,-ncol(cp), drop = FALSE], quote = FALSE)
 
 	if (covar) {
-	  cvmat <- sshhr( cov(object$dat, method = object$type) )
+	  cvmat <- sshhr( cov(object$dat, method = object$method) )
 		cvr <- format(round(cvmat, dec))
 	  cvr[abs(cmat$r) < cutoff] <- ""
 		ltmat <- lower.tri(cvr)
@@ -134,7 +134,7 @@ plot.correlation_ <- function(x, ...) {
 	panel.plot <- function(x, y) {
 	    usr <- par("usr"); on.exit(par(usr))
 	    par(usr = c(0, 1, 0, 1))
-	    ct <- cor.test(x,y, method = object$type)
+	    ct <- sshhr(cor.test(x,y, method = object$method))
 	    sig <- symnum(ct$p.value, corr = FALSE, na = FALSE,
 	                  cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
 	                  symbols = c("***", "**", "*", ".", " "))

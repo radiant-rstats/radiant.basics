@@ -1,7 +1,7 @@
 ###############################
 # Correlation
 ###############################
-cor_type <- c("Pearson" = "pearson", "Spearman" = "spearman", "Kendall" = "kendall")
+cor_method <- c("Pearson" = "pearson", "Spearman" = "spearman", "Kendall" = "kendall")
 
 # list of function arguments
 cor_args <- as.list(formals(correlation))
@@ -42,8 +42,8 @@ output$ui_correlation <- renderUI({
   	wellPanel(
       checkboxInput("cor_pause", "Pause estimation", state_init("cor_pause", FALSE)),
 	    uiOutput("ui_cor_vars"),
-		  selectInput(inputId = "cor_type", label = "Method:", choices = cor_type,
-  	  	selected = state_single("cor_type", cor_type, "pearson"), multiple = FALSE),
+		  selectInput(inputId = "cor_method", label = "Method:", choices = cor_method,
+  	  	selected = state_single("cor_method", cor_method, "pearson"), multiple = FALSE),
 		  conditionalPanel(condition = "input.tabs_correlation == 'Summary'",
      		numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1,
     			value = state_init("cor_cutoff",0), step = 0.05),
