@@ -1139,6 +1139,7 @@ prob_binom <- function(n,
 	if (is.na(lb) || lb < 0) {
 		p_elb <- p_lb <- lb <- NA
 	} else {
+		lb <- as_integer(lb)
 		if (lb > n) lb <- n
 		p_elb <- dbinom(lb, n, p) %>% round(dec)
 		p_lelb <- pbinom(lb, n, p) %>% round(dec)
@@ -1151,6 +1152,7 @@ prob_binom <- function(n,
 	if (is.na(ub) || ub < 0) {
 		p_eub <- p_ub <- ub <- NA
 	} else {
+		ub <- as_integer(ub)
 		if (ub > n) ub <- n
 		p_eub <- dbinom(ub, n, p) %>% round(dec)
 		p_leub <- pbinom(ub, n, p) %>% round(dec)
