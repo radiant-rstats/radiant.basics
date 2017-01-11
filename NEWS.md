@@ -1,4 +1,4 @@
-# CHANGES IN radiant.basics VERSION 0.6.3 (unreleased)
+# CHANGES IN radiant.basics VERSION 0.7
 
 ## NEW FEATURES
 
