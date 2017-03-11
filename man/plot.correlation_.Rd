@@ -4,10 +4,14 @@
 \alias{plot.correlation_}
 \title{Plot method for the correlation function}
 \usage{
-\method{plot}{correlation_}(x, ...)
+\method{plot}{correlation_}(x, n = 1000, jit = 0.3, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{correlation}}}
+
+\item{n}{Number of datapoints to use in the plot (1000 is default). Use -1 for all observations}
+
+\item{jit}{Level of jittering to apply to scatter plot. Default is .3. Use 0 for no jittering}
 
 \item{...}{further arguments passed to or from other methods.}
 }
