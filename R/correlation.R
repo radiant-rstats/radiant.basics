@@ -120,6 +120,8 @@ summary.correlation_ <- function(object,
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{correlation}}
+#' @param n Number of datapoints to use in the plot (1000 is default). Use -1 for all observations
+#' @param jit Level of jittering to apply to scatter plot. Default is .3. Use 0 for no jittering
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
@@ -130,8 +132,10 @@ summary.correlation_ <- function(object,
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{summary.correlation_}} to summarize results
 #'
+#' @importFrom ggplot2 alpha
+#'
 #' @export
-plot.correlation_ <- function(x, ...) {
+plot.correlation_ <- function(x, n = 1000, jit = .3, ...) {
 
 	object <- x; rm(x)
 
@@ -152,7 +156,13 @@ plot.correlation_ <- function(x, ...) {
 	    text(.8, .8, sig, cex = cex, col = "blue")
 	}
 	panel.smooth <- function(x, y) {
-    points(jitter(x,.3), jitter(y,.3), pch = 16, col = ggplot2::alpha("black", 0.5))
+		if(n > 0 & length(x) > n) {
+			ind <- sample(1:length(x), n)
+			x <- x[ind]
+			y <- y[ind]
+		}
+    points(jitter(x,jit), jitter(y,jit), pch = 16, 
+    	col = ggplot2::alpha("black", 0.5))
     ## uncomment the lines below if you want linear and loess lines
     ## in the scatter plot matrix
 		# abline(lm(y~x), col="red")
@@ -166,5 +176,6 @@ plot.correlation_ <- function(x, ...) {
 	# pairs(object$dat, lower.panel = panel.smooth, upper.panel = panel.plot)
 
 	object$dat %>% {if (is.null(.)) object else . } %>%
+		# {if(n > 0 & nrow(.) > n) dplyr::sample_n(., n) else .} %>%
 	  pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
 }

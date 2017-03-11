@@ -2,6 +2,8 @@
 
 ## NEW FEATURES
 
+- Allow sampling data for correlation plot. Default is 1,000 obs
+
 ## BUG FIXES
 
 - Fixed correlation dropdown. Correlations did not change when method was changed (thanks @Fiordmaster)
