@@ -29,7 +29,7 @@ correlation <- function(dataset, vars,
 		select(which(!sapply(., class) %in% c("character", "factor"))) %>%
 		mutate_each(funs(as.numeric))
 
-	if (!is_string(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
 	## using correlation_ to avoid print method conflict with nlme
   as.list(environment()) %>% add_class("correlation_")

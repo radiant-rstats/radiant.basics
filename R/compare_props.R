@@ -45,7 +45,7 @@ compare_props <- function(dataset, var1, var2,
 
 	vars <- c(var1, var2)
 	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
-	if (!is_string(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
 	lv <- levels(dat[[var2]])
 	if (levs != "") {

@@ -25,7 +25,7 @@ single_mean <- function(dataset, var,
                         data_filter = "") {
 
 	dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE)
-	if (!is_string(dataset)) dataset <- "-----"
+	if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## removing any missing values
 	miss <- n_missing(dat)

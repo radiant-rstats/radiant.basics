@@ -21,7 +21,7 @@ cross_tabs <- function(dataset, var1, var2,
                        data_filter = "") {
 
 	dat <- getdata(dataset, c(var1, var2), filt = data_filter)
-  if (!is_string(dataset)) dataset <- "-----"
+  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## Use simulated p-values when
   # http://stats.stackexchange.com/questions/100976/n-1-pearsons-chi-square-in-r

@@ -20,7 +20,7 @@ goodness <- function(dataset, var, p = NULL,
                      data_filter = "") {
 
 	dat <- getdata(dataset, var, filt = data_filter)
-  if (!is_string(dataset)) dataset <- "-----"
+  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## creating and cleaning up the table
 	tab <- table(dat[[var]])

@@ -34,7 +34,8 @@ compare_means <- function(dataset, var1, var2,
 
 	vars <- c(var1, var2)
 	dat <- getdata(dataset, vars, filt = data_filter)
-	if (!is_string(dataset)) dataset <- "-----"
+	# if (!is_string(dataset)) dataset <- deparse(substitute(dataset))
+  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
 	## in case : was used for var2
 	vars <- colnames(dat)
