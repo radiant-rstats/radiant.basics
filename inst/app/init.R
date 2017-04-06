@@ -20,6 +20,9 @@ options(radiant.url.list = r_url_list); rm(r_url_list)
 options(radiant.basics_ui =
 	tagList(
 	  navbarMenu("Basics",
+      tags$head(
+        tags$script(src = "www_basics/js/run_return.js")
+      ),
 	    "Probability",
 	    tabPanel("Probability calculator", uiOutput("prob_calc")),
 	    tabPanel("Central Limit Theorem", uiOutput("clt")),
