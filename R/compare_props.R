@@ -55,7 +55,7 @@ compare_props <- function(dataset, var1, var2,
 		}
 	}
 
-  ## check there is variation in the data
+  ## check if there is variation in the data
   if (any(summarise_each(dat, funs(does_vary)) == FALSE))
   	return("One or more selected variables show no variation. Please select other variables." %>%
   	       add_class("compare_props"))
@@ -261,6 +261,6 @@ plot.compare_props <- function(x,
 			 		ylab(paste0("Proportions per level of ", v1))
 	}
 
-	sshhr( do.call(gridExtra::arrangeGrob, c(plot_list, list(ncol = 1))) ) %>%
+	sshhr( do.call(gridExtra::grid.arrange, c(plot_list, list(ncol = 1))) ) %>%
  	  { if (shiny) . else print(.) }
 }

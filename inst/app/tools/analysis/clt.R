@@ -170,7 +170,7 @@ clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
                                 sd = sd(sstat[[1]])), color = "black", size = 1)
 
   withProgress(message = 'Making plots', value = 1, {
-    do.call(gridExtra::arrangeGrob, c(plots, list(ncol = min(2,length(plots)))))
+    do.call(gridExtra::grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
   })
 
 }
