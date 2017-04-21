@@ -182,6 +182,7 @@ summary.cross_tabs <- function(object,
 #' @param x Return value from \code{\link{cross_tabs}}
 #' @param check Show plots for variables var1 and var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "row_perc", "col_perc", and "perc" for row, column, and table percentages respectively
 #' @param shiny Did the function call originate inside a shiny app
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -196,6 +197,7 @@ summary.cross_tabs <- function(object,
 plot.cross_tabs <- function(x,
                             check = "",
                             shiny = FALSE,
+                            custom = FALSE,
                             ...) {
 
 	object <- x; rm(x)
@@ -262,19 +264,6 @@ plot.cross_tabs <- function(x,
 		         x = object$var2, y = ""))
 	}
 
-	# if ("dev_perc" %in% check) {
- #  	tab <- as.data.frame(object$cst$deviation, check.names = FALSE)
-	# 	colnames(tab)[1:2] <- c(object$var1, object$var2)
-	# 	ymax <- max(abs(tab$Freq))
-	# 	ylim <- if (ymax < 1) c(-1,1) else c(-ymax, ymax)
-	# 	plot_list[['dev_prec']] <-
-	# 	  ggplot(tab, aes_string(x = object$var1, y = "Freq", fill = object$var2)) +
-	# 	    geom_bar(stat="identity", position = "dodge", alpha = .7) +
-	# 	    labs(list(title = paste("Deviation % for ",object$var2," versus ",object$var1, sep = ""),
-	# 	         x = object$var1, y = "")) +
-	# 	    scale_y_continuous(labels = scales::percent, limits = ylim)
- #  }
-
 	if ("row_perc" %in% check) {
 		plot_list[['row_perc']] <-
 	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
@@ -313,6 +302,9 @@ plot.cross_tabs <- function(x,
 			    ggtitle("Table percentages")
 	}
 
-	sshhr( do.call(gridExtra::grid.arrange, c(plot_list, list(ncol = 1))) ) %>%
-	  { if (shiny) . else print(.) }
+  if (custom)
+    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
+
+	sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
+	  {if (shiny) . else print(.)}
 }

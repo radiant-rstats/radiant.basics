@@ -170,12 +170,13 @@ cp_available <- reactive({
 })
 
 observeEvent(input$compare_props_report, {
+  if (input$cp_var1 == "None" || input$cp_var2 == "None") return(invisible())
   figs <- FALSE
   outputs <- c("summary")
   inp_out <- list(list(show = input$cp_show), "")
   if (length(input$cp_plots) > 0) {
     outputs <- c("summary","plot")
-    inp_out[[2]] <- list(plots = input$cp_plots)
+    inp_out[[2]] <- list(plots = input$cp_plots, custom = FALSE)
     figs <- TRUE
   }
 

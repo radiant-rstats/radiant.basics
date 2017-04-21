@@ -62,11 +62,10 @@ prob_norm <- function(mean,
 #'
 #' @param x Return value from \code{\link{prob_norm}}
 #' @param type Probabilities or values
-#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
+plot.prob_norm <- function(x, type = "values", ...) {
 
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
@@ -119,7 +118,7 @@ plot.prob_norm <- function(x, type = "values", shiny = FALSE, ...) {
 	  geom_vline(xintercept = dnorm_lines, color = 'black', linetype = 'dashed', size = .5) +
 	  xlab("") + ylab("")
 
-   if (shiny) plt else print(plt)
+   sshhr(plt)
 }
 
 #' Summary method for the probability calculator function (normal)
@@ -278,11 +277,10 @@ prob_tdist <- function(df,
 #'
 #' @param x Return value from \code{\link{prob_tdist}}
 #' @param type Probabilities or values
-#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-plot.prob_tdist <- function(x, type = "values", shiny = FALSE, ...) {
+plot.prob_tdist <- function(x, type = "values", ...) {
 
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
@@ -332,7 +330,7 @@ plot.prob_tdist <- function(x, type = "values", shiny = FALSE, ...) {
 	  geom_vline(xintercept = dt_lines, color = 'black', linetype = 'dashed', size = .5) +
 	  xlab("") + ylab("")
 
-   if (shiny) plt else print(plt)
+   sshhr(plt)
 }
 
 
@@ -493,11 +491,10 @@ prob_fdist <- function(df1, df2,
 #'
 #' @param x Return value from \code{\link{prob_fdist}}
 #' @param type Probabilities or values
-#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-plot.prob_fdist <- function(x, type = "values", shiny = FALSE, ...) {
+plot.prob_fdist <- function(x, type = "values", ...) {
 
 
 	mess <- paste0("mess_",type)
@@ -560,7 +557,7 @@ plot.prob_fdist <- function(x, type = "values", shiny = FALSE, ...) {
 	  geom_vline(xintercept = vlines, color = 'black', linetype = 'dashed', size = .5) +
 	  xlab("") + ylab("")
 
-   if (shiny) plt else print(plt)
+   sshhr(plt)
 }
 
 
@@ -721,11 +718,10 @@ prob_chisq <- function(df,
 #'
 #' @param x Return value from \code{\link{prob_chisq}}
 #' @param type Probabilities or values
-#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-plot.prob_chisq <- function(x, type = "values", shiny = FALSE, ...) {
+plot.prob_chisq <- function(x, type = "values", ...) {
 
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
@@ -784,7 +780,7 @@ plot.prob_chisq <- function(x, type = "values", shiny = FALSE, ...) {
 	  geom_vline(xintercept = vlines, color = 'black', linetype = 'dashed', size = .5) +
 	  xlab("") + ylab("")
 
-   if (shiny) plt else print(plt)
+   sshhr(plt)
 }
 
 
@@ -946,11 +942,10 @@ prob_unif <- function(min,
 #'
 #' @param x Return value from \code{\link{prob_unif}}
 #' @param type Probabilities or values
-#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
+plot.prob_unif <- function(x, type = "values", ...) {
 
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
@@ -995,26 +990,17 @@ plot.prob_unif <- function(x, type = "values", shiny = FALSE, ...) {
 
 	## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
 	## and R Graphics Cookbook
-	# plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
 	plt <- ggplot(data.frame(x=limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub), aes_string(x="x")) +
-	  # stat_function(fun=dunif, args = list(min = min, max = max)) +
 	  stat_function(fun=dunif_limit, geom="area", fill="blue", alpha=0.2, n = 501) +
 	  stat_function(fun=dunif_lb, geom="area", fill="red", alpha=0.2, n = 501) +
 	  stat_function(fun=dunif_ub, geom="area", fill="red", alpha=0.2, n = 501) +
 	  geom_vline(xintercept = dunif_lines, color = 'black', linetype = 'dashed', size = .5) +
-	  # geom_vline(xintercept = c(min,max), color = 'black', linetype = 'solid', size = .5) +
-	  # geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = dunif(x[1], x[1], x[2]))) +
 	  geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = y[1])) +
-	  # geom_segment(aes(x = x[2], y = 0, xend = x[2], yend = dunif(x[1], x[1], x[2]))) +
 	  geom_segment(aes(x = x[2], y = 0, xend = x[2], yend = y[2])) +
-	  # geom_segment(aes(x = x[1], y = dunif(x[1], x[1], x[2]), xend = x[2], yend = dunif(x[1], x[1], x[2]))) +
 	  geom_segment(aes(x = x[1], y = y[1], xend = x[2], yend = y[2])) +
-	  # geom_segment(aes(x = x[1], y = 0, xend = x[1] - abs(.05*(x[2]-x[1])), yend = 0)) +
-	  # geom_segment(aes(x = x[2], y = 0, xend = x[2] + abs(.05*(x[2]-x[1])), yend = 0)) +
-	  # geom_rect(aes(ymin = 0, ymax = y[1], xmin = lb, xmax = ub), fill = "blue", alpha = 0.2) +
-	  xlab("") + ylab("")
+	  labs(x = "", y = "")
 
-   if (shiny) plt else print(plt)
+   sshhr(plt)
 }
 
 #' Summary method for the probability calculator function (uniform)
@@ -1227,11 +1213,10 @@ prob_binom <- function(n,
 #'
 #' @param x Return value from \code{\link{prob_binom}}
 #' @param type Probabilities or values
-#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
+plot.prob_binom <- function(x, type = "values", ...) {
 
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
@@ -1285,7 +1270,7 @@ plot.prob_binom <- function(x, type = "values", shiny = FALSE, ...) {
 	  theme(legend.position="none") +
 	  scale_x_discrete(breaks = breaks)
 
-   if (shiny) plt else print(plt)
+   sshhr(plt)
 }
 
 #' Summary method for the probability calculator function
@@ -1560,7 +1545,6 @@ prob_disc <- function(v, p,
 #'
 #' @param x Return value from \code{\link{prob_disc}}
 #' @param type Probabilities or values
-#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -1568,7 +1552,7 @@ prob_disc <- function(v, p,
 #' plot(result, type = "probs")
 #'
 #' @export
-plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
+plot.prob_disc <- function(x, type = "values", ...) {
 
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
@@ -1625,7 +1609,7 @@ plot.prob_disc <- function(x, type = "values", shiny = FALSE, ...) {
 	  theme(legend.position="none") +
 	  scale_x_discrete(breaks = breaks)
 
-   if (shiny) plt else print(plt)
+   sshhr(plt)
 }
 
 #' Summary method for the probability calculator function (discrete)
@@ -1824,11 +1808,10 @@ prob_expo <- function(rate,
 #'
 #' @param x Return value from \code{\link{prob_expo}}
 #' @param type Probabilities or values
-#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-plot.prob_expo <- function(x, type = "values", shiny = FALSE, ...) {
+plot.prob_expo <- function(x, type = "values", ...) {
 
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
@@ -1887,7 +1870,7 @@ plot.prob_expo <- function(x, type = "values", shiny = FALSE, ...) {
 	  geom_vline(xintercept = vlines, color = 'black', linetype = 'dashed', size = .5) +
 	  xlab("") + ylab("")
 
-   if (shiny) plt else print(plt)
+   sshhr(plt)
 }
 
 
@@ -2089,11 +2072,10 @@ prob_pois <- function(lambda,
 #'
 #' @param x Return value from \code{\link{prob_pois}}
 #' @param type Probabilities or values
-#' @param shiny Did the function call originate inside a shiny app
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-plot.prob_pois <- function(x, type = "values", shiny = FALSE, ...) {
+plot.prob_pois <- function(x, type = "values", ...) {
 
 	mess <- paste0("mess_",type)
 	if (!is.null(x[[mess]])) return(invisible())
@@ -2156,7 +2138,7 @@ plot.prob_pois <- function(x, type = "values", shiny = FALSE, ...) {
 	  theme(legend.position="none") +
 	  scale_x_discrete(breaks = breaks)
 
-   if (shiny) plt else print(plt)
+   sshhr(plt)
 }
 
 #' Summary method for the probability calculator function (Poisson distribution)

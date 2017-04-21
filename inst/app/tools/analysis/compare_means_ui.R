@@ -188,12 +188,13 @@ cm_available <- reactive({
 })
 
 observeEvent(input$compare_means_report, {
+  if (input$cm_var1 == "None") return(invisible())
   figs <- FALSE
   outputs <- c("summary")
   inp_out <- list(list(show = input$cm_show), "")
   if (length(input$cm_plots) > 0) {
     outputs <- c("summary","plot")
-    inp_out[[2]] <- list(plots = input$cm_plots)
+    inp_out[[2]] <- list(plots = input$cm_plots, custom = FALSE)
     figs <- TRUE
   }
   update_report(inp_main = clean_args(cm_inputs(), cm_args),

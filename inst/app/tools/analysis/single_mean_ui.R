@@ -33,7 +33,6 @@ output$ui_single_mean <- renderUI({
       wellPanel(
         selectizeInput(inputId = "sm_plots", label = "Select plots:",
           choices = sm_plots,
-          # selected = state_single("sm_plots", sm_plots, "hist"),
           selected = state_init("sm_plots", "hist"),
           multiple = TRUE,
           options = list(plugins = list('remove_button', 'drag_drop')))
@@ -43,7 +42,6 @@ output$ui_single_mean <- renderUI({
  	   	uiOutput("ui_sm_var"),
   	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
   	  	choices = sm_alt,
-        # selected = state_single("sm_alternative", sm_alt, sm_args$alternative),
         selected = state_init("sm_alternative", sm_args$alternative),
   	  	multiple = FALSE),
     	sliderInput('sm_conf_lev',"Confidence level:", min = 0.85, max = 0.99,
@@ -120,13 +118,15 @@ sm_available <- reactive({
 })
 
 observeEvent(input$single_mean_report, {
-  outputs <- c("summary","plot")
-  inp_out <- list(plots = input$sm_plots) %>% list("",.)
-  figs <- TRUE
+  if (input$sm_var == "None") return(invisible())
   if (length(input$sm_plots) == 0) {
     figs <- FALSE
     outputs <- c("summary")
     inp_out <- list("","")
+  } else {
+    outputs <- c("summary","plot")
+    inp_out <- list("", list(plots = input$sm_plots, custom = FALSE))
+    figs <- TRUE
   }
   update_report(inp_main = clean_args(sm_inputs(), sm_args),
                 fun_name = "single_mean", inp_out = inp_out,

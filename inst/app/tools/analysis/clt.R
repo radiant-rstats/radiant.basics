@@ -117,9 +117,6 @@ output$clt <- renderUI({
   if(is.na(input$clt_binom_prob) || input$clt_binom_prob < 0.01)
     return("Please choose a probability between 0 and 1 for the binomial distribution.")
 
-  ## creating a dependency so a new set of draw is generated every time the button is pressed
-  # input$clt_resample
-
 	clt(input$clt_dist, input$clt_n, input$clt_m, input$clt_stat)
 })
 
@@ -170,7 +167,7 @@ clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
                                 sd = sd(sstat[[1]])), color = "black", size = 1)
 
   withProgress(message = 'Making plots', value = 1, {
-    do.call(gridExtra::grid.arrange, c(plots, list(ncol = min(2,length(plots)))))
+    gridExtra::grid.arrange(grobs =  plots, ncol = min(2,length(plots)))
   })
 
 }

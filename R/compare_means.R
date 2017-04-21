@@ -34,7 +34,6 @@ compare_means <- function(dataset, var1, var2,
 
 	vars <- c(var1, var2)
 	dat <- getdata(dataset, vars, filt = data_filter)
-	# if (!is_string(dataset)) dataset <- deparse(substitute(dataset))
   if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
 	## in case : was used for var2
@@ -60,7 +59,6 @@ compare_means <- function(dataset, var1, var2,
 
 	## resetting option to independent if the number of observations is unequal
   ## summary on factor gives counts
-
   if (samples == "paired") {
     if (summary(dat[["variable"]]) %>% {max(.) != min(.)})
       samples <- "independent (obs. per level unequal)"
@@ -223,11 +221,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
 #' @seealso \code{\link{summary.compare_means}} to summarize results
 #'
 #' @export
-plot.compare_means <- function(x,
-                               plots = "scatter",
-                               shiny = FALSE,
-                               custom = FALSE,
-                               ...) {
+plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FALSE, ...) {
 
 	if (is.character(x)) return(x)
 	object <- x; rm(x)
@@ -274,17 +268,14 @@ plot.compare_means <- function(x,
 	}
 
 	if ("scatter" %in% plots) {
-    # ymax <- max(dat[[v2]]) %>% {if (. < 0) 0 else .}
-    # ymin <- min(dat[[v2]]) %>% {if (. > 0) 0 else .}
 		plot_list[[which("scatter" == plots)]] <-
 		  visualize(dat, xvar = v1, yvar = v2, type = "scatter", check = "jitter", alpha = .3, custom = TRUE) +
 	 		xlab(var1) + ylab(paste0(var2, " (mean)"))
   }
 
- if (custom)
-   if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
+  if (custom)
+    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
-	sshhr( do.call(gridExtra::grid.arrange, c(plot_list, list(ncol = 1))) ) %>%
+	sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
  	  { if (shiny) . else print(.) }
-
 }

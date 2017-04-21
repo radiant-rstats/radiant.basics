@@ -4,14 +4,12 @@
 \alias{plot.prob_tdist}
 \title{Plot method for the probability calculator (t-distribution)}
 \usage{
-\method{plot}{prob_tdist}(x, type = "values", shiny = FALSE, ...)
+\method{plot}{prob_tdist}(x, type = "values", ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{prob_tdist}}}
 
 \item{type}{Probabilities or values}
-
-\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

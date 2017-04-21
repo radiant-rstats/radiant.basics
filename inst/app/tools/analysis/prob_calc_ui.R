@@ -481,7 +481,7 @@ pc_available <- reactive({
 .plot_prob_calc <- reactive({
   if (pc_available() != "available") return(pc_available())
   type <- if (is.null(input$pc_type)) "values" else input$pc_type
-  plot(.prob_calc(), type = type, shiny = TRUE)
+  plot(.prob_calc(), type = type)
 })
 
 observeEvent(input$prob_calc_report, {

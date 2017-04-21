@@ -4,14 +4,12 @@
 \alias{plot.prob_binom}
 \title{Plot method for the probability calculator function (binomial)}
 \usage{
-\method{plot}{prob_binom}(x, type = "values", shiny = FALSE, ...)
+\method{plot}{prob_binom}(x, type = "values", ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{prob_binom}}}
 
 \item{type}{Probabilities or values}
-
-\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

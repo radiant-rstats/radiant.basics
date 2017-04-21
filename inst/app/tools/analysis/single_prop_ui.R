@@ -126,13 +126,15 @@ sp_available <- reactive({
 })
 
 observeEvent(input$single_prop_report, {
-  outputs <- c("summary","plot")
-  inp_out <- list(plots = input$sp_plots) %>% list("",.)
-  figs <- TRUE
+  if (input$sp_var == "None") return(invisible())
   if (length(input$sp_plots) == 0) {
     figs <- FALSE
     outputs <- c("summary")
     inp_out <- list("","")
+  } else {
+    outputs <- c("summary","plot")
+    inp_out <- list("", list(plots = input$sp_plots, custom = FALSE))
+    figs <- TRUE
   }
   update_report(inp_main = clean_args(sp_inputs(), sp_args),
                 fun_name = "single_prop", inp_out = inp_out,

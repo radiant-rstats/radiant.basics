@@ -99,13 +99,18 @@ gd_available <- reactive({
 })
 
 observeEvent(input$goodness_report, {
-	outputs <- inp_out <- character(0)
-	figs <- FALSE
+  if (input$gd_var == "None") return(invisible())
+  inp_out <- list("","")
 	if (length(input$gd_check) > 0) {
 		outputs <- c("summary","plot")
-		inp_out <- list(check = input$gd_check) %>% list(.,.)
+    inp_out[[1]] <- list(check = input$gd_check)
+    inp_out[[2]] <- list(check = input$gd_check, custom = FALSE)
 		figs <- TRUE
-	}
+	} else {
+    outputs <- "summary" 
+    inp_out[[1]] <- list(check = "")
+    figs <- FALSE
+  }
 
 	update_report(inp_main = clean_args(gd_inputs(), gd_args),
 	              inp_out = inp_out,

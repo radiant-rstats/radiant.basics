@@ -4,14 +4,12 @@
 \alias{plot.prob_unif}
 \title{Plot method for the probability calculator (uniform)}
 \usage{
-\method{plot}{prob_unif}(x, type = "values", shiny = FALSE, ...)
+\method{plot}{prob_unif}(x, type = "values", ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{prob_unif}}}
 
 \item{type}{Probabilities or values}
-
-\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

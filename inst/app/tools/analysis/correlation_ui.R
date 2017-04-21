@@ -114,8 +114,10 @@ cor_available <- reactive({
 })
 
 observeEvent(input$correlation_report, {
+  if (length(input$cor_vars) < 2) return(invisible())
   inp_out <- list("","")
   inp_out[[1]] <- clean_args(cor_sum_inputs(), cor_sum_args[-1])
+  inp_out[[2]] <- list(n = 1000)
   update_report(inp_main = clean_args(cor_inputs(), cor_args),
                 fun_name = "correlation",
                 inp_out = inp_out,

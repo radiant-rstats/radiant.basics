@@ -169,13 +169,6 @@ plot.correlation_ <- function(x, n = 1000, jit = .3, ...) {
 		# lines(stats::lowess(y~x), col="blue")
 	}
 
-	# if (is.null(object$dat)) {
-	# 	object$dat <- select(object, which(!sapply(object, class) %in% c("character", "factor"))) %>%
-	# 	  mutate_each(funs(as.numeric))
-	# }
-	# pairs(object$dat, lower.panel = panel.smooth, upper.panel = panel.plot)
-
 	object$dat %>% {if (is.null(.)) object else . } %>%
-		# {if(n > 0 & nrow(.) > n) dplyr::sample_n(., n) else .} %>%
 	  pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
 }

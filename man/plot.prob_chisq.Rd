@@ -4,14 +4,12 @@
 \alias{plot.prob_chisq}
 \title{Plot method for the probability calculator (Chi-squared distribution)}
 \usage{
-\method{plot}{prob_chisq}(x, type = "values", shiny = FALSE, ...)
+\method{plot}{prob_chisq}(x, type = "values", ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{prob_chisq}}}
 
 \item{type}{Probabilities or values}
-
-\item{shiny}{Did the function call originate inside a shiny app}
 
 \item{...}{further arguments passed to or from other methods}
 }

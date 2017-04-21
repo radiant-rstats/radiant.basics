@@ -106,13 +106,18 @@ ct_available <- reactive({
 })
 
 observeEvent(input$cross_tabs_report, {
-	outputs <- inp_out <- character(0)
-	figs <- FALSE
+  if (input$ct_var1 == "None" || input$ct_var2 == "None") return(invisible())
+  inp_out <- list("","")
 	if (length(input$ct_check) > 0) {
 		outputs <- c("summary","plot")
-		inp_out <- list(check = input$ct_check) %>% list(.,.)
+    inp_out[[1]] <- list(check = input$ct_check)
+    inp_out[[2]] <- list(check = input$ct_check, custom = FALSE)
 		figs <- TRUE
-	}
+	} else {
+    outputs <- "summary"
+    inp_out[[1]] <- list(check = "")
+    figs <- FALSE
+  }
 
 	update_report(inp_main = clean_args(ct_inputs(), ct_args),
 	              inp_out = inp_out,

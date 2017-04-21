@@ -16,6 +16,9 @@ r_url_list[["Correlation"]] <-
   list("tabs_correlation" = list("Summary" = "basics/correlation/", "Plot" = "basics`/correlation/plot/"))
 options(radiant.url.list = r_url_list); rm(r_url_list)
 
+## try http://127.0.0.1:3174/?url=basics/goodness/plot/&SSUID=local
+## http://127.0.0.1:7407/?url=basics/compare-means/plot/&SSUID=local-a82049
+
 ## design menu
 options(radiant.basics_ui =
 	tagList(
