@@ -15,4 +15,3 @@ Newspaper readership
 Newspaper readership data for 580 consumers. Description provided in attr(newspaper,"description")
 }
 \keyword{datasets}
-

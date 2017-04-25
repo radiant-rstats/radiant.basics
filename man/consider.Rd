@@ -15,4 +15,3 @@ Car brand consideration
 Survey data of consumer purchase intentions. Description provided in attr(consider,"description")
 }
 \keyword{datasets}
-

@@ -27,7 +27,7 @@ single_prop <- function(dataset, var,
                         conf_lev = .95,
                         data_filter = "") {
 
-	dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE) %>% mutate_each(funs(as.factor))
+	dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE) %>% mutate_all(funs(as.factor))
 	if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## removing any missing values

@@ -38,4 +38,3 @@ single_mean("diamonds","price")
 
 \code{\link{plot.single_mean}} to plot results
 }
-

@@ -34,4 +34,3 @@ plot(result, plots = c("bar","dodge"))
 
 \code{\link{summary.compare_props}} to summarize results
 }
-

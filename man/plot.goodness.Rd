@@ -34,4 +34,3 @@ newspaper \%>\% goodness("Income") \%>\% plot(c("observed","expected"))
 
 \code{\link{summary.goodness}} to summarize results
 }
-

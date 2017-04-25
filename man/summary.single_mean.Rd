@@ -30,4 +30,3 @@ diamonds \%>\% single_mean("price") \%>\% summary
 
 \code{\link{plot.single_mean}} to plot results
 }
-

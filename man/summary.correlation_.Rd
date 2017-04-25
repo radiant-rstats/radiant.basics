@@ -35,4 +35,3 @@ diamonds \%>\% correlation("price:carat") \%>\% summary
 
 \code{\link{plot.correlation_}} to plot results
 }
-

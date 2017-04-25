@@ -36,4 +36,3 @@ plot(result, plots = c("hist","simulate"))
 
 \code{\link{summary.single_prop}} to summarize the results
 }
-

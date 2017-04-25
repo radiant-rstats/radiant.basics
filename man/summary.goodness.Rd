@@ -32,4 +32,3 @@ newspaper \%>\% goodness("Income", "1/3 2/3") \%>\% summary("observed")
 
 \code{\link{plot.goodness}} to plot results
 }
-

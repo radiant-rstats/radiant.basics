@@ -44,7 +44,7 @@ compare_props <- function(dataset, var1, var2,
 # data_filter = ""
 
 	vars <- c(var1, var2)
-	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_each(funs(as.factor))
+	dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_all(funs(as.factor))
 	if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
 	lv <- levels(dat[[var2]])
@@ -56,7 +56,7 @@ compare_props <- function(dataset, var1, var2,
 	}
 
   ## check if there is variation in the data
-  if (any(summarise_each(dat, funs(does_vary)) == FALSE))
+  if (any(summarise_all(dat, funs(does_vary)) == FALSE))
   	return("One or more selected variables show no variation. Please select other variables." %>%
   	       add_class("compare_props"))
 

@@ -4,6 +4,7 @@
 \name{radiant.basics}
 \alias{radiant.basics}
 \alias{radiant.basics-package}
+\alias{radiant.basics}
 \title{radiant.basics}
 \usage{
 radiant.basics()
@@ -16,4 +17,3 @@ Launch Radiant in the default browser
 \details{
 See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
 }
-

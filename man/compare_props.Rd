@@ -45,4 +45,3 @@ result <- titanic \%>\% compare_props("pclass", "survived")
 
 \code{\link{plot.compare_props}} to plot results
 }
-

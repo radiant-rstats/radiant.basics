@@ -53,7 +53,7 @@ compare_means <- function(dataset, var1, var2,
   dat$variable %<>% as.factor
 
 	## check there is variation in the data
-  if (any(summarise_each(dat, funs(does_vary)) == FALSE))
+  if (any(summarise_all(dat, funs(does_vary)) == FALSE))
   	return("Test could not be calculated (no variation). Please select another variable." %>%
   	       add_class("compare_means"))
 
@@ -123,7 +123,7 @@ compare_means <- function(dataset, var1, var2,
 	dat_summary <-
 	  dat %>%
 		group_by_("variable") %>%
-    summarise_each(funs(mean, n = length(.), sd, se = sd/sqrt(n),
+    summarise_all(funs(mean = mean, n = length(.), sd, se = sd/sqrt(n),
                    			ci = ci_calc(se, n, conf_lev))) %>%
     rename_(.dots = setNames("variable", cname))
 

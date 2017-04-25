@@ -33,4 +33,3 @@ result <- goodness("newspaper", "Income")
 
 \code{\link{plot.goodness}} to plot results
 }
-

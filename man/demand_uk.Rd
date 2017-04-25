@@ -15,4 +15,3 @@ Demand in the UK
 Survey data of consumer purchase intentions. Description provided in attr(demand_uk,"description")
 }
 \keyword{datasets}
-

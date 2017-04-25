@@ -15,4 +15,3 @@ Salaries for Professors
 2008-2009 nine-month salary for professors in a college in the US. Description provided in attr(salary,description")
 }
 \keyword{datasets}
-

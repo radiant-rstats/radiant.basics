@@ -27,7 +27,7 @@ correlation <- function(dataset, vars,
 	## system.time but results (using diamonds and mtcars) are identical
 	dat <- getdata(dataset, vars, filt = data_filter) %>%
 		select(which(!sapply(., class) %in% c("character", "factor"))) %>%
-		mutate_each(funs(as.numeric))
+		mutate_all(funs(as.numeric))
 
 	if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 

@@ -48,4 +48,3 @@ result <- diamonds \%>\% compare_means("cut","price")
 
 \code{\link{plot.compare_means}} to plot results
 }
-

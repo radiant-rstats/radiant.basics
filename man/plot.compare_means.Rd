@@ -34,4 +34,3 @@ plot(result, plots = c("bar","density"))
 
 \code{\link{summary.compare_means}} to summarize results
 }
-

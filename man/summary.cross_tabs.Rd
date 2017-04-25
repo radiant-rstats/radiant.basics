@@ -32,4 +32,3 @@ newspaper \%>\% cross_tabs("Income", "Newspaper") \%>\% summary("observed")
 
 \code{\link{plot.cross_tabs}} to plot results
 }
-

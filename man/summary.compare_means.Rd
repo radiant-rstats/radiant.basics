@@ -35,4 +35,3 @@ summary(result)
 
 \code{\link{plot.compare_means}} to plot results
 }
-

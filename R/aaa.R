@@ -6,7 +6,7 @@ globalVariables(c(".","..count..","matches","n","se","Freq","ci","col1","n","y",
 #' @name radiant.basics
 #' @docType package
 #' @import radiant.data shiny ggplot2
-#' @importFrom dplyr summarise_each funs rename_ bind_cols select filter filter_ group_by_ summarise arrange mutate count
+#' @importFrom dplyr mutate_all summarise_all funs rename_ bind_cols select filter filter_ group_by_ summarise arrange mutate count
 #' @importFrom tidyr gather_
 #' @importFrom gridExtra grid.arrange
 #' @importFrom scales percent

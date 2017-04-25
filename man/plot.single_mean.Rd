@@ -34,4 +34,3 @@ plot(result, plots = c("hist", "simulate"))
 
 \code{\link{summary.single_mean}} to summarize results
 }
-

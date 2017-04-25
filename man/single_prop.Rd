@@ -41,4 +41,3 @@ result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
 
 \code{\link{plot.single_prop}} to plot the results
 }
-
