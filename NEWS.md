@@ -13,3 +13,7 @@
 - Fixed correlation dropdown. Correlations did not change when method was changed (thanks @Fiordmaster)
 - Improved formatting for small negative values in Basics > Correlation
 - Convert numeric bounds to integer in Basics > Probability calculator > Binomial to avoid warnings
+
+## Deprecated
+
+- Use of *_each is deprecated
