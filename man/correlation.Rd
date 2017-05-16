@@ -4,12 +4,12 @@
 \alias{correlation}
 \title{Calculate correlations for two or more variables}
 \usage{
-correlation(dataset, vars, method = "pearson", data_filter = "")
+correlation(dataset, vars = "", method = "pearson", data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{vars}{Variables to include in the analysis}
+\item{vars}{Variables to include in the analysis. Default is all but character and factor variables are removed}
 
 \item{method}{Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default}
 

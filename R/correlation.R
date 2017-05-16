@@ -3,7 +3,7 @@
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param vars Variables to include in the analysis
+#' @param vars Variables to include in the analysis. Default is all but character and factor variables are removed
 #' @param method Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
@@ -19,7 +19,7 @@
 #' @seealso \code{\link{plot.correlation_}} to plot results
 #'
 #' @export
-correlation <- function(dataset, vars,
+correlation <- function(dataset, vars = "",
                         method = "pearson",
                         data_filter = "") {
 

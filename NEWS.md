@@ -1,3 +1,7 @@
+# CHANGES IN radiant.basics 0.8.1
+
+* `correlation` defaults to all variables if no value for `var` is provided
+
 # CHANGES IN radiant.basics 0.8.0
 
 ## NEW FEATURES
