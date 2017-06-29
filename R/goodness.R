@@ -5,6 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param var A categorical variable
 #' @param p Hypothesized distribution as a number, fraction, or numeric vector. If unspecified, defaults to an even distribution
+#' @param tab Table with frequencies as alternative to dataset
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of all variables used in goodness as an object of class goodness
@@ -16,16 +17,24 @@
 #' @seealso \code{\link{plot.goodness}} to plot results
 #'
 #' @export
-goodness <- function(dataset, var, p = NULL,
+goodness <- function(dataset, var,
+                     p = NULL,
+                     tab = NULL,
                      data_filter = "") {
 
-	dat <- getdata(dataset, var, filt = data_filter)
-  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
-  ## creating and cleaning up the table
-	tab <- table(dat[[var]])
-	tab[is.na(tab)] <- 0
-	tab <- as.table(tab)
+  if (!missing(dataset) && !is.table(tab)) {
+  	dat <- getdata(dataset, var, filt = data_filter)
+    if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+
+    ## creating and cleaning up the table
+  	tab <- table(dat[[var]])
+  	tab[is.na(tab)] <- 0
+  	tab <- as.table(tab)
+
+		## dat not needed in summary or plot
+  	rm(dat)
+  }
 
 	if (is_not(p) || p == "") {
 		p <- rep(1/length(tab), length(tab))
@@ -52,8 +61,13 @@ goodness <- function(dataset, var, p = NULL,
 	## adding the chi-sq table
 	cst$chi_sq	<- with(cst, (observed - expected)^2 / expected)
 
-	## dat not needed in summary or plot
-	rm(dat)
+	res <- tidy(cst)
+	elow <- sum(cst$expected < 5)
+
+	if (elow > 0) {
+	  res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value
+	  res$parameter <- paste0("*",res$parameter,"*")
+	}
 
   as.list(environment()) %>% add_class("goodness")
 }
@@ -109,21 +123,13 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 		print(round(object$cst$residuals, dec))
 	}
 
-	res <- object$cst %>% tidy
-	elow <- sum(object$cst$expected < 5)
-
-  if (elow > 0) {
-  	res$p.value <- chisq.test(object$cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value
-  	res$parameter <- paste0("*",res$parameter,"*")
-  }
-
   round_fun <- function(x) is.na(x) || is.character(x)
-	res[!sapply(res, round_fun)] %<>% round(dec + 1)
+	object$res[!sapply(object$res, round_fun)] %<>% round(dec + 1)
 
-	if (res$p.value < .001) res$p.value  <- "< .001"
-	cat(paste0("\nChi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value), "\n\n")
-	cat(paste(sprintf("%.1f",100 * (elow / length(object$cst$expected))),"% of cells have expected values below 5\n"), sep = "")
-	if (elow > 0) cat("p.value for chi-squared statistics obtained using simulation (2000 replicates)")
+	if (object$res$p.value < .001) object$res$p.value  <- "< .001"
+	cat(paste0("\nChi-squared: ", object$res$statistic, " df(", object$res$parameter, "), p.value ", object$res$p.value), "\n\n")
+	cat(paste(sprintf("%.1f",100 * (object$elow / length(object$cst$expected))),"% of cells have expected values below 5\n"), sep = "")
+	if (object$elow > 0) cat("p.value for chi-squared statistics obtained using simulation (2000 replicates)")
 }
 
 #' Plot method for the goodness function
@@ -132,6 +138,7 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 #'
 #' @param x Return value from \code{\link{goodness}}
 #' @param check Show plots for variable var. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), and "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e))
+#' @param fillcol Color used for bar plots
 #' @param shiny Did the function call originate inside a shiny app
 #' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
@@ -145,11 +152,16 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 #' @seealso \code{\link{summary.goodness}} to summarize results
 #'
 #' @export
-plot.goodness <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
+plot.goodness <- function(x, check = "",
+													fillcol = "blue",
+	 											  shiny = FALSE,
+	 											  custom = FALSE,
+	 											  ...) {
 
 	object <- x; rm(x)
   if (is.character(object)) return(object)
 	plot_list <- list()
+	if (is_empty(check)) check = "observed"
 
 	if ("observed" %in% check) {
 	  fact_names <- names(object$cst$observed)
@@ -157,9 +169,9 @@ plot.goodness <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
 		colnames(tab)[1] <- object$var
  	  tab[[1]] %<>% as.factor %>% factor(levels = fact_names)
  	  tab[["Freq"]] %<>% {. / sum(.)}
-		plot_list[['observed']] <-
+		plot_list[["observed"]] <-
 		  ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-		    geom_bar(stat="identity", alpha = .5) +
+		    geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
 		    ggtitle(paste("Observed frequencies for",object$var)) +
 		    xlab(object$var) +
 		    ylab("") +
@@ -172,9 +184,9 @@ plot.goodness <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
 		colnames(tab)[1] <- "Freq"
 		tab[[object$var]] <- rownames(tab)
  	  tab[["Freq"]] %<>% {. / sum(.)}
-		plot_list[['expected']] <-
+		plot_list[["expected"]] <-
   		ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-		    geom_bar(stat="identity", alpha = .5) +
+		    geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
 		    ggtitle(paste("Expected frequencies for",object$var)) +
 		    xlab(object$var) +
 		    ylab("") +
@@ -184,9 +196,9 @@ plot.goodness <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
 	if ("chi_sq" %in% check) {
   	tab <- as.data.frame(object$cst$chi_sq, check.names = FALSE)
 		colnames(tab)[1] <- object$var
-		plot_list[['chi_sq']] <-
+		plot_list[["chi_sq"]] <-
   		ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-		    geom_bar(stat="identity", alpha = .5) +
+		    geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
 		    ggtitle(paste("Contribtion to chi-squared for ",object$var)) +
 		    xlab(object$var) +
 		    ylab("")
@@ -195,10 +207,10 @@ plot.goodness <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
 	if ("dev_std" %in% check) {
   	tab <- as.data.frame(object$cst$residuals, check.names = FALSE)
 		colnames(tab)[1] <- object$var
-		plot_list[['dev_std']] <-
+		plot_list[["dev_std"]] <-
   		ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-		    geom_bar(stat="identity", position = "dodge", alpha = .5) +
-		    geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = 'black', linetype = 'longdash', size = .5) +
+		    geom_bar(stat = "identity", position = "dodge", alpha = .5, fill = fillcol) +
+		    geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = "black", linetype = "longdash", size = .5) +
 		    geom_text(x = 1, y = 2.11, label = "95%") +
 		    geom_text(x = 1, y = 1.49, label = "90%") +
 		    ggtitle(paste("Deviation standardized for",object$var)) +

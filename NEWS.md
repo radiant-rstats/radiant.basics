@@ -1,6 +1,8 @@
-# CHANGES IN radiant.basics 0.8.1
+# CHANGES IN radiant.basics 0.8.2
 
 * `correlation` defaults to all variables if no value for `var` is provided
+* Renamed methods `summary.correlation_` and `plot.correlation_` to `summary.correlation` and `plot.correlation`
+* Added `tab` argument to `goodness` and `cross_tabs` so a table object can be passed directly
 
 # CHANGES IN radiant.basics 0.8.0
 

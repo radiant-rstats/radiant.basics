@@ -5,6 +5,7 @@
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
 #' @param var1 A categorical variable
 #' @param var2 Another categorical variable
+#' @param tab Table with frequencies as alternative to dataset
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
 #' @return A list of all variables used in cross_tabs as an object of class cross_tabs
@@ -18,20 +19,30 @@
 #'
 #' @export
 cross_tabs <- function(dataset, var1, var2,
+                       tab = NULL,
                        data_filter = "") {
 
-	dat <- getdata(dataset, c(var1, var2), filt = data_filter)
-  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  if (missing(dataset) && missing(var1) && missing(var2) && is.table(tab)) {
+    nm <- names(dimnames(tab))
+    var1 <- nm[1]
+    var2 <- nm[2]
+  } else {
 
-  ## Use simulated p-values when
-  # http://stats.stackexchange.com/questions/100976/n-1-pearsons-chi-square-in-r
-  # http://stats.stackexchange.com/questions/14226/given-the-power-of-computers-these-days-is-there-ever-a-reason-to-do-a-chi-squa/14230#14230
-  # http://stats.stackexchange.com/questions/62445/rules-to-apply-monte-carlo-simulation-of-p-values-for-chi-squared-test
+  	dat <- getdata(dataset, c(var1, var2), filt = data_filter)
+    if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
-  ## creating and cleaning up the table
-	tab <- table(dat[[var1]], dat[[var2]])
-	tab[is.na(tab)] <- 0
-	tab <- tab[ ,colSums(tab) > 0] %>% {.[rowSums(.) > 0, ]} %>% as.table
+    ## Use simulated p-values when
+    # http://stats.stackexchange.com/questions/100976/n-1-pearsons-chi-square-in-r
+    # http://stats.stackexchange.com/questions/14226/given-the-power-of-computers-these-days-is-there-ever-a-reason-to-do-a-chi-squa/14230#14230
+    # http://stats.stackexchange.com/questions/62445/rules-to-apply-monte-carlo-simulation-of-p-values-for-chi-squared-test
+
+    ## creating and cleaning up the table
+  	tab <- table(dat[[var1]], dat[[var2]])
+  	tab[is.na(tab)] <- 0
+  	tab <- tab[ ,colSums(tab) > 0] %>% {.[rowSums(.) > 0, ]} %>% as.table
+ 		## dat not needed in summary or plot
+  	rm(dat)
+  }
 
 	cst <- sshhr( chisq.test(tab, correct = FALSE) )
 
@@ -39,8 +50,13 @@ cross_tabs <- function(dataset, var1, var2,
 	# cst$deviation <- with(cst, (observed-expected) / expected)
 	cst$chi_sq	<- with(cst, (observed - expected)^2 / expected)
 
-	## dat not needed in summary or plot
-	rm(dat)
+	res <- tidy(cst)
+	elow <- sum(cst$expected < 5)
+
+  if (elow > 0) {
+  	res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value
+  	res$parameter <- paste0("*",res$parameter,"*")
+  }
 
   as.list(environment()) %>% add_class("cross_tabs")
 }
@@ -72,7 +88,7 @@ summary.cross_tabs <- function(object,
 	cat("Data     :", object$dataset, "\n")
 	if (object$data_filter %>% gsub("\\s","",.) != "")
 		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-	cat("Variables:", paste0(c(object$var1, object$var2), collapse=", "), "\n")
+	cat("Variables:", paste0(c(object$var1, object$var2), collapse = ", "), "\n")
 	cat("Null hyp.: there is no association between", object$var1, "and", object$var2, "\n")
 	cat("Alt. hyp.: there is an association between", object$var1, "and", object$var2, "\n")
 
@@ -157,22 +173,13 @@ summary.cross_tabs <- function(object,
 	# 	print(round(object$cst$deviation, 2)) 	# % deviation
 	# }
 
-	# res <- object$cst %>% tidy %>% round(3)
-	res <- object$cst %>% tidy
-	elow <- sum(object$cst$expected < 5)
-
-  if (elow > 0) {
-  	res$p.value <- chisq.test(object$cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value
-  	res$parameter <- paste0("*",res$parameter,"*")
-  }
-
   round_fun <- function(x) is.na(x) || is.character(x)
-	res[!sapply(res, round_fun)] %<>% round(dec + 1)
+	object$res[!sapply(object$res, round_fun)] %<>% round(dec + 1)
 
-	if (res$p.value < .001) res$p.value  <- "< .001"
-	cat(paste0("\nChi-squared: ", res$statistic, " df(", res$parameter, "), p.value ", res$p.value), "\n\n")
-	cat(paste(sprintf("%.1f",100 * (elow / length(object$cst$expected))),"% of cells have expected values below 5\n"), sep = "")
-	if (elow > 0) cat("p.value for chi-squared statistics obtained using simulation (2000 replicates)")
+	if (object$res$p.value < .001) object$res$p.value  <- "< .001"
+	cat(paste0("\nChi-squared: ", object$res$statistic, " df(", object$res$parameter, "), p.value ", object$res$p.value), "\n\n")
+	cat(paste(sprintf("%.1f",100 * (object$elow / length(object$cst$expected))),"% of cells have expected values below 5\n"), sep = "")
+	if (object$elow > 0) cat("p.value for chi-squared statistics obtained using simulation (2000 replicates)")
 }
 
 #' Plot method for the cross_tabs function
@@ -206,10 +213,11 @@ plot.cross_tabs <- function(x,
 		tab %>%
 			data.frame(., check.names = FALSE) %>%
 			mutate(rnames = rownames(.)) %>%
-			{sshhr( gather_(., "variable", "values", setdiff(colnames(.),"rnames")) )}
+			{sshhr( gather_(., "variable", "values", setdiff(colnames(.), "rnames")) )}
 	}
 
 	plot_list <- list()
+	if (is_empty(check)) check = "observed"
 
 	if ("observed" %in% check) {
 
@@ -219,9 +227,9 @@ plot.cross_tabs <- function(x,
  	  tab[[1]] %<>% as.factor %>% factor(levels = fact_names[[1]])
 		tab[[2]] %<>% as.factor %>% factor(levels = fact_names[[2]])
 
-		plot_list[['observed']] <-
+		plot_list[["observed"]] <-
 		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
-		    geom_bar(stat="identity", position = "fill", alpha = .7) +
+		    geom_bar(stat = "identity", position = "fill", alpha = .7) +
 		    labs(list(title = paste("Observed frequencies for ",object$var2," versus ",object$var1, sep = ""),
 				  	 x = object$var2, y = "", fill = object$var1)) +
 		    scale_y_continuous(labels = scales::percent)
@@ -232,10 +240,9 @@ plot.cross_tabs <- function(x,
   	tab <- gather_table(object$cst$expected)
 		tab$rnames %<>% as.factor %>% factor(levels = fact_names[[1]])
 		tab$variable %<>% as.factor %>% factor(levels = fact_names[[2]])
-		plot_list[['expected']] <-
-		  # ggplot(tab, aes_string(x = "rnames", y = "values", fill = "variable")) +
+		plot_list[["expected"]] <-
 		  ggplot(tab, aes_string(x = "variable", y = "values", fill = "rnames")) +
-		    geom_bar(stat="identity", position = "fill", alpha = .7) +
+		    geom_bar(stat = "identity", position = "fill", alpha = .7) +
 		    labs(list(title = paste("Expected frequencies for ",object$var2," versus ",object$var1, sep = ""),
 		         x = object$var2, y = "", fill = object$var1)) +
 		    scale_y_continuous(labels = scales::percent)
@@ -244,9 +251,9 @@ plot.cross_tabs <- function(x,
 	if ("chi_sq" %in% check) {
   	tab <- as.data.frame(object$cst$chi_sq, check.names = FALSE)
 		colnames(tab)[1:2] <- c(object$var1, object$var2)
-		plot_list[['chi_sq']] <-
+		plot_list[["chi_sq"]] <-
 		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
-		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
+		    geom_bar(stat = "identity", position = "dodge", alpha = .7) +
 		    labs(list(title = paste("Contribution to chi-squared for ",object$var2," versus ",object$var1, sep = ""),
 		         x = object$var2, y = ""))
   }
@@ -254,9 +261,9 @@ plot.cross_tabs <- function(x,
 	if ("dev_std" %in% check) {
   	tab <- as.data.frame(object$cst$residuals, check.names = FALSE)
 		colnames(tab)[1:2] <- c(object$var1, object$var2)
-		plot_list[['dev_std']] <-
+		plot_list[["dev_std"]] <-
 		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
-		    geom_bar(stat="identity", position = "dodge", alpha = .7) +
+		    geom_bar(stat = "identity", position = "dodge", alpha = .7) +
 		    geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = 'black', linetype = 'longdash', size = .5) +
 		    geom_text(data = NULL, x = 1, y = 2.11, label = "95%") +
 		    geom_text(data = NULL, x = 1, y = 1.49, label = "90%") +
@@ -265,12 +272,12 @@ plot.cross_tabs <- function(x,
 	}
 
 	if ("row_perc" %in% check) {
-		plot_list[['row_perc']] <-
+		plot_list[["row_perc"]] <-
 	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
 	  	  group_by_("Var1") %>%
 	  	  mutate(perc = Freq / sum(Freq)) %>%
 			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
-			    geom_bar(stat="identity", position = "dodge", alpha = .7) +
+			    geom_bar(stat = "identity", position = "dodge", alpha = .7) +
 			 		labs(fill = object$var1) +
 			 		scale_y_continuous(labels = scales::percent) +
 			 		ylab("Percentage") + xlab(object$var2) +
@@ -278,12 +285,12 @@ plot.cross_tabs <- function(x,
 	}
 
 	if ("col_perc" %in% check) {
-		plot_list[['col_perc']] <-
+		plot_list[["col_perc"]] <-
 	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
 	  	  group_by_("Var2") %>%
 	  	  mutate(perc = Freq / sum(Freq)) %>%
 			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
-			    geom_bar(stat="identity", position = "dodge", alpha = .7) +
+			    geom_bar(stat = "identity", position = "dodge", alpha = .7) +
 			 		labs(fill = object$var1) +
 			 		scale_y_continuous(labels = scales::percent) +
 			 		ylab("Percentage") + xlab(object$var2) +
@@ -291,11 +298,11 @@ plot.cross_tabs <- function(x,
 	}
 
 	if ("perc" %in% check) {
-		plot_list[['perc']] <-
+		plot_list[["perc"]] <-
 	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
 	  	  mutate(perc = Freq / sum(Freq)) %>%
 			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
-			    geom_bar(stat="identity", position = "dodge", alpha = .7) +
+			    geom_bar(stat = "identity", position = "dodge", alpha = .7) +
 			 		labs(fill = object$var1) +
 			 		scale_y_continuous(labels = scales::percent) +
 			 		ylab("Percentage") + xlab(object$var2) +
