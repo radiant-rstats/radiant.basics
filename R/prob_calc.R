@@ -1257,7 +1257,7 @@ plot.prob_binom <- function(x, type = "values", ...) {
   	breaks <- dat$x
   } else {
   	x <- as_integer(dat$x)
-  	breaks <- seq(min(x), max(x), length.out = 20) %>% round(0)
+  	breaks <- seq(min(x), max(x), length.out = 10) %>% round(0)
   }
 
   cols <- c(below = "red", equal = "blue", above = "black")
@@ -1592,11 +1592,11 @@ plot.prob_disc <- function(x, type = "values", ...) {
     k = k
   )
 
-  if (nrow(dat) < 40) {
+  if (nrow(dat) < 30) {
   	breaks <- dat$x
   } else {
   	x <- as_integer(dat$x)
-  	breaks <- seq(min(x), max(x), length.out = 20) %>% round(0)
+  	breaks <- seq(min(x), max(x), length.out = 10) %>% round(0)
   }
 
   cols <- c(below = "red", equal = "blue", above = "black")
@@ -2125,7 +2125,7 @@ plot.prob_pois <- function(x, type = "values", ...) {
   	breaks <- dat$x
   } else {
   	x <- as_integer(dat$x)
-  	breaks <- seq(min(x), max(x), length.out = 20) %>% round(0)
+  	breaks <- seq(min(x), max(x), length.out = 10) %>% round(0)
   }
 
   cols <- c(below = "red", equal = "blue", above = "black")

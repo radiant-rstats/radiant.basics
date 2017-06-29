@@ -71,16 +71,14 @@ clt_plot_height <- function() 700
 
 ## output is called from the main radiant ui.R
 output$clt <- renderUI({
-    # register_print_output("summary_clt", ".summary_clt")
     register_plot_output("plot_clt", ".plot_clt",
                           height_fun = "clt_plot_height",
                           width_fun = "clt_plot_width")
 
     ## two separate tabs
     clt_output_panels <- tagList(
-      # tabPanel("Summary", verbatimTextOutput("summary_prob_calc")),
       tabPanel("Plot",
-        plot_downloader("clt", width = clt_plot_width(), height = clt_plot_height()),
+        plot_downloader("clt", width = clt_plot_width, height = clt_plot_height),
         plotOutput("plot_clt", width = "100%", height = "100%")
       )
     )
@@ -102,20 +100,27 @@ output$clt <- renderUI({
     return("Please choose a sample size larger than 2.")
   if(is.na(input$clt_m) || input$clt_m < 2)
     return("Please choose 2 or more samples.")
-  if(is.na(input$clt_unif_min))
-    return("Please choose a minimum value for the uniform distribution.")
-  if(is.na(input$clt_unif_max))
-    return("Please choose a maximum value for the uniform distribution.")
-  if(is.na(input$clt_norm_mean))
-    return("Please choose a mean value for the normal distribution.")
-  if(is.na(input$clt_norm_sd) || input$clt_norm_sd < .001)
-    return("Please choose a non-zero standard deviation for the normal distribution.")
-  if(is.na(input$clt_expo_rate) || input$clt_expo_rate < 1)
-    return("Please choose a rate larger than 1 for the exponential distribution.")
-  if(is.na(input$clt_binom_size) || input$clt_binom_size < 1)
-    return("Please choose a size parameter larger than 1 for the binomial distribution.")
-  if(is.na(input$clt_binom_prob) || input$clt_binom_prob < 0.01)
-    return("Please choose a probability between 0 and 1 for the binomial distribution.")
+  if(input$clt_dist == "runif") {
+    if(is.na(input$clt_unif_min))
+      return("Please choose a minimum value for the uniform distribution.")
+    if(is.na(input$clt_unif_max))
+      return("Please choose a maximum value for the uniform distribution.")
+    if(input$clt_unif_max <= input$clt_unif_min)
+      return("The maximum value for the uniform distribution\nmust be larger than the minimum value.")
+  } else if(input$clt_dist == "rnorm") {
+    if(is.na(input$clt_norm_mean))
+      return("Please choose a mean value for the normal distribution.")
+    if(is.na(input$clt_norm_sd) || input$clt_norm_sd < .001)
+      return("Please choose a non-zero standard deviation for the normal distribution.")
+  } else if(input$clt_dist == "expo") {
+    if(is.na(input$clt_expo_rate) || input$clt_expo_rate < 1)
+      return("Please choose a rate larger than 1 for the exponential distribution.")
+  } else if(input$clt_dist == "binom") {
+    if(is.na(input$clt_binom_size) || input$clt_binom_size < 1)
+      return("Please choose a size parameter larger than 1 for the binomial distribution.")
+    if(is.na(input$clt_binom_prob) || input$clt_binom_prob < 0.01)
+      return("Please choose a probability between 0 and 1 for the binomial distribution.")
+  }
 
 	clt(input$clt_dist, input$clt_n, input$clt_m, input$clt_stat)
 })
