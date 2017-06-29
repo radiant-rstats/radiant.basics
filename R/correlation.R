@@ -3,7 +3,7 @@
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 #'
 #' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
-#' @param vars Variables to include in the analysis. Default is all but character and factor variables are removed
+#' @param vars Variables to include in the analysis. Default is all but character and factor variables with more than two unique values are removed
 #' @param method Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #'
@@ -15,8 +15,8 @@
 #' result <- correlation("diamonds", "price:carat")
 #' result <- diamonds %>% correlation("price:carat")
 #'
-#' @seealso \code{\link{summary.correlation_}} to summarize results
-#' @seealso \code{\link{plot.correlation_}} to plot results
+#' @seealso \code{\link{summary.correlation}} to summarize results
+#' @seealso \code{\link{plot.correlation}} to plot results
 #'
 #' @export
 correlation <- function(dataset, vars = "",
@@ -26,13 +26,11 @@ correlation <- function(dataset, vars = "",
 	## data.matrix as the last step in the chain is about 25% slower using
 	## system.time but results (using diamonds and mtcars) are identical
 	dat <- getdata(dataset, vars, filt = data_filter) %>%
-		select(which(!sapply(., class) %in% c("character", "factor"))) %>%
-		mutate_all(funs(as.numeric))
+		# select_if(!is.character) %>%
+		mutate_all(funs(as_numeric))
 
 	if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
-
-	## using correlation_ to avoid print method conflict with nlme
-  as.list(environment()) %>% add_class("correlation_")
+  as.list(environment()) %>% add_class("correlation")
 }
 
 #' Summary method for the correlation function
@@ -51,21 +49,19 @@ correlation <- function(dataset, vars = "",
 #' diamonds %>% correlation("price:carat") %>% summary
 #'
 #' @seealso \code{\link{correlation}} to calculate results
-#' @seealso \code{\link{plot.correlation_}} to plot results
+#' @seealso \code{\link{plot.correlation}} to plot results
 #'
 #' @importFrom psych corr.test
 #'
 #' @export
-summary.correlation_ <- function(object,
+summary.correlation <- function(object,
                                  cutoff = 0,
                                  covar = FALSE,
                                  dec = 2,
                                  ...) {
 
-	## using correlation_ to avoid print method conflict with nlme
 	## calculate the correlation matrix with p.values using the psych package
-
-	cmat <- sshhr( psych::corr.test(object$dat, method = object$method) )
+	cmat <- sshhr(psych::corr.test(object$dat, method = object$method))
 
 	cr <- apply(cmat$r, 2, formatnr, dec = dec) %>%
 		format(justify = "right") %>%
@@ -120,7 +116,7 @@ summary.correlation_ <- function(object,
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{correlation}}
-#' @param n Number of datapoints to use in the plot (1000 is default). Use -1 for all observations
+#' @param n Number of datapoints to use in the plot (1,000 is default). Use -1 for all observations
 #' @param jit Level of jittering to apply to scatter plot. Default is .3. Use 0 for no jittering
 #' @param ... further arguments passed to or from other methods.
 #'
@@ -130,16 +126,15 @@ summary.correlation_ <- function(object,
 #' diamonds %>% correlation("price:carat") %>% plot
 #'
 #' @seealso \code{\link{correlation}} to calculate results
-#' @seealso \code{\link{summary.correlation_}} to summarize results
+#' @seealso \code{\link{summary.correlation}} to summarize results
 #'
 #' @importFrom ggplot2 alpha
 #'
 #' @export
-plot.correlation_ <- function(x, n = 1000, jit = .3, ...) {
+plot.correlation <- function(x, n = 1000, jit = .3, ...) {
 
 	object <- x; rm(x)
 
-	## using correlation_ to avoid print method conflict with nlme
 	## based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
 	panel.plot <- function(x, y) {
 	    usr <- par("usr"); on.exit(par(usr))
