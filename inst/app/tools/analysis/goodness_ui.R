@@ -28,7 +28,10 @@ output$ui_gd_p <- renderUI({
   req(input$gd_var != "None")
   ## nice idea but but may end up being a hassle for the user
   # init <- .getdata()[[input$gd_var]] %>% unique %>% length %>% paste0("1/",.)
-  returnTextInput("gd_p", label = "Probabilities:", value = state_init("gd_p", ""))
+  returnTextInput("gd_p", label = "Probabilities:", 
+    value = state_init("gd_p", ""),
+    placeholder = "Enter probabilities (e.g., 1/2 1/2)"
+  )
 })
 
 output$ui_goodness <- renderUI({
@@ -67,7 +70,7 @@ output$goodness <- renderUI({
 	gd_output_panels <- tabsetPanel(
     id = "tabs_goodness",
     tabPanel("Summary", verbatimTextOutput("summary_goodness")),
-    tabPanel("Plot", plot_downloader("goodness", height = gd_plot_height()),
+    tabPanel("Plot", plot_downloader("goodness", height = gd_plot_height),
              plotOutput("plot_goodness", width = "100%", height = "100%"))
   )
 

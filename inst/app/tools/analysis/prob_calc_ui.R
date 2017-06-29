@@ -342,7 +342,8 @@ output$ui_prob_calc <- renderUI({
   )
 })
 
-pc_plot_width <- function() 700
+pc_plot_width <- function() 
+  if (!is.null(input$viz_plot_width)) input$viz_plot_width else 650
 
 pc_plot_height <- function() 400
 
@@ -399,6 +400,13 @@ pc_inputs <- reactive({
     args[[i]] <- input[[paste0(pre,i)]]
   }
 
+  validate(
+    need(
+      input$pc_dec, 
+      "Provide an integer value for the number of decimal places"
+    )
+  )
+
   args[["dec"]] <- input$pc_dec
 
   args
@@ -416,7 +424,7 @@ output$prob_calc <- renderUI({
     pc_output_panels <- tagList(
       tabPanel("Summary", verbatimTextOutput("summary_prob_calc")),
       tabPanel("Plot",
-               plot_downloader("prob_calc", height = pc_plot_height()),
+               plot_downloader("prob_calc", width = pc_plot_width, height = pc_plot_height),
                plotOutput("plot_prob_calc", width = "100%", height = "100%"))
     )
 
@@ -435,8 +443,8 @@ pc_available <- reactive({
   } else {
     a <- "available"
     if (input$pc_dist == "norm") {
-      if (is_not(input$pc_mean) || is_not(input$pc_stdev))
-        a <- "Please provide a mean and standard deviation"
+      if (is_not(input$pc_mean) || is_not(input$pc_stdev) || input$pc_stdev <= 0)
+        a <- "Please provide a mean and standard deviation (> 0)"
     } else if (input$pc_dist == "binom") {
       if (is_not(input$pcb_n) || is_not(input$pcb_p))
         a <- "Please provide a value for n (number of trials) and p (probability of success)"
@@ -454,7 +462,7 @@ pc_available <- reactive({
         a <- "Please provide a value for the degrees of freedom"
     } else if (input$pc_dist == "disc") {
       if (is_empty(input$pcd_v) || is_empty(input$pcd_p))
-        a <- "Please provide a set of values and probabilities. Separate numbers using spaces"
+        a <- "Please provide a set of values and probabilities.\nSeparate numbers using spaces (e.g., 1/2 1/2)"
     } else if (input$pc_dist == "expo") {
       if (is_not(input$pce_rate) || input$pce_rate <= 0)
         a <- "Please provide a value for the rate (> 0)"
@@ -479,7 +487,7 @@ pc_available <- reactive({
 })
 
 .plot_prob_calc <- reactive({
-  if (pc_available() != "available") return(pc_available())
+  req(pc_available() == "available")
   type <- if (is.null(input$pc_type)) "values" else input$pc_type
   plot(.prob_calc(), type = type)
 })

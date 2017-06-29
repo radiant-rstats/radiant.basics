@@ -92,7 +92,7 @@ output$single_prop <- renderUI({
 	    id = "tabs_single_prop",
 	    tabPanel("Summary", verbatimTextOutput("summary_single_prop")),
 	    tabPanel("Plot", plotOutput("plot_single_prop", height = "100%"),
-               plot_downloader("single_prop", height = sp_plot_height()))
+               plot_downloader("single_prop", height = sp_plot_height))
 	  )
 
 		stat_tab_panel(menu = "Basics > Proportions",

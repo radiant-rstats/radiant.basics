@@ -75,7 +75,7 @@ output$single_mean <- renderUI({
 		sm_output_panels <- tabsetPanel(
 	    id = "tabs_single_mean",
 	    tabPanel("Summary", verbatimTextOutput("summary_single_mean")),
-	    tabPanel("Plot", plot_downloader("single_mean", height = sm_plot_height()),
+	    tabPanel("Plot", plot_downloader("single_mean", height = sm_plot_height),
                plotOutput("plot_single_mean", height = "100%"))
 	  )
 

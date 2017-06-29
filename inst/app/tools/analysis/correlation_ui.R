@@ -16,8 +16,8 @@ cor_inputs <- reactive({
   cor_args
 })
 
-cor_sum_args <- as.list(if (exists("summary.correlation_")) formals(summary.correlation_)
-                        else formals(radiant.basics::summary.correlation_))
+cor_sum_args <- as.list(if (exists("summary.correlation")) formals(summary.correlation)
+                        else formals(radiant.basics::summary.correlation))
 
 ## list of function inputs selected by user
 cor_sum_inputs <- reactive({
@@ -28,12 +28,23 @@ cor_sum_inputs <- reactive({
 })
 
 output$ui_cor_vars <- renderUI({
-	isChar <- .getclass() %in% c("character", "factor")
-	vars <- varnames()[!isChar]
+
+  withProgress(message = "Acquiring variable information", value = 1, {
+    vars <- varnames()
+  	isChar <- .getclass() %in% c("character", "factor") %>%
+      set_names(vars)
+    tlv <- two_level_vars()
+    if (length(tlv) > 0) isChar[tlv] <- FALSE
+    vars <- vars[!isChar]
+  })
   if (length(vars) == 0) return()
-  selectInput(inputId = "cor_vars", label = "Select variables:", choices = vars,
+  selectInput(inputId = "cor_vars", label = "Select variables:", 
+    choices = vars,
  		selected = state_multiple("cor_vars",vars),
- 		multiple = TRUE, size = min(10, length(vars)), selectize = FALSE)
+ 		multiple = TRUE, 
+    size = min(10, length(vars)), 
+    selectize = FALSE
+  )
 })
 
 output$ui_correlation <- renderUI({
@@ -81,7 +92,7 @@ output$correlation <- renderUI({
     id = "tabs_correlation",
     tabPanel("Summary", verbatimTextOutput("summary_correlation")),
     tabPanel("Plot",
-             plot_downloader("correlation", height = cor_plot_height()),
+             plot_downloader("correlation", height = cor_plot_height),
              plotOutput("plot_correlation", width = "100%", height = "100%"))
   )
 
@@ -100,6 +111,12 @@ cor_available <- reactive({
 
 .correlation <- reactive({
   req(input$cor_pause == FALSE, cancelOutput = TRUE)
+  validate(
+    need(
+      input$cor_cutoff >= 0 && input$cor_cutoff <= 1,  
+      "Provide a correlation cutoff value in the range from 0 to 1"
+    )
+  )
 	do.call(correlation, cor_inputs())
 })
 
