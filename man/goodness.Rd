@@ -4,7 +4,7 @@
 \alias{goodness}
 \title{Evaluate if sample data for a categorical variable is consistent wtih a hypothesized distribution}
 \usage{
-goodness(dataset, var, p = NULL, data_filter = "")
+goodness(dataset, var, p = NULL, tab = NULL, data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
@@ -12,6 +12,8 @@ goodness(dataset, var, p = NULL, data_filter = "")
 \item{var}{A categorical variable}
 
 \item{p}{Hypothesized distribution as a number, fraction, or numeric vector. If unspecified, defaults to an even distribution}
+
+\item{tab}{Table with frequencies as alternative to dataset}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }

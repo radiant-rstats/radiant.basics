@@ -9,7 +9,7 @@ correlation(dataset, vars = "", method = "pearson", data_filter = "")
 \arguments{
 \item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
 
-\item{vars}{Variables to include in the analysis. Default is all but character and factor variables are removed}
+\item{vars}{Variables to include in the analysis. Default is all but character and factor variables with more than two unique values are removed}
 
 \item{method}{Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default}
 
@@ -32,7 +32,7 @@ result <- diamonds \%>\% correlation("price:carat")
 
 }
 \seealso{
-\code{\link{summary.correlation_}} to summarize results
+\code{\link{summary.correlation}} to summarize results
 
-\code{\link{plot.correlation_}} to plot results
+\code{\link{plot.correlation}} to plot results
 }
