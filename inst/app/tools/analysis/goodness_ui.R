@@ -19,15 +19,13 @@ gd_inputs <- reactive({
 # Goodness of fit test
 ###############################
 output$ui_gd_var <- renderUI({
-	vars <- c("None", groupable_vars())
+	vars <- c("None" = "", groupable_vars())
   selectInput(inputId = "gd_var", label = "Select a categorical variable:",
     choices = vars, selected = state_single("gd_var",vars), multiple = FALSE)
 })
 
 output$ui_gd_p <- renderUI({
-  req(input$gd_var != "None")
-  ## nice idea but but may end up being a hassle for the user
-  # init <- .getdata()[[input$gd_var]] %>% unique %>% length %>% paste0("1/",.)
+  req(input$gd_var)
   returnTextInput("gd_p", label = "Probabilities:", 
     value = state_init("gd_p", ""),
     placeholder = "Enter probabilities (e.g., 1/2 1/2)"
@@ -102,7 +100,7 @@ gd_available <- reactive({
 })
 
 observeEvent(input$goodness_report, {
-  if (input$gd_var == "None") return(invisible())
+  if (is_empty(input$gd_var)) return(invisible())
   inp_out <- list("","")
 	if (length(input$gd_check) > 0) {
 		outputs <- c("summary","plot")

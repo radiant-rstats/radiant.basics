@@ -21,28 +21,22 @@ cp_inputs <- reactive({
 # Compare proportions
 ###############################
 output$ui_cp_var1 <- renderUI({
-  vars <- c("None", groupable_vars())
+  vars <- c("None" = "", groupable_vars())
   selectInput(inputId = "cp_var1",label = "Select a grouping variable:",
     choices = vars, selected = state_single("cp_var1",vars), multiple = FALSE)
 })
 
 output$ui_cp_var2 <- renderUI({
   vars <- two_level_vars()
-
-  ## if possible, keep current indep value when depvar changes
-  ## after storing residuals or predictions
-  # isolate({
-  #   init <- input$cp_var2 %>%
-  #     {if (!is_empty(.) && . %in% vars) . else character(0)}
-  # })
-
   if (not_available(input$cp_var1)) return()
   if (input$cp_var1 %in% vars) vars <- vars[-which(vars == input$cp_var1)]
 
-  vars <- c("None",vars)
+  vars <- c("None" = "",vars)
   selectInput(inputId = "cp_var2", label = "Variable (select one):",
     selected = state_single("cp_var2", vars),
-    choices = vars, multiple = FALSE)
+    choices = vars, 
+    multiple = FALSE
+  )
 })
 
 output$ui_cp_levs <- renderUI({
@@ -52,8 +46,10 @@ output$ui_cp_levs <- renderUI({
     levs <- .getdata()[[input$cp_var2]] %>% as.factor %>% levels
 
   selectInput(inputId = "cp_levs", label = "Choose level:",
-              choices = levs,
-              selected = state_single("cp_levs",levs), multiple = FALSE)
+    choices = levs,
+    selected = state_single("cp_levs",levs), 
+    multiple = FALSE
+  )
 })
 
 output$ui_cp_comb <- renderUI({
@@ -73,7 +69,7 @@ output$ui_cp_comb <- renderUI({
     choices = cmb,
     selected = state_multiple("cp_comb", cmb, cmb[1]),
     multiple = TRUE,
-    options = list(plugins = list('remove_button', 'drag_drop')))
+    options = list(placeholder = "Evaluate all combinations", plugins = list("remove_button", "drag_drop")))
 })
 
 
@@ -83,10 +79,10 @@ output$ui_compare_props <- renderUI({
     conditionalPanel(condition = "input.tabs_compare_props == 'Plot'",
       wellPanel(
         selectizeInput(inputId = "cp_plots", label = "Select plots:",
-                choices = cp_plots,
-                selected = state_multiple("cp_plots", cp_plots, "bar"),
-                multiple = TRUE,
-                options = list(plugins = list('remove_button', 'drag_drop')))
+          choices = cp_plots,
+          selected = state_multiple("cp_plots", cp_plots, "bar"),
+          multiple = TRUE,
+          options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop")))
       )
     ),
     wellPanel(
@@ -97,8 +93,7 @@ output$ui_compare_props <- renderUI({
         uiOutput("ui_cp_comb"),
         selectInput(inputId = "cp_alternative", label = "Alternative hypothesis:",
           choices = cp_alt,
-          selected = state_init("cp_alternative", cp_args$alternative)),
-          # selected = state_single("cp_alternative", cp_alt, cp_args$alternative)),
+          selected = state_single("cp_alternative", cp_alt, cp_args$alternative)),
         checkboxInput("cp_show", "Show additional statistics", value = state_init("cp_show", FALSE)),
         sliderInput("cp_conf_lev","Confidence level:", min = 0.85, max = 0.99,
           value = state_init("cp_conf_lev",cp_args$conf_lev), step = 0.01),
@@ -170,7 +165,7 @@ cp_available <- reactive({
 })
 
 observeEvent(input$compare_props_report, {
-  if (input$cp_var1 == "None" || input$cp_var2 == "None") return(invisible())
+  if (is_empty(input$cp_var1) || is_empty(input$cp_var2)) return(invisible())
   figs <- FALSE
   outputs <- c("summary")
   inp_out <- list(list(show = input$cp_show), "")

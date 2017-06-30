@@ -1,8 +1,11 @@
-# CHANGES IN radiant.basics 0.8.2
+# CHANGES IN radiant.basics 0.8.3
 
 * `correlation` defaults to all variables if no value for `var` is provided
 * Renamed methods `summary.correlation_` and `plot.correlation_` to `summary.correlation` and `plot.correlation`
 * Added `tab` argument to `goodness` and `cross_tabs` so a table object can be passed directly
+* Documentation updates
+* Code clean-up and various minor fixes and improvements
+* Scatter plots in _Correlation > Plot_ are now based on 1,000 data points by default. Use _R > Report_ to adjust (e.g., `plot(result, n = -1)`)
 
 # CHANGES IN radiant.basics 0.8.0
 

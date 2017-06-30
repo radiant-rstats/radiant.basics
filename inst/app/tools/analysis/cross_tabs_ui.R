@@ -22,14 +22,14 @@ ct_inputs <- reactive({
 # Cross-tabs
 ###############################
 output$ui_ct_var1 <- renderUI({
-	vars <- c("None", groupable_vars())
+	vars <- c("None" = "", groupable_vars())
   selectInput(inputId = "ct_var1", label = "Select a categorical variable:",
     choices = vars, selected = state_single("ct_var1",vars), multiple = FALSE)
 })
 
 output$ui_ct_var2 <- renderUI({
   if (not_available(input$ct_var1)) return()
-  vars <- c("None", groupable_vars())
+  vars <- c("None" = "", groupable_vars())
 
   if (length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
   selectInput(inputId = "ct_var2", label = "Select a categorical variable:",
@@ -106,7 +106,7 @@ ct_available <- reactive({
 })
 
 observeEvent(input$cross_tabs_report, {
-  if (input$ct_var1 == "None" || input$ct_var2 == "None") return(invisible())
+  if (is_empty(nput$ct_var1) || is_empty(input$ct_var2)) return(invisible())
   inp_out <- list("","")
 	if (length(input$ct_check) > 0) {
 		outputs <- c("summary","plot")

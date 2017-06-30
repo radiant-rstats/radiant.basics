@@ -20,11 +20,12 @@ sp_inputs <- reactive({
 })
 
 output$ui_sp_var <- renderUI({
-  vars <- c("None", groupable_vars())
+  vars <- c("None" = "", groupable_vars())
   selectInput(inputId = "sp_var", label = "Variable (select one):",
-              choices = vars,
-              # selected = use_input("sp_var",vars), multiple = FALSE)
-              selected = state_single("sp_var",vars), multiple = FALSE)
+    choices = vars,
+    selected = state_single("sp_var", vars), 
+    multiple = FALSE
+  )
 })
 
 output$up_sp_lev <- renderUI({
@@ -41,10 +42,11 @@ output$ui_single_prop <- renderUI({
     conditionalPanel(condition = "input.tabs_single_prop == 'Plot'",
       wellPanel(
         selectizeInput(inputId = "sp_plots", label = "Select plots:",
-                choices = sp_plots,
-                selected = state_single("sp_plots", sp_plots, "bar"),
-                multiple = TRUE,
-                options = list(plugins = list('remove_button', 'drag_drop')))
+          choices = sp_plots,
+          selected = state_multiple("sp_plots", sp_plots, "bar"),
+            multiple = TRUE, 
+            options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop"))
+        )
       )
     ),
     wellPanel(
@@ -52,14 +54,13 @@ output$ui_single_prop <- renderUI({
       uiOutput("up_sp_lev"),
    	  selectInput(inputId = "sp_alternative", label = "Alternative hypothesis:",
   	  	choices = sp_alt,
-        # selected = state_single("sp_alternative", sp_alt, sp_args$alternative),
-        selected = state_init("sp_alternative", sp_args$alternative),
+        selected = state_single("sp_alternative", sp_alt, sp_args$alternative),
   	  	multiple = FALSE),
     	sliderInput("sp_conf_lev","Confidence level:", min = 0.85, max = 0.99,
         value = state_init("sp_conf_lev", sp_args$conf_lev), step = 0.01),
       numericInput("sp_comp_value", "Comparison value:",
-                   state_init('sp_comp_value', sp_args$comp_value),
-                   min = 0.01, max = 0.99, step = 0.01)
+        state_init('sp_comp_value', sp_args$comp_value),
+        min = 0.01, max = 0.99, step = 0.01)
       # radioButtons("sp_type", label = "Test:", c("Binomial" = "binom", "Chi-square" = "chisq"),
       #     selected = state_init("sp_type", "binom"),
       #     inline = TRUE)
@@ -126,7 +127,7 @@ sp_available <- reactive({
 })
 
 observeEvent(input$single_prop_report, {
-  if (input$sp_var == "None") return(invisible())
+  if (is_empty(input$sp_var)) return(invisible())
   if (length(input$sp_plots) == 0) {
     figs <- FALSE
     outputs <- c("summary")

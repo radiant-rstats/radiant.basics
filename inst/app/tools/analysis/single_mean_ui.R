@@ -21,7 +21,7 @@ sm_inputs <- reactive({
 
 output$ui_sm_var <- renderUI({
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
-  vars <- c("None", varnames()[isNum])
+  vars <- c("None" = "", varnames()[isNum])
   selectInput(inputId = "sm_var", label = "Variable (select one):",
     choices = vars, selected = state_single("sm_var",vars), multiple = FALSE)
 })
@@ -33,21 +33,21 @@ output$ui_single_mean <- renderUI({
       wellPanel(
         selectizeInput(inputId = "sm_plots", label = "Select plots:",
           choices = sm_plots,
-          selected = state_init("sm_plots", "hist"),
+          selected = state_multiple("sm_plots", sm_plots, "hist"),
           multiple = TRUE,
-          options = list(plugins = list('remove_button', 'drag_drop')))
+          options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop")))
       )
     ),
     wellPanel(
  	   	uiOutput("ui_sm_var"),
   	  selectInput(inputId = "sm_alternative", label = "Alternative hypothesis:",
   	  	choices = sm_alt,
-        selected = state_init("sm_alternative", sm_args$alternative),
+        selected = state_single("sm_alternative", sm_alt, sm_args$alternative),
   	  	multiple = FALSE),
-    	sliderInput('sm_conf_lev',"Confidence level:", min = 0.85, max = 0.99,
+    	sliderInput("sm_conf_lev", "Confidence level:", min = 0.85, max = 0.99,
     		value = state_init('sm_conf_lev',sm_args$conf_lev), step = 0.01),
     	numericInput("sm_comp_value", "Comparison value:",
-    	  state_init('sm_comp_value',sm_args$comp_value))
+    	  state_init("sm_comp_value", sm_args$comp_value))
     ),
   	help_and_report(modal_title = 'Single mean', fun_name = 'single_mean',
                     help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/single_mean.md")))
@@ -118,7 +118,7 @@ sm_available <- reactive({
 })
 
 observeEvent(input$single_mean_report, {
-  if (input$sm_var == "None") return(invisible())
+  if (is_empty(input$sm_var)) return(invisible())
   if (length(input$sm_plots) == 0) {
     figs <- FALSE
     outputs <- c("summary")

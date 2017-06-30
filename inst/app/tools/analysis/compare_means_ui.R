@@ -21,22 +21,18 @@ cm_inputs <- reactive({
 # Compare means
 ###############################
 output$ui_cm_var1 <- renderUI({
-  # isNumOrFct <- "numeric" == .getclass() |
-  #               "integer" == .getclass() |
-  #               "factor" == .getclass()
-  # vars <- c("None", varnames()[isNumOrFct])
-
-  vars <- c("None", groupable_vars())
+  vars <- c("None" = "", groupable_vars())
   isNum <- "numeric" == .getclass() | "integer" == .getclass()
 
   ## can't use unique here - removes variable type information
   vars <- c(vars, varnames()[isNum]) %>% .[!duplicated(.)]
 
   selectInput(inputId = "cm_var1",
-              label = "Select a factor or numeric variable:",
-              choices = vars,
-              selected = state_single("cm_var1",vars),
-              multiple = FALSE)
+    label = "Select a factor or numeric variable:",
+    choices = vars,
+    selected = state_single("cm_var1",vars),
+    multiple = FALSE
+  )
 })
 
 output$ui_cm_var2 <- renderUI({
@@ -52,11 +48,11 @@ output$ui_cm_var2 <- renderUI({
     selectizeInput(inputId = "cm_var2", label = "Numeric variable(s):",
       selected = state_multiple("cm_var2", vars),
       choices = vars, multiple = TRUE,
-      options = list(placeholder = 'Select variables',
-                     plugins = list('remove_button', 'drag_drop')))
+      options = list(placeholder = "None",
+                     plugins = list("remove_button", "drag_drop")))
   } else {
     ## when cm_var1 is not numeric comparisons are across levels/groups
-    vars <- c("None", vars)
+    vars <- c("None" = "", vars)
     selectInput(inputId = "cm_var2", label = "Numeric variable:",
       selected = state_single("cm_var2", vars),
       choices = vars, multiple = FALSE)
@@ -82,7 +78,7 @@ output$ui_cm_comb <- renderUI({
     choices = cmb,
     selected = state_multiple("cm_comb", cmb, cmb[1]),
     multiple = TRUE,
-    options = list(plugins = list('remove_button', 'drag_drop')))
+    options = list(placeholder = "Evaluate all combinations", plugins = list("remove_button", "drag_drop")))
 })
 
 
@@ -92,10 +88,10 @@ output$ui_compare_means <- renderUI({
     conditionalPanel(condition = "input.tabs_compare_means == 'Plot'",
       wellPanel(
         selectizeInput(inputId = "cm_plots", label = "Select plots:",
-                choices = cm_plots,
-                selected = state_multiple("cm_plots", cm_plots, "scatter"),
-                multiple = TRUE,
-                options = list(plugins = list('remove_button', 'drag_drop')))
+          choices = cm_plots,
+          selected = state_multiple("cm_plots", cm_plots, "scatter"),
+          multiple = TRUE,
+          options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop")))
       )
     ),
     wellPanel(
@@ -105,17 +101,16 @@ output$ui_compare_means <- renderUI({
         uiOutput("ui_cm_comb"),
         selectInput(inputId = "cm_alternative", label = "Alternative hypothesis:",
           choices = cm_alt,
-          selected = state_init("cm_alternative", cm_args$alternative)),
-        sliderInput('cm_conf_lev',"Confidence level:", min = 0.85, max = 0.99,
-          value = state_init("cm_conf_lev",cm_args$conf_lev), step = 0.01),
+          selected = state_single("cm_alternative", cm_alt, cm_args$alternative)),
+        sliderInput("cm_conf_lev", "Confidence level:", min = 0.85, max = 0.99,
+          value = state_init("cm_conf_lev", cm_args$conf_lev), step = 0.01),
         checkboxInput("cm_show", "Show additional statistics", value = state_init("cm_show", FALSE)),
         radioButtons(inputId = "cm_samples", label = "Sample type:", cm_samples,
           selected = state_init("cm_samples", cm_args$samples),
           inline = TRUE),
         radioButtons(inputId = "cm_adjust", label = "Multiple comp. adjustment:", cm_adjust,
           selected = state_init("cm_adjust", cm_args$adjust),
-          inline = TRUE)
-        ,
+          inline = TRUE),
         radioButtons(inputId = "cm_test", label = "Test type:",
           c("t-test" = "t", "Wilcox" = "wilcox"),
           selected = state_init("cm_test", cm_args$test),
@@ -188,7 +183,7 @@ cm_available <- reactive({
 })
 
 observeEvent(input$compare_means_report, {
-  if (input$cm_var1 == "None") return(invisible())
+  if (is_empty(input$cm_var1)) return(invisible())
   figs <- FALSE
   outputs <- c("summary")
   inp_out <- list(list(show = input$cm_show), "")

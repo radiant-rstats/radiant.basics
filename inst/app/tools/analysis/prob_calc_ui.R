@@ -270,9 +270,9 @@ output$ui_pc_input_unif <- renderUI({
 output$ui_prob_calc <- renderUI({
   tagList(
     wellPanel(
-      selectizeInput("pc_dist", label = "Distribution:",
+      selectInput("pc_dist", label = "Distribution:",
         choices = pc_dist,
-        selected = state_single("pc_dist", pc_dist, "norm"),
+        selected = state_init("pc_dist", "norm"),
         multiple = FALSE),
       conditionalPanel("input.pc_dist == 'norm'",
         uiOutput("ui_pc_norm")

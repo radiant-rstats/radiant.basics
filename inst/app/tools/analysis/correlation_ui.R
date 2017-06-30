@@ -69,7 +69,7 @@ output$ui_correlation <- renderUI({
 })
 
 cor_plot <- reactive({
-	length(input$cor_vars) %>%
+	max(2, length(input$cor_vars)) %>%
   	{ list(plot_width = 400 + 75 * ., plot_height = 400 + 75 * .) }
 })
 
