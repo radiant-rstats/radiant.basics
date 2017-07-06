@@ -1,14 +1,14 @@
 ###############################
-# Correlation
+## Correlation
 ###############################
 cor_method <- c("Pearson" = "pearson", "Spearman" = "spearman", "Kendall" = "kendall")
 
-# list of function arguments
+## list of function arguments
 cor_args <- as.list(formals(correlation))
 
-# list of function inputs selected by user
+## list of function inputs selected by user
 cor_inputs <- reactive({
-  # loop needed because reactive values don't allow single bracket indexing
+  ## loop needed because reactive values don't allow single bracket indexing
   cor_args$data_filter <- if (input$show_filter) input$data_filter else ""
   cor_args$dataset <- input$dataset
   for (i in r_drop(names(cor_args)))
@@ -31,7 +31,7 @@ output$ui_cor_vars <- renderUI({
 
   withProgress(message = "Acquiring variable information", value = 1, {
     vars <- varnames()
-  	isChar <- .getclass() %in% c("character", "factor") %>%
+    isChar <- .getclass() %in% c("character", "factor") %>%
       set_names(vars)
     tlv <- two_level_vars()
     if (length(tlv) > 0) isChar[tlv] <- FALSE
@@ -40,8 +40,8 @@ output$ui_cor_vars <- renderUI({
   if (length(vars) == 0) return()
   selectInput(inputId = "cor_vars", label = "Select variables:", 
     choices = vars,
- 		selected = state_multiple("cor_vars",vars),
- 		multiple = TRUE, 
+    selected = state_multiple("cor_vars",vars),
+    multiple = TRUE, 
     size = min(10, length(vars)), 
     selectize = FALSE
   )
@@ -50,27 +50,37 @@ output$ui_cor_vars <- renderUI({
 output$ui_correlation <- renderUI({
   req(input$dataset)
   tagList(
-  	wellPanel(
-      checkboxInput("cor_pause", "Pause estimation", state_init("cor_pause", FALSE)),
-	    uiOutput("ui_cor_vars"),
-		  selectInput(inputId = "cor_method", label = "Method:", choices = cor_method,
-  	  	selected = state_single("cor_method", cor_method, "pearson"), multiple = FALSE),
-		  conditionalPanel(condition = "input.tabs_correlation == 'Summary'",
-     		numericInput("cor_cutoff", label = "Correlation cutoff:", min = 0, max = 1,
-    			value = state_init("cor_cutoff",0), step = 0.05),
-     		checkboxInput("cor_covar", label = "Show covariance matrix",
-     		              value = state_init("cor_covar", FALSE))
-     	)
-	  ),
-  	help_and_report(modal_title = "Correlation",
-  	                fun_name = "correlation",
-                    help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/correlation.md")))
-	)
+    wellPanel(
+      checkboxInput("cor_pause", "Pause estimation", 
+        state_init("cor_pause", FALSE)
+      ),
+      uiOutput("ui_cor_vars"),
+      selectInput("cor_method", "Method:", 
+        choices = cor_method, 
+        selected = state_single("cor_method", cor_method, "pearson"), 
+        multiple = FALSE
+      ),
+      conditionalPanel(condition = "input.tabs_correlation == 'Summary'",
+        numericInput("cor_cutoff", "Correlation cutoff:", 
+          min = 0, max = 1, step = 0.05,
+          value = state_init("cor_cutoff", 0)
+        ),
+        checkboxInput("cor_covar", "Show covariance matrix", 
+          value = state_init("cor_covar", FALSE)
+        )
+      )
+    ),
+    help_and_report(
+      modal_title = "Correlation", 
+      fun_name = "correlation", 
+      help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/correlation.md"))
+    )
+  )
 })
 
 cor_plot <- reactive({
-	max(2, length(input$cor_vars)) %>%
-  	{ list(plot_width = 400 + 75 * ., plot_height = 400 + 75 * .) }
+  max(2, length(input$cor_vars)) %>%
+    { list(plot_width = 400 + 75 * ., plot_height = 400 + 75 * .) }
 })
 
 cor_plot_width <- function()
@@ -79,28 +89,39 @@ cor_plot_width <- function()
 cor_plot_height <- function()
   cor_plot() %>% { if (is.list(.)) .$plot_height else 650 }
 
-# output is called from the main radiant ui.R
+## output is called from the main radiant ui.R
 output$correlation <- renderUI({
 
-	register_print_output("summary_correlation", ".summary_correlation")
-	register_plot_output("plot_correlation", ".plot_correlation",
-                       	height_fun = "cor_plot_height",
-                       	width_fun = "cor_plot_width")
+  register_print_output("summary_correlation", ".summary_correlation")
+  register_plot_output("plot_correlation", ".plot_correlation",
+    height_fun = "cor_plot_height", 
+    width_fun = "cor_plot_width"
+  )
 
-	# two separate tabs
-	cor_output_panels <- tabsetPanel(
+  ## two separate tabs
+  cor_output_panels <- tabsetPanel(
     id = "tabs_correlation",
     tabPanel("Summary", verbatimTextOutput("summary_correlation")),
     tabPanel("Plot",
-             plot_downloader("correlation", height = cor_plot_height),
-             plotOutput("plot_correlation", width = "100%", height = "100%"))
+      conditionalPanel("input.cor_pause == false",
+        plot_downloader("correlation", 
+          width = cor_plot_width, 
+          height = cor_plot_height
+        )
+      ),
+      plotOutput("plot_correlation",
+        width = "100%", 
+        height = "100%"
+      )
+    )
   )
 
-	stat_tab_panel(menu = "Basics > Tables",
-	              tool = "Correlation",
-	              tool_ui = "ui_correlation",
-	             	output_panels = cor_output_panels)
-
+  stat_tab_panel(
+    menu = "Basics > Tables", 
+    tool = "Correlation", 
+    tool_ui = "ui_correlation", 
+    output_panels = cor_output_panels
+  )
 })
 
 cor_available <- reactive({
@@ -117,7 +138,7 @@ cor_available <- reactive({
       "Provide a correlation cutoff value in the range from 0 to 1"
     )
   )
-	do.call(correlation, cor_inputs())
+  do.call(correlation, cor_inputs())
 })
 
 .summary_correlation <- reactive({
@@ -127,7 +148,7 @@ cor_available <- reactive({
 
 .plot_correlation <- reactive({
   if (cor_available() != "available") return(cor_available())
-	capture_plot(plot(.correlation()))
+  capture_plot(plot(.correlation()))
 })
 
 observeEvent(input$correlation_report, {
@@ -135,9 +156,11 @@ observeEvent(input$correlation_report, {
   inp_out <- list("","")
   inp_out[[1]] <- clean_args(cor_sum_inputs(), cor_sum_args[-1])
   inp_out[[2]] <- list(n = 1000)
-  update_report(inp_main = clean_args(cor_inputs(), cor_args),
-                fun_name = "correlation",
-                inp_out = inp_out,
-                fig.width = cor_plot_width(),
-                fig.height = cor_plot_height())
+  update_report(
+    inp_main = clean_args(cor_inputs(), cor_args), 
+    fun_name = "correlation", 
+    inp_out = inp_out, 
+    fig.width = cor_plot_width(), 
+    fig.height = cor_plot_height()
+  )
 })

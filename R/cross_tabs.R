@@ -28,7 +28,7 @@ cross_tabs <- function(dataset, var1, var2,
     var2 <- nm[2]
   } else {
 
-  	dat <- getdata(dataset, c(var1, var2), filt = data_filter)
+    dat <- getdata(dataset, c(var1, var2), filt = data_filter)
     if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
     ## Use simulated p-values when
@@ -37,25 +37,25 @@ cross_tabs <- function(dataset, var1, var2,
     # http://stats.stackexchange.com/questions/62445/rules-to-apply-monte-carlo-simulation-of-p-values-for-chi-squared-test
 
     ## creating and cleaning up the table
-  	tab <- table(dat[[var1]], dat[[var2]])
-  	tab[is.na(tab)] <- 0
-  	tab <- tab[ ,colSums(tab) > 0] %>% {.[rowSums(.) > 0, ]} %>% as.table
- 		## dat not needed in summary or plot
-  	rm(dat)
+    tab <- table(dat[[var1]], dat[[var2]])
+    tab[is.na(tab)] <- 0
+    tab <- tab[ ,colSums(tab) > 0] %>% {.[rowSums(.) > 0, ]} %>% as.table
+    ## dat not needed in summary or plot
+    rm(dat)
   }
 
-	cst <- sshhr( chisq.test(tab, correct = FALSE) )
+  cst <- sshhr( chisq.test(tab, correct = FALSE) )
 
-	## adding the % deviation table
-	# cst$deviation <- with(cst, (observed-expected) / expected)
-	cst$chi_sq	<- with(cst, (observed - expected)^2 / expected)
+  ## adding the % deviation table
+  # cst$deviation <- with(cst, (observed-expected) / expected)
+  cst$chi_sq  <- with(cst, (observed - expected)^2 / expected)
 
-	res <- tidy(cst)
-	elow <- sum(cst$expected < 5)
+  res <- tidy(cst)
+  elow <- sum(cst$expected < 5)
 
   if (elow > 0) {
-  	res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value
-  	res$parameter <- paste0("*",res$parameter,"*")
+    res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value
+    res$parameter <- paste0("*",res$parameter,"*")
   }
 
   as.list(environment()) %>% add_class("cross_tabs")
@@ -85,101 +85,101 @@ summary.cross_tabs <- function(object,
                                ...) {
 
   cat("Cross-tabs\n")
-	cat("Data     :", object$dataset, "\n")
-	if (object$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-	cat("Variables:", paste0(c(object$var1, object$var2), collapse = ", "), "\n")
-	cat("Null hyp.: there is no association between", object$var1, "and", object$var2, "\n")
-	cat("Alt. hyp.: there is an association between", object$var1, "and", object$var2, "\n")
+  cat("Data     :", object$dataset, "\n")
+  if (object$data_filter %>% gsub("\\s","",.) != "")
+    cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+  cat("Variables:", paste0(c(object$var1, object$var2), collapse = ", "), "\n")
+  cat("Null hyp.: there is no association between", object$var1, "and", object$var2, "\n")
+  cat("Alt. hyp.: there is an association between", object$var1, "and", object$var2, "\n")
 
-	rnames <- object$cst$observed %>% rownames %>% c(., "Total")
-	cnames <- object$cst$observed %>% colnames %>% c(., "Total")
+  rnames <- object$cst$observed %>% rownames %>% c(., "Total")
+  cnames <- object$cst$observed %>% colnames %>% c(., "Total")
 
-	if ("observed" %in% check) {
-		cat("\nObserved:\n")
-		object$cst$observed %>%
-			rbind(colSums(.)) %>%
-			set_rownames(rnames) %>%
-			cbind(rowSums(.)) %>%
-			set_colnames(cnames) %>%
-			print
-	}
+  if ("observed" %in% check) {
+    cat("\nObserved:\n")
+    object$cst$observed %>%
+      rbind(colSums(.)) %>%
+      set_rownames(rnames) %>%
+      cbind(rowSums(.)) %>%
+      set_colnames(cnames) %>%
+      print
+  }
 
-	if ("expected" %in% check) {
-		cat("\nExpected: (row total x column total) / total\n")
-		object$cst$expected %>%
-			rbind(colSums(.)) %>%
-			set_rownames(rnames) %>%
-			cbind(rowSums(.)) %>%
-			set_colnames(cnames) %>%
-			round(dec) %>%
-			print
-	}
+  if ("expected" %in% check) {
+    cat("\nExpected: (row total x column total) / total\n")
+    object$cst$expected %>%
+      rbind(colSums(.)) %>%
+      set_rownames(rnames) %>%
+      cbind(rowSums(.)) %>%
+      set_colnames(cnames) %>%
+      round(dec) %>%
+      print
+  }
 
-	if ("chi_sq" %in% check) {
-		cat("\nContribution to chi-squared: (o - e)^2 / e\n")
-		object$cst$chi_sq %>%
-			rbind(colSums(.)) %>%
-			set_rownames(rnames) %>%
-			cbind(rowSums(.)) %>%
-			set_colnames(cnames) %>%
-			round(dec) %>%
-			print
-	}
+  if ("chi_sq" %in% check) {
+    cat("\nContribution to chi-squared: (o - e)^2 / e\n")
+    object$cst$chi_sq %>%
+      rbind(colSums(.)) %>%
+      set_rownames(rnames) %>%
+      cbind(rowSums(.)) %>%
+      set_colnames(cnames) %>%
+      round(dec) %>%
+      print
+  }
 
-	if ("dev_std" %in% check) {
-		cat("\nDeviation standardized: (o - e) / sqrt(e)\n")
-		print(round(object$cst$residuals, dec)) 	## standardized residuals
-	}
+  if ("dev_std" %in% check) {
+    cat("\nDeviation standardized: (o - e) / sqrt(e)\n")
+    print(round(object$cst$residuals, dec))   ## standardized residuals
+  }
 
-	if ("row_perc" %in% check) {
-		cat("\nRow percentages:\n")
-		object$cst$observed %>%
-			rbind(colSums(.)) %>%
-			set_rownames(rnames) %>%
-			cbind(rowSums(.)) %>%
-			set_colnames(cnames) %>%
-			{. / .[,"Total"]} %>%
-			round(dec) %>%
-			print
-	}
+  if ("row_perc" %in% check) {
+    cat("\nRow percentages:\n")
+    object$cst$observed %>%
+      rbind(colSums(.)) %>%
+      set_rownames(rnames) %>%
+      cbind(rowSums(.)) %>%
+      set_colnames(cnames) %>%
+      {. / .[,"Total"]} %>%
+      round(dec) %>%
+      print
+  }
 
-	if ("col_perc" %in% check) {
-		cat("\nColumn percentages:\n")
-		object$cst$observed %>%
-			rbind(colSums(.)) %>%
-			set_rownames(rnames) %>%
-			cbind(rowSums(.)) %>%
-			set_colnames(cnames) %>%
-			{t(.) / .["Total",]} %>% t %>%
-			round(dec) %>%
-			print
-	}
+  if ("col_perc" %in% check) {
+    cat("\nColumn percentages:\n")
+    object$cst$observed %>%
+      rbind(colSums(.)) %>%
+      set_rownames(rnames) %>%
+      cbind(rowSums(.)) %>%
+      set_colnames(cnames) %>%
+      {t(.) / .["Total",]} %>% t %>%
+      round(dec) %>%
+      print
+  }
 
-	if ("perc" %in% check) {
-		cat("\nProbability table:\n")
-		object$cst$observed %>%
-			rbind(colSums(.)) %>%
-			set_rownames(rnames) %>%
-			cbind(rowSums(.)) %>%
-			set_colnames(cnames) %>%
-			{. / .["Total","Total"]} %>%
-			round(dec) %>%
-			print
-	}
+  if ("perc" %in% check) {
+    cat("\nProbability table:\n")
+    object$cst$observed %>%
+      rbind(colSums(.)) %>%
+      set_rownames(rnames) %>%
+      cbind(rowSums(.)) %>%
+      set_colnames(cnames) %>%
+      {. / .["Total","Total"]} %>%
+      round(dec) %>%
+      print
+  }
 
-	# if ("dev_perc" %in% check) {
-	# 	cat("\nDeviation %: (o - e) / e\n")
-	# 	print(round(object$cst$deviation, 2)) 	# % deviation
-	# }
+  # if ("dev_perc" %in% check) {
+  #   cat("\nDeviation %: (o - e) / e\n")
+  #   print(round(object$cst$deviation, 2))   # % deviation
+  # }
 
   round_fun <- function(x) is.na(x) || is.character(x)
-	object$res[!sapply(object$res, round_fun)] %<>% round(dec + 1)
+  object$res[!sapply(object$res, round_fun)] %<>% round(dec + 1)
 
-	if (object$res$p.value < .001) object$res$p.value  <- "< .001"
-	cat(paste0("\nChi-squared: ", object$res$statistic, " df(", object$res$parameter, "), p.value ", object$res$p.value), "\n\n")
-	cat(paste(sprintf("%.1f",100 * (object$elow / length(object$cst$expected))),"% of cells have expected values below 5\n"), sep = "")
-	if (object$elow > 0) cat("p.value for chi-squared statistics obtained using simulation (2000 replicates)")
+  if (object$res$p.value < .001) object$res$p.value  <- "< .001"
+  cat(paste0("\nChi-squared: ", object$res$statistic, " df(", object$res$parameter, "), p.value ", object$res$p.value), "\n\n")
+  cat(paste(sprintf("%.1f",100 * (object$elow / length(object$cst$expected))),"% of cells have expected values below 5\n"), sep = "")
+  if (object$elow > 0) cat("p.value for chi-squared statistics obtained using simulation (2000 replicates)")
 }
 
 #' Plot method for the cross_tabs function
@@ -207,111 +207,134 @@ plot.cross_tabs <- function(x,
                             custom = FALSE,
                             ...) {
 
-	object <- x; rm(x)
+  object <- x; rm(x)
 
-	gather_table <- function(tab) {
-		tab %>%
-			data.frame(., check.names = FALSE) %>%
-			mutate(rnames = rownames(.)) %>%
-			{sshhr( gather_(., "variable", "values", setdiff(colnames(.), "rnames")) )}
-	}
-
-	plot_list <- list()
-	if (is_empty(check)) check = "observed"
-
-	if ("observed" %in% check) {
-
-		fact_names <- object$cst$observed %>% dimnames %>% as.list
-    tab <- as.data.frame(object$cst$observed, check.names = FALSE)
-		colnames(tab)[1:2] <- c(object$var1, object$var2)
- 	  tab[[1]] %<>% as.factor %>% factor(levels = fact_names[[1]])
-		tab[[2]] %<>% as.factor %>% factor(levels = fact_names[[2]])
-
-		plot_list[["observed"]] <-
-		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
-		    geom_bar(stat = "identity", position = "fill", alpha = .7) +
-		    labs(list(title = paste("Observed frequencies for ",object$var2," versus ",object$var1, sep = ""),
-				  	 x = object$var2, y = "", fill = object$var1)) +
-		    scale_y_continuous(labels = scales::percent)
-	}
-
-	if ("expected" %in% check) {
-		fact_names <- object$cst$expected %>% dimnames %>% as.list
-  	tab <- gather_table(object$cst$expected)
-		tab$rnames %<>% as.factor %>% factor(levels = fact_names[[1]])
-		tab$variable %<>% as.factor %>% factor(levels = fact_names[[2]])
-		plot_list[["expected"]] <-
-		  ggplot(tab, aes_string(x = "variable", y = "values", fill = "rnames")) +
-		    geom_bar(stat = "identity", position = "fill", alpha = .7) +
-		    labs(list(title = paste("Expected frequencies for ",object$var2," versus ",object$var1, sep = ""),
-		         x = object$var2, y = "", fill = object$var1)) +
-		    scale_y_continuous(labels = scales::percent)
-	}
-
-	if ("chi_sq" %in% check) {
-  	tab <- as.data.frame(object$cst$chi_sq, check.names = FALSE)
-		colnames(tab)[1:2] <- c(object$var1, object$var2)
-		plot_list[["chi_sq"]] <-
-		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
-		    geom_bar(stat = "identity", position = "dodge", alpha = .7) +
-		    labs(list(title = paste("Contribution to chi-squared for ",object$var2," versus ",object$var1, sep = ""),
-		         x = object$var2, y = ""))
+  gather_table <- function(tab) {
+    tab %>%
+      data.frame(., check.names = FALSE) %>%
+      mutate(rnames = rownames(.)) %>%
+      {sshhr( gather_(., "variable", "values", setdiff(colnames(.), "rnames")) )}
   }
 
-	if ("dev_std" %in% check) {
-  	tab <- as.data.frame(object$cst$residuals, check.names = FALSE)
-		colnames(tab)[1:2] <- c(object$var1, object$var2)
-		plot_list[["dev_std"]] <-
-		  ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
-		    geom_bar(stat = "identity", position = "dodge", alpha = .7) +
-		    geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = 'black', linetype = 'longdash', size = .5) +
-		    geom_text(data = NULL, x = 1, y = 2.11, label = "95%") +
-		    geom_text(data = NULL, x = 1, y = 1.49, label = "90%") +
-		    labs(list(title = paste("Deviation standardized for ",object$var2," versus ",object$var1, sep = ""),
-		         x = object$var2, y = ""))
-	}
+  plot_list <- list()
+  if (is_empty(check)) check = "observed"
 
-	if ("row_perc" %in% check) {
-		plot_list[["row_perc"]] <-
-	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
-	  	  group_by_("Var1") %>%
-	  	  mutate(perc = Freq / sum(Freq)) %>%
-			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
-			    geom_bar(stat = "identity", position = "dodge", alpha = .7) +
-			 		labs(fill = object$var1) +
-			 		scale_y_continuous(labels = scales::percent) +
-			 		ylab("Percentage") + xlab(object$var2) +
-			    ggtitle("Row percentages")
-	}
+  if ("observed" %in% check) {
 
-	if ("col_perc" %in% check) {
-		plot_list[["col_perc"]] <-
-	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
-	  	  group_by_("Var2") %>%
-	  	  mutate(perc = Freq / sum(Freq)) %>%
-			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
-			    geom_bar(stat = "identity", position = "dodge", alpha = .7) +
-			 		labs(fill = object$var1) +
-			 		scale_y_continuous(labels = scales::percent) +
-			 		ylab("Percentage") + xlab(object$var2) +
-			    ggtitle("Column percentages")
-	}
+    fact_names <- object$cst$observed %>% dimnames %>% as.list
+    tab <- as.data.frame(object$cst$observed, check.names = FALSE)
+    colnames(tab)[1:2] <- c(object$var1, object$var2)
+    tab[[1]] %<>% as.factor %>% factor(levels = fact_names[[1]])
+    tab[[2]] %<>% as.factor %>% factor(levels = fact_names[[2]])
 
-	if ("perc" %in% check) {
-		plot_list[["perc"]] <-
-	  	as.data.frame(object$cst$observed, check.names = FALSE) %>%
-	  	  mutate(perc = Freq / sum(Freq)) %>%
-			  ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
-			    geom_bar(stat = "identity", position = "dodge", alpha = .7) +
-			 		labs(fill = object$var1) +
-			 		scale_y_continuous(labels = scales::percent) +
-			 		ylab("Percentage") + xlab(object$var2) +
-			    ggtitle("Table percentages")
-	}
+    plot_list[["observed"]] <-
+      ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
+        geom_bar(stat = "identity", position = "fill", alpha = .7) +
+        scale_y_continuous(labels = scales::percent) +
+        labs(
+          title = paste("Observed frequencies for ",object$var2," versus ",object$var1, sep = ""),
+          x = object$var2, 
+          y = "", 
+          fill = object$var1
+        ) 
+  }
+
+  if ("expected" %in% check) {
+    fact_names <- object$cst$expected %>% dimnames %>% as.list
+    tab <- gather_table(object$cst$expected)
+    tab$rnames %<>% as.factor %>% factor(levels = fact_names[[1]])
+    tab$variable %<>% as.factor %>% factor(levels = fact_names[[2]])
+    plot_list[["expected"]] <-
+      ggplot(tab, aes_string(x = "variable", y = "values", fill = "rnames")) +
+        geom_bar(stat = "identity", position = "fill", alpha = .7) +
+        scale_y_continuous(labels = scales::percent) +
+        labs(
+          title = paste("Expected frequencies for ",object$var2," versus ",object$var1, sep = ""), 
+          x = object$var2, 
+          y = "", 
+          fill = object$var1
+        ) 
+  }
+
+  if ("chi_sq" %in% check) {
+    tab <- as.data.frame(object$cst$chi_sq, check.names = FALSE)
+    colnames(tab)[1:2] <- c(object$var1, object$var2)
+    plot_list[["chi_sq"]] <-
+      ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
+        geom_bar(stat = "identity", position = "dodge", alpha = .7) +
+        labs(
+          title = paste("Contribution to chi-squared for ",object$var2," versus ",object$var1, sep = ""),
+          x = object$var2, 
+          y = ""
+        )
+  }
+
+  if ("dev_std" %in% check) {
+    tab <- as.data.frame(object$cst$residuals, check.names = FALSE)
+    colnames(tab)[1:2] <- c(object$var1, object$var2)
+    plot_list[["dev_std"]] <-
+      ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
+        geom_bar(stat = "identity", position = "dodge", alpha = .7) +
+        geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = "black", linetype = "longdash", size = .5) +
+        geom_text(data = NULL, x = 1, y = 2.11, label = "95%") +
+        geom_text(data = NULL, x = 1, y = 1.49, label = "90%") +
+        labs(
+          title = paste("Deviation standardized for ",object$var2," versus ",object$var1, sep = ""),
+          x = object$var2, 
+          y = ""
+        )
+  }
+
+  if ("row_perc" %in% check) {
+    plot_list[["row_perc"]] <-
+      as.data.frame(object$cst$observed, check.names = FALSE) %>%
+        group_by_("Var1") %>%
+        mutate(perc = Freq / sum(Freq)) %>%
+        ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
+          geom_bar(stat = "identity", position = "dodge", alpha = .7) +
+          scale_y_continuous(labels = scales::percent) +
+          labs(
+            title = "Row percentages",
+            y = "Percentage", 
+            x = object$var2, 
+            fill = object$var1
+          )
+  }
+
+  if ("col_perc" %in% check) {
+    plot_list[["col_perc"]] <-
+      as.data.frame(object$cst$observed, check.names = FALSE) %>%
+        group_by_("Var2") %>%
+        mutate(perc = Freq / sum(Freq)) %>%
+        ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
+          geom_bar(stat = "identity", position = "dodge", alpha = .7) +
+          scale_y_continuous(labels = scales::percent) +
+          labs(
+            title = "Column percentages", 
+            y = "Percentage",
+            x = object$var2,
+            fill = object$var1
+          )
+  }
+
+  if ("perc" %in% check) {
+    plot_list[["perc"]] <-
+      as.data.frame(object$cst$observed, check.names = FALSE) %>%
+        mutate(perc = Freq / sum(Freq)) %>%
+        ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
+          geom_bar(stat = "identity", position = "dodge", alpha = .7) +
+          scale_y_continuous(labels = scales::percent) +
+          labs(
+            title = "Table percentages",
+            y = "Percentage",
+            x = object$var2, 
+            fill = object$var1
+          )
+  }
 
   if (custom)
     if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
-	sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
-	  {if (shiny) . else print(.)}
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
+    {if (shiny) . else print(.)}
 }

@@ -22,7 +22,7 @@ ct_inputs <- reactive({
 # Cross-tabs
 ###############################
 output$ui_ct_var1 <- renderUI({
-	vars <- c("None" = "", groupable_vars())
+  vars <- c("None" = "", groupable_vars())
   selectInput(inputId = "ct_var1", label = "Select a categorical variable:",
     choices = vars, selected = state_single("ct_var1",vars), multiple = FALSE)
 })
@@ -40,48 +40,57 @@ output$ui_ct_var2 <- renderUI({
 output$ui_cross_tabs <- renderUI({
   req(input$dataset)
   tagList(
-  	wellPanel(
-	    uiOutput("ui_ct_var1"),
-	    uiOutput("ui_ct_var2"),
-      checkboxGroupInput("ct_check", NULL, ct_check,
-        selected = state_group("ct_check"), inline = FALSE)
-		),
-  	help_and_report(modal_title = "Cross-tabs",
-  	                fun_name = "cross_tabs",
-                    help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/cross_tabs.md")))
+    wellPanel(
+      uiOutput("ui_ct_var1"),
+      uiOutput("ui_ct_var2"),
+      checkboxGroupInput("ct_check", NULL, 
+        choices = ct_check,
+        selected = state_group("ct_check"), 
+        inline = FALSE
+      )
+    ),
+    help_and_report(
+      modal_title = "Cross-tabs", 
+      fun_name = "cross_tabs", 
+      help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/cross_tabs.md"))
+    )
   )
 })
 
 ct_plot <- reactive({
-	list(plot_width = 650, plot_height = 400 * length(input$ct_check))
+  list(plot_width = 650, plot_height = 400 * length(input$ct_check))
 })
 
 ct_plot_width <- function()
-	ct_plot() %>% { if (is.list(.)) .$plot_width else 650 }
+  ct_plot() %>% { if (is.list(.)) .$plot_width else 650 }
 
 ct_plot_height <- function()
-	ct_plot() %>% { if (is.list(.)) .$plot_height else 400 }
+  ct_plot() %>% { if (is.list(.)) .$plot_height else 400 }
 
 ## output is called from the main radiant ui.R
 output$cross_tabs <- renderUI({
-	register_print_output("summary_cross_tabs", ".summary_cross_tabs")
-	register_plot_output("plot_cross_tabs", ".plot_cross_tabs",
-                       height_fun = "ct_plot_height",
-                       width_fun = "ct_plot_width")
-
-	## two separate tabs
-	ct_output_panels <- tabsetPanel(
-    id = "tabs_cross_tabs",
-    tabPanel("Summary", verbatimTextOutput("summary_cross_tabs")),
-    tabPanel("Plot", plot_downloader("cross_tabs", height = ct_plot_height),
-             plotOutput("plot_cross_tabs", width = "100%", height = "100%"))
+  register_print_output("summary_cross_tabs", ".summary_cross_tabs")
+  register_plot_output("plot_cross_tabs", ".plot_cross_tabs",
+    height_fun = "ct_plot_height", 
+    width_fun = "ct_plot_width"
   )
 
-	stat_tab_panel(menu = "Basics > Tables",
-	              tool = "Cross-tabs",
-	              tool_ui = "ui_cross_tabs",
-	             	output_panels = ct_output_panels)
+  ## two separate tabs
+  ct_output_panels <- tabsetPanel(
+    id = "tabs_cross_tabs",
+    tabPanel("Summary", verbatimTextOutput("summary_cross_tabs")),
+    tabPanel("Plot", 
+      plot_downloader("cross_tabs", height = ct_plot_height), 
+      plotOutput("plot_cross_tabs", width = "100%", height = "100%")
+    )
+  )
 
+  stat_tab_panel(
+    menu = "Basics > Tables", 
+    tool = "Cross-tabs", 
+    tool_ui = "ui_cross_tabs", 
+    output_panels = ct_output_panels
+  )
 })
 
 ct_available <- reactive({
@@ -92,38 +101,40 @@ ct_available <- reactive({
 })
 
 .cross_tabs <- reactive({
-	do.call(cross_tabs, ct_inputs())
+  do.call(cross_tabs, ct_inputs())
 })
 
 .summary_cross_tabs <- reactive({
   if (ct_available() != "available") return(ct_available())
-	summary(.cross_tabs(), check = input$ct_check)
+  summary(.cross_tabs(), check = input$ct_check)
 })
 
 .plot_cross_tabs <- reactive({
   if (ct_available() != "available") return(ct_available())
-	plot(.cross_tabs(), check = input$ct_check, shiny = TRUE)
+  plot(.cross_tabs(), check = input$ct_check, shiny = TRUE)
 })
 
 observeEvent(input$cross_tabs_report, {
-  if (is_empty(nput$ct_var1) || is_empty(input$ct_var2)) return(invisible())
+  if (is_empty(input$ct_var1) || is_empty(input$ct_var2)) return(invisible())
   inp_out <- list("","")
-	if (length(input$ct_check) > 0) {
-		outputs <- c("summary","plot")
+  if (length(input$ct_check) > 0) {
+    outputs <- c("summary","plot")
     inp_out[[1]] <- list(check = input$ct_check)
     inp_out[[2]] <- list(check = input$ct_check, custom = FALSE)
-		figs <- TRUE
-	} else {
+    figs <- TRUE
+  } else {
     outputs <- "summary"
     inp_out[[1]] <- list(check = "")
     figs <- FALSE
   }
 
-	update_report(inp_main = clean_args(ct_inputs(), ct_args),
-	              inp_out = inp_out,
-	             	fun_name = "cross_tabs",
-	             	outputs = outputs,
-	             	figs = figs,
-	             	fig.width = ct_plot_width(),
-	             	fig.height = ct_plot_height())
+  update_report(
+    inp_main = clean_args(ct_inputs(), ct_args), 
+    inp_out = inp_out, 
+    fun_name = "cross_tabs", 
+    outputs = outputs, 
+    figs = figs, 
+    fig.width = ct_plot_width(), 
+    fig.height = ct_plot_height()
+  )
 })

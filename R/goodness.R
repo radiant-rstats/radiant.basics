@@ -22,52 +22,51 @@ goodness <- function(dataset, var,
                      tab = NULL,
                      data_filter = "") {
 
-
   if (!missing(dataset) && !is.table(tab)) {
-  	dat <- getdata(dataset, var, filt = data_filter)
+    dat <- getdata(dataset, var, filt = data_filter)
     if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
     ## creating and cleaning up the table
-  	tab <- table(dat[[var]])
-  	tab[is.na(tab)] <- 0
-  	tab <- as.table(tab)
+    tab <- table(dat[[var]])
+    tab[is.na(tab)] <- 0
+    tab <- as.table(tab)
 
-		## dat not needed in summary or plot
-  	rm(dat)
+    ## dat not needed in summary or plot
+    rm(dat)
   }
 
-	if (is_not(p) || p == "") {
-		p <- rep(1/length(tab), length(tab))
-	} else if (is.character(p)) {
-	  p <- gsub(","," ", p) %>% strsplit("\\s+") %>% unlist %>% strsplit("/")
-		asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1])/as.numeric(x[2]), as.numeric(x[1]))
+  if (is_not(p) || p == "") {
+    p <- rep(1/length(tab), length(tab))
+  } else if (is.character(p)) {
+    p <- gsub(","," ", p) %>% strsplit("\\s+") %>% unlist %>% strsplit("/")
+    asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1])/as.numeric(x[2]), as.numeric(x[1]))
     p <- sshhr(sapply(p, asNum))
 
-	  if (anyNA(p))
-	    return(paste0("Invalid inputs: ", paste0(p, collapse = ", ")) %>% add_class("goodness"))
+    if (anyNA(p))
+      return(paste0("Invalid inputs: ", paste0(p, collapse = ", ")) %>% add_class("goodness"))
 
-	  lp <- length(p); lt <- length(tab)
-	  if (lt != lp && lt %% lp == 0) p <- rep(p, lt / lp)
+    lp <- length(p); lt <- length(tab)
+    if (lt != lp && lt %% lp == 0) p <- rep(p, lt / lp)
 
-	  if (!is.numeric(p) || sum(p) != 1)
-	    return(
-  		  paste0("Probabilities do not sum to 1 (",round(sum(p),3),")\nUse fractions if appropriate. Variable ", var, " has ", length(tab), " unique values.") %>%
-  		  add_class("goodness")
-		  )
-	}
+    if (!is.numeric(p) || sum(p) != 1)
+      return(
+        paste0("Probabilities do not sum to 1 (",round(sum(p),3),")\nUse fractions if appropriate. Variable ", var, " has ", length(tab), " unique values.") %>%
+        add_class("goodness")
+      )
+  }
 
-	cst <- sshhr( chisq.test(tab, p = p, correct = FALSE) )
+  cst <- sshhr( chisq.test(tab, p = p, correct = FALSE) )
 
-	## adding the chi-sq table
-	cst$chi_sq	<- with(cst, (observed - expected)^2 / expected)
+  ## adding the chi-sq table
+  cst$chi_sq  <- with(cst, (observed - expected)^2 / expected)
 
-	res <- tidy(cst)
-	elow <- sum(cst$expected < 5)
+  res <- tidy(cst)
+  elow <- sum(cst$expected < 5)
 
-	if (elow > 0) {
-	  res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value
-	  res$parameter <- paste0("*",res$parameter,"*")
-	}
+  if (elow > 0) {
+    res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value
+    res$parameter <- paste0("*",res$parameter,"*")
+  }
 
   as.list(environment()) %>% add_class("goodness")
 }
@@ -95,41 +94,41 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
   if (is.character(object)) return(object)
 
   cat("Goodness of fit test\n")
-	cat("Data     :", object$dataset, "\n")
-	if (object$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
-	cat("Variable :", object$var, "\n")
-	cat("Specified:", object$p, "\n")
-	cat("Null hyp.: the distribution of", object$var, "is consistent with the specified distribution\n")
-	cat("Alt. hyp.: the distribution of", object$var, "is not consistent with the specified distribution\n")
+  cat("Data     :", object$dataset, "\n")
+  if (object$data_filter %>% gsub("\\s","",.) != "")
+    cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+  cat("Variable :", object$var, "\n")
+  cat("Specified:", object$p, "\n")
+  cat("Null hyp.: the distribution of", object$var, "is consistent with the specified distribution\n")
+  cat("Alt. hyp.: the distribution of", object$var, "is not consistent with the specified distribution\n")
 
-	if ("observed" %in% check) {
-		cat("\nObserved:\n")
-		object$cst$observed %>% {.["Total"] <- sum(.); .} %>% print
-	}
+  if ("observed" %in% check) {
+    cat("\nObserved:\n")
+    object$cst$observed %>% {.["Total"] <- sum(.); .} %>% print
+  }
 
-	if ("expected" %in% check) {
-		cat("\nExpected: total x p\n")
-		object$cst$expected %>% {.["Total"] <- sum(.); .} %>% round(dec) %>% print
-	}
+  if ("expected" %in% check) {
+    cat("\nExpected: total x p\n")
+    object$cst$expected %>% {.["Total"] <- sum(.); .} %>% round(dec) %>% print
+  }
 
-	if ("chi_sq" %in% check) {
-		cat("\nContribution to chi-squared: (o - e)^2 / e\n")
-		object$cst$chi_sq %>% {.["Total"] <- sum(.); .} %>% round(dec) %>% print
-	}
+  if ("chi_sq" %in% check) {
+    cat("\nContribution to chi-squared: (o - e)^2 / e\n")
+    object$cst$chi_sq %>% {.["Total"] <- sum(.); .} %>% round(dec) %>% print
+  }
 
-	if ("dev_std" %in% check) {
-		cat("\nDeviation standardized: (o - e) / sqrt(e)\n")
-		print(round(object$cst$residuals, dec))
-	}
+  if ("dev_std" %in% check) {
+    cat("\nDeviation standardized: (o - e) / sqrt(e)\n")
+    print(round(object$cst$residuals, dec))
+  }
 
   round_fun <- function(x) is.na(x) || is.character(x)
-	object$res[!sapply(object$res, round_fun)] %<>% round(dec + 1)
+  object$res[!sapply(object$res, round_fun)] %<>% round(dec + 1)
 
-	if (object$res$p.value < .001) object$res$p.value  <- "< .001"
-	cat(paste0("\nChi-squared: ", object$res$statistic, " df(", object$res$parameter, "), p.value ", object$res$p.value), "\n\n")
-	cat(paste(sprintf("%.1f",100 * (object$elow / length(object$cst$expected))),"% of cells have expected values below 5\n"), sep = "")
-	if (object$elow > 0) cat("p.value for chi-squared statistics obtained using simulation (2000 replicates)")
+  if (object$res$p.value < .001) object$res$p.value  <- "< .001"
+  cat(paste0("\nChi-squared: ", object$res$statistic, " df(", object$res$parameter, "), p.value ", object$res$p.value), "\n\n")
+  cat(paste(sprintf("%.1f",100 * (object$elow / length(object$cst$expected))),"% of cells have expected values below 5\n"), sep = "")
+  if (object$elow > 0) cat("p.value for chi-squared statistics obtained using simulation (2000 replicates)")
 }
 
 #' Plot method for the goodness function
@@ -153,74 +152,83 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 #'
 #' @export
 plot.goodness <- function(x, check = "",
-													fillcol = "blue",
-	 											  shiny = FALSE,
-	 											  custom = FALSE,
-	 											  ...) {
+                          fillcol = "blue",
+                          shiny = FALSE,
+                          custom = FALSE,
+                          ...) {
 
-	object <- x; rm(x)
+  # object <- result
+  object <- x; rm(x)
   if (is.character(object)) return(object)
-	plot_list <- list()
-	if (is_empty(check)) check = "observed"
+  plot_list <- list()
+  if (is_empty(check)) check = "observed"
 
-	if ("observed" %in% check) {
-	  fact_names <- names(object$cst$observed)
+  if ("observed" %in% check) {
+    fact_names <- names(object$cst$observed)
     tab <- as.data.frame(object$cst$observed, check.names = FALSE)
-		colnames(tab)[1] <- object$var
- 	  tab[[1]] %<>% as.factor %>% factor(levels = fact_names)
- 	  tab[["Freq"]] %<>% {. / sum(.)}
-		plot_list[["observed"]] <-
-		  ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-		    geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
-		    ggtitle(paste("Observed frequencies for",object$var)) +
-		    xlab(object$var) +
-		    ylab("") +
-		    scale_y_continuous(labels = scales::percent)
-	}
-
-	if ("expected" %in% check) {
-	  fact_names <- names(object$cst$expected)
-	  tab <- as.data.frame(object$cst$expected, check.names = FALSE)
-		colnames(tab)[1] <- "Freq"
-		tab[[object$var]] <- rownames(tab)
- 	  tab[["Freq"]] %<>% {. / sum(.)}
-		plot_list[["expected"]] <-
-  		ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-		    geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
-		    ggtitle(paste("Expected frequencies for",object$var)) +
-		    xlab(object$var) +
-		    ylab("") +
-		    scale_y_continuous(labels = scales::percent)
-	}
-
-	if ("chi_sq" %in% check) {
-  	tab <- as.data.frame(object$cst$chi_sq, check.names = FALSE)
-		colnames(tab)[1] <- object$var
-		plot_list[["chi_sq"]] <-
-  		ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-		    geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
-		    ggtitle(paste("Contribtion to chi-squared for ",object$var)) +
-		    xlab(object$var) +
-		    ylab("")
+    colnames(tab)[1] <- object$var
+    tab[[1]] %<>% as.factor %>% factor(levels = fact_names)
+    tab[["Freq"]] %<>% {. / sum(.)}
+    plot_list[["observed"]] <-
+      ggplot(tab, aes_string(x = object$var, y = "Freq")) +
+        geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
+        scale_y_continuous(labels = scales::percent) +
+        labs(
+          title = paste("Observed frequencies for", object$var),
+          x = object$var,
+          y = ""
+        )
   }
 
-	if ("dev_std" %in% check) {
-  	tab <- as.data.frame(object$cst$residuals, check.names = FALSE)
-		colnames(tab)[1] <- object$var
-		plot_list[["dev_std"]] <-
-  		ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-		    geom_bar(stat = "identity", position = "dodge", alpha = .5, fill = fillcol) +
-		    geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = "black", linetype = "longdash", size = .5) +
-		    geom_text(x = 1, y = 2.11, label = "95%") +
-		    geom_text(x = 1, y = 1.49, label = "90%") +
-		    ggtitle(paste("Deviation standardized for",object$var)) +
-		    xlab(object$var) +
-		    ylab("")
-	}
+  if ("expected" %in% check) {
+    fact_names <- names(object$cst$expected)
+    tab <- as.data.frame(object$cst$expected, check.names = FALSE)
+    colnames(tab)[1] <- "Freq"
+    tab[[object$var]] <- factor(rownames(tab), levels = rownames(tab))
+    tab[["Freq"]] %<>% {. / sum(.)}
+    plot_list[["expected"]] <-
+      ggplot(tab, aes_string(x = object$var, y = "Freq")) +
+        geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
+        scale_y_continuous(labels = scales::percent) +
+        labs(
+          title = paste("Expected frequencies for", object$var),
+          x = object$var,
+          y = ""
+        )
+  }
+
+  if ("chi_sq" %in% check) {
+    tab <- as.data.frame(object$cst$chi_sq, check.names = FALSE)
+    colnames(tab)[1] <- object$var
+    plot_list[["chi_sq"]] <-
+      ggplot(tab, aes_string(x = object$var, y = "Freq")) +
+        geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
+        labs(
+          title = paste("Contribtion to chi-squared for", object$var),
+          x = object$var,
+          y = ""
+        )
+  }
+
+  if ("dev_std" %in% check) {
+    tab <- as.data.frame(object$cst$residuals, check.names = FALSE)
+    colnames(tab)[1] <- object$var
+    plot_list[["dev_std"]] <-
+      ggplot(tab, aes_string(x = object$var, y = "Freq")) +
+        geom_bar(stat = "identity", position = "dodge", alpha = .5, fill = fillcol) +
+        geom_hline(yintercept = c(-1.96,1.96,-1.64,1.64), color = "black", linetype = "longdash", size = .5) +
+        geom_text(x = 1, y = 2.11, label = "95%") +
+        geom_text(x = 1, y = 1.49, label = "90%") +
+        labs(
+          title = paste("Deviation standardized for", object$var),
+          x = object$var,
+          y = ""
+        )
+  }
 
   if (custom)
     if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
-	sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
-	  {if (shiny) . else print(.)}
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
+    {if (shiny) . else print(.)}
 }

@@ -48,14 +48,16 @@ output$ui_cm_var2 <- renderUI({
     selectizeInput(inputId = "cm_var2", label = "Numeric variable(s):",
       selected = state_multiple("cm_var2", vars),
       choices = vars, multiple = TRUE,
-      options = list(placeholder = "None",
-                     plugins = list("remove_button", "drag_drop")))
+      options = list(placeholder = "None", plugins = list("remove_button", "drag_drop"))
+    )
   } else {
     ## when cm_var1 is not numeric comparisons are across levels/groups
     vars <- c("None" = "", vars)
-    selectInput(inputId = "cm_var2", label = "Numeric variable:",
+    selectInput("cm_var2", "Numeric variable:",
       selected = state_single("cm_var2", vars),
-      choices = vars, multiple = FALSE)
+      choices = vars, 
+      multiple = FALSE
+    )
   }
 })
 
@@ -78,7 +80,8 @@ output$ui_cm_comb <- renderUI({
     choices = cmb,
     selected = state_multiple("cm_comb", cmb, cmb[1]),
     multiple = TRUE,
-    options = list(placeholder = "Evaluate all combinations", plugins = list("remove_button", "drag_drop")))
+    options = list(placeholder = "Evaluate all combinations", plugins = list("remove_button", "drag_drop"))
+  )
 })
 
 
@@ -102,8 +105,10 @@ output$ui_compare_means <- renderUI({
         selectInput(inputId = "cm_alternative", label = "Alternative hypothesis:",
           choices = cm_alt,
           selected = state_single("cm_alternative", cm_alt, cm_args$alternative)),
-        sliderInput("cm_conf_lev", "Confidence level:", min = 0.85, max = 0.99,
-          value = state_init("cm_conf_lev", cm_args$conf_lev), step = 0.01),
+        sliderInput("cm_conf_lev", "Confidence level:", 
+          min = 0.85, max = 0.99, step = 0.01,
+          value = state_init("cm_conf_lev", cm_args$conf_lev)
+        ),
         checkboxInput("cm_show", "Show additional statistics", value = state_init("cm_show", FALSE)),
         radioButtons(inputId = "cm_samples", label = "Sample type:", cm_samples,
           selected = state_init("cm_samples", cm_args$samples),
@@ -117,9 +122,11 @@ output$ui_compare_means <- renderUI({
           inline = TRUE)
       )
     ),
-    help_and_report(modal_title = "Compare means",
-                    fun_name = "compare_means",
-                    help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/compare_means.md")))
+    help_and_report(
+      modal_title = "Compare means", 
+      fun_name = "compare_means", 
+      help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/compare_means.md"))
+    )
   )
 })
 
@@ -136,23 +143,27 @@ cm_plot_height <- function()
 # output is called from the main radiant ui.R
 output$compare_means <- renderUI({
 
-    register_print_output("summary_compare_means", ".summary_compare_means", )
-    register_plot_output("plot_compare_means", ".plot_compare_means",
-                          height_fun = "cm_plot_height")
+  register_print_output("summary_compare_means", ".summary_compare_means", )
+  register_plot_output("plot_compare_means", ".plot_compare_means",
+    height_fun = "cm_plot_height"
+  )
 
-    # two separate tabs
-    cm_output_panels <- tabsetPanel(
-      id = "tabs_compare_means",
-      tabPanel("Summary", verbatimTextOutput("summary_compare_means")),
-      tabPanel("Plot",
-               plot_downloader("compare_means", height = cm_plot_height),
-               plotOutput("plot_compare_means", height = "100%"))
+  # two separate tabs
+  cm_output_panels <- tabsetPanel(
+    id = "tabs_compare_means",
+    tabPanel("Summary", verbatimTextOutput("summary_compare_means")),
+    tabPanel("Plot",
+      plot_downloader("compare_means", height = cm_plot_height),
+      plotOutput("plot_compare_means", height = "100%")
     )
+  )
 
-    stat_tab_panel(menu = "Basics > Means",
-                  tool = "Compare means",
-                  tool_ui = "ui_compare_means",
-                  output_panels = cm_output_panels)
+  stat_tab_panel(
+    menu = "Basics > Means", 
+    tool = "Compare means", 
+    tool_ui = "ui_compare_means", 
+    output_panels = cm_output_panels
+  )
 })
 
 cm_available <- reactive({
@@ -160,7 +171,7 @@ cm_available <- reactive({
   if (not_available(input$cm_var1) || not_available(input$cm_var2))
     return("This analysis requires at least two variables. The first can be of type\nfactor, numeric, or interval. The second must be of type numeric or interval.\nIf these variable types are not available please select another dataset.\n\n" %>% suggest_data("salary"))
   ## cm_var2 may still have > elements selected when cm_var1 is changed to a factor
-  if (length(input$cm_var2) > 1 && .getclass()[input$cm_var1] == 'factor')
+  if (length(input$cm_var2) > 1 && .getclass()[input$cm_var1] == "factor")
     return(" ")
   ## cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
   if (input$cm_var1 %in% input$cm_var2) return(" ")
@@ -192,9 +203,11 @@ observeEvent(input$compare_means_report, {
     inp_out[[2]] <- list(plots = input$cm_plots, custom = FALSE)
     figs <- TRUE
   }
-  update_report(inp_main = clean_args(cm_inputs(), cm_args),
-                fun_name = "compare_means",
-                inp_out = inp_out, outputs = outputs, figs = figs,
-                fig.width = cm_plot_width(),
-                fig.height = cm_plot_height())
+  update_report(
+    inp_main = clean_args(cm_inputs(), cm_args), 
+    fun_name = "compare_means", 
+    inp_out = inp_out, outputs = outputs, figs = figs, 
+    fig.width = cm_plot_width(), 
+    fig.height = cm_plot_height()
+  )
 })

@@ -22,8 +22,11 @@ cp_inputs <- reactive({
 ###############################
 output$ui_cp_var1 <- renderUI({
   vars <- c("None" = "", groupable_vars())
-  selectInput(inputId = "cp_var1",label = "Select a grouping variable:",
-    choices = vars, selected = state_single("cp_var1",vars), multiple = FALSE)
+  selectInput("cp_var1", "Select a grouping variable:",
+    choices = vars, 
+    selected = state_single("cp_var1",vars), 
+    multiple = FALSE
+  )
 })
 
 output$ui_cp_var2 <- renderUI({
@@ -31,8 +34,8 @@ output$ui_cp_var2 <- renderUI({
   if (not_available(input$cp_var1)) return()
   if (input$cp_var1 %in% vars) vars <- vars[-which(vars == input$cp_var1)]
 
-  vars <- c("None" = "",vars)
-  selectInput(inputId = "cp_var2", label = "Variable (select one):",
+  vars <- c("None" = "", vars)
+  selectInput(inputId = "cp_var2", "Variable (select one):",
     selected = state_single("cp_var2", vars),
     choices = vars, 
     multiple = FALSE
@@ -45,9 +48,9 @@ output$ui_cp_levs <- renderUI({
   else
     levs <- .getdata()[[input$cp_var2]] %>% as.factor %>% levels
 
-  selectInput(inputId = "cp_levs", label = "Choose level:",
+  selectInput(inputId = "cp_levs", "Choose level:",
     choices = levs,
-    selected = state_single("cp_levs",levs), 
+    selected = state_single("cp_levs", levs), 
     multiple = FALSE
   )
 })
@@ -65,11 +68,12 @@ output$ui_cp_comb <- renderUI({
     return()
   }
 
-  selectizeInput("cp_comb", label = "Choose combinations:",
+  selectizeInput("cp_comb", "Choose combinations:",
     choices = cmb,
     selected = state_multiple("cp_comb", cmb, cmb[1]),
     multiple = TRUE,
-    options = list(placeholder = "Evaluate all combinations", plugins = list("remove_button", "drag_drop")))
+    options = list(placeholder = "Evaluate all combinations", plugins = list("remove_button", "drag_drop"))
+  )
 })
 
 
@@ -82,7 +86,8 @@ output$ui_compare_props <- renderUI({
           choices = cp_plots,
           selected = state_multiple("cp_plots", cp_plots, "bar"),
           multiple = TRUE,
-          options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop")))
+          options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop"))
+        )
       )
     ),
     wellPanel(
@@ -91,20 +96,29 @@ output$ui_compare_props <- renderUI({
       uiOutput("ui_cp_levs"),
       conditionalPanel(condition = "input.tabs_compare_props == 'Summary'",
         uiOutput("ui_cp_comb"),
-        selectInput(inputId = "cp_alternative", label = "Alternative hypothesis:",
+        selectInput(inputId = "cp_alternative", "Alternative hypothesis:",
           choices = cp_alt,
-          selected = state_single("cp_alternative", cp_alt, cp_args$alternative)),
-        checkboxInput("cp_show", "Show additional statistics", value = state_init("cp_show", FALSE)),
-        sliderInput("cp_conf_lev","Confidence level:", min = 0.85, max = 0.99,
-          value = state_init("cp_conf_lev",cp_args$conf_lev), step = 0.01),
-        radioButtons(inputId = "cp_adjust", label = "Multiple comp. adjustment:", cp_adjust,
+          selected = state_single("cp_alternative", cp_alt, cp_args$alternative)
+        ),
+        checkboxInput("cp_show", "Show additional statistics", 
+          value = state_init("cp_show", FALSE)
+        ),
+        sliderInput("cp_conf_lev","Confidence level:", 
+          min = 0.85, max = 0.99, step = 0.01, 
+          value = state_init("cp_conf_lev",cp_args$conf_lev)
+        ),
+        radioButtons(inputId = "cp_adjust", "Multiple comp. adjustment:", 
+          cp_adjust,
           selected = state_init("cp_adjust", cp_args$adjust),
-          inline = TRUE)
+          inline = TRUE
+        )
       )
     ),
-    help_and_report(modal_title = "Compare proportions",
-                    fun_name = "compare_props",
-                    help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/compare_props.md")))
+    help_and_report(
+      modal_title = "Compare proportions", 
+      fun_name = "compare_props", 
+      help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/compare_props.md"))
+    )
   )
 })
 
@@ -121,22 +135,27 @@ cp_plot_height <- function()
 # output is called from the main radiant ui.R
 output$compare_props <- renderUI({
 
-    register_print_output("summary_compare_props", ".summary_compare_props", )
-    register_plot_output("plot_compare_props", ".plot_compare_props",
-                         height_fun = "cp_plot_height")
+  register_print_output("summary_compare_props", ".summary_compare_props", )
+  register_plot_output("plot_compare_props", ".plot_compare_props",
+    height_fun = "cp_plot_height"
+  )
 
-    # two separate tabs
-    cp_output_panels <- tabsetPanel(
-      id = "tabs_compare_props",
-      tabPanel("Summary", verbatimTextOutput("summary_compare_props")),
-      tabPanel("Plot", plot_downloader("compare_props", height = cp_plot_height),
-               plotOutput("plot_compare_props", height = "100%"))
+  # two separate tabs
+  cp_output_panels <- tabsetPanel(
+    id = "tabs_compare_props",
+    tabPanel("Summary", verbatimTextOutput("summary_compare_props")),
+    tabPanel("Plot", 
+      plot_downloader("compare_props", height = cp_plot_height), 
+      plotOutput("plot_compare_props", height = "100%")
     )
+  )
 
-    stat_tab_panel(menu = "Basics > Proportions",
-                  tool = "Compare proportions",
-                  tool_ui = "ui_compare_props",
-                  output_panels = cp_output_panels)
+  stat_tab_panel(
+    menu = "Basics > Proportions", 
+    tool = "Compare proportions", 
+    tool_ui = "ui_compare_props", 
+    output_panels = cp_output_panels
+  )
 })
 
 cp_available <- reactive({
@@ -175,9 +194,13 @@ observeEvent(input$compare_props_report, {
     figs <- TRUE
   }
 
-  update_report(inp_main = clean_args(cp_inputs(), cp_args),
-                fun_name = "compare_props",
-                inp_out = inp_out, outputs = outputs, figs = figs,
-                fig.width = cp_plot_width(),
-                fig.height = cp_plot_height())
+  update_report(
+    inp_main = clean_args(cp_inputs(), cp_args), 
+    fun_name = "compare_props", 
+    inp_out = inp_out, 
+    outputs = outputs, 
+    figs = figs, 
+    fig.width = cp_plot_width(), 
+    fig.height = cp_plot_height()
+  )
 })

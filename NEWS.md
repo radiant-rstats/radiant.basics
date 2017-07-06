@@ -4,8 +4,9 @@
 * Renamed methods `summary.correlation_` and `plot.correlation_` to `summary.correlation` and `plot.correlation`
 * Added `tab` argument to `goodness` and `cross_tabs` so a table object can be passed directly
 * Documentation updates
-* Code clean-up and various minor fixes and improvements
 * Scatter plots in _Correlation > Plot_ are now based on 1,000 data points by default. Use _R > Report_ to adjust (e.g., `plot(result, n = -1)`)
+* Fix for level ordering in goodness-of-fit expected-values plot
+* Code clean-up and various minor fixes and improvements
 
 # CHANGES IN radiant.basics 0.8.0
 

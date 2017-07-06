@@ -27,39 +27,39 @@ single_prop <- function(dataset, var,
                         conf_lev = .95,
                         data_filter = "") {
 
-	dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE) %>% mutate_all(funs(as.factor))
-	if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE) %>% mutate_all(funs(as.factor))
+  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
 
   ## removing any missing values
-	miss <- n_missing(dat)
+  miss <- n_missing(dat)
   dat <- na.omit(dat)
 
-	levs <- levels(dat[[var]])
-	if (lev != "") {
-		if (lev %in% levs && levs[1] != lev) {
-			dat[[var]] %<>% as.character %>% as.factor %>% relevel(lev)
-			levs <- levels(dat[[var]])
-		}
-	} else {
-		lev <- levs[1]
-	}
+  levs <- levels(dat[[var]])
+  if (lev != "") {
+    if (lev %in% levs && levs[1] != lev) {
+      dat[[var]] %<>% as.character %>% as.factor %>% relevel(lev)
+      levs <- levels(dat[[var]])
+    }
+  } else {
+    lev <- levs[1]
+  }
 
-	n <- nrow(dat)
-	ns <- sum(dat == lev)
-	p <- ns / n
+  n <- nrow(dat)
+  ns <- sum(dat == lev)
+  p <- ns / n
 
   dat_summary <- data.frame(
     diff = p - comp_value,
     prop = p,
     mean = n*p,
-		sd = sqrt(n*p*(1-p)),
-		n = n,
-	  n_missing = miss
+    sd = sqrt(n*p*(1-p)),
+    n = n,
+    n_missing = miss
   )
 
-	## use binom.test for exact
-	res <- binom.test(ns, n, p = comp_value, alternative = alternative,
-	                  conf.level = conf_lev) %>% tidy
+  ## use binom.test for exact
+  res <- binom.test(ns, n, p = comp_value, alternative = alternative,
+                    conf.level = conf_lev) %>% tidy
 
   as.list(environment()) %>% add_class("single_prop")
 }
@@ -84,42 +84,42 @@ single_prop <- function(dataset, var,
 summary.single_prop <- function(object, dec = 3, ...) {
 
   cat("Single proportion test (binomial exact)\n")
-	cat("Data      :", object$dataset, "\n")
-	if (object$data_filter %>% gsub("\\s","",.) != "")
-		cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
-	cat("Variable  :", object$var, "\n")
-	cat("Level     :", object$lev, "in", object$var, "\n")
-	cat("Confidence:", object$conf_lev, "\n")
+  cat("Data      :", object$dataset, "\n")
+  if (object$data_filter %>% gsub("\\s","",.) != "")
+    cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
+  cat("Variable  :", object$var, "\n")
+  cat("Level     :", object$lev, "in", object$var, "\n")
+  cat("Confidence:", object$conf_lev, "\n")
 
-	hyp_symbol <- c("two.sided" = "not equal to",
+  hyp_symbol <- c("two.sided" = "not equal to",
                   "less" = "<",
                   "greater" = ">")[object$alternative]
 
-	cat("Null hyp. : the proportion of", object$lev, "in", object$var, "=",
-	    object$comp_value, "\n")
-	cat("Alt. hyp. : the proportion of", object$lev, "in", object$var, hyp_symbol,
-	    object$comp_value, "\n\n")
+  cat("Null hyp. : the proportion of", object$lev, "in", object$var, "=",
+      object$comp_value, "\n")
+  cat("Alt. hyp. : the proportion of", object$lev, "in", object$var, hyp_symbol,
+      object$comp_value, "\n\n")
 
-	## determine lower and upper % for ci
-	ci_perc <- ci_label(object$alternative, object$conf_lev)
+  ## determine lower and upper % for ci
+  ci_perc <- ci_label(object$alternative, object$conf_lev)
 
-	## print summary statistics
+  ## print summary statistics
   print(object$dat_summary[-1] %>% round(dec) %>% as.data.frame, row.names = FALSE)
-	cat("\n")
+  cat("\n")
 
-	res <- object$res
-	res <- bind_cols(data.frame(diff = object$dat_summary[["diff"]]), res[,-1])  %>%
-	       select(-matches("parameter"),-matches("method"),-matches("alternative")) %>%
-	       as.data.frame
+  res <- object$res
+  res <- bind_cols(data.frame(diff = object$dat_summary[["diff"]]), res[,-1])  %>%
+         select(-matches("parameter"),-matches("method"),-matches("alternative")) %>%
+         as.data.frame
 
-	names(res) <- c("diff","ns","p.value", ci_perc[1], ci_perc[2])
-	res %<>% round(dec) 	# restrict the number of decimals
-	res$` ` <- sig_stars(res$p.value)
-	if (res$p.value < .001) res$p.value <- "< .001"
+  names(res) <- c("diff","ns","p.value", ci_perc[1], ci_perc[2])
+  res %<>% round(dec)   # restrict the number of decimals
+  res$` ` <- sig_stars(res$p.value)
+  if (res$p.value < .001) res$p.value <- "< .001"
 
-	## print statistics
-	print(res, row.names = FALSE)
-	cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
+  ## print statistics
+  print(res, row.names = FALSE)
+  cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 
 }
 
@@ -149,52 +149,57 @@ plot.single_prop <- function(x,
                              custom = FALSE,
                              ...) {
 
-	## bar used to called hist - changed for consistency with compare_props
-	plots %<>% gsub("hist","bar",.)
+  ## bar used to called hist - changed for consistency with compare_props
+  plots %<>% gsub("hist","bar",.)
 
   object <- x; rm(x)
 
-	lev_name <- object$levs[1]
+  lev_name <- object$levs[1]
 
- 	plot_list <- list()
-	if ("bar" %in% plots) {
-		plot_list[[which("bar" == plots)]] <-
-			ggplot(object$dat, aes_string(x = object$var, fill = object$var)) +
-	 	 		geom_bar(aes(y = (..count..)/sum(..count..)), alpha = .7) +
-		 		scale_y_continuous(labels = scales::percent) +
-	 	 		ggtitle(paste0("Single proportion: ", lev_name, " in ", object$var)) +
-	 	 		ylab("") + theme(legend.position = "none")
+  plot_list <- list()
+  if ("bar" %in% plots) {
+    plot_list[[which("bar" == plots)]] <-
+      ggplot(object$dat, aes_string(x = object$var, fill = object$var)) +
+        geom_bar(aes(y = (..count..)/sum(..count..)), alpha = .7) +
+        scale_y_continuous(labels = scales::percent) +
+        theme(legend.position = "none") +
+        labs(
+          title = paste0("Single proportion: ", lev_name, " in ", object$var), 
+          y = ""
+        )
 
-	}
-	if ("simulate" %in% plots) {
-		simdat <- rbinom(1000, prob = object$comp_value, object$n) %>%
-								divide_by(object$n) %>%
-							  data.frame %>%
-							  set_colnames(lev_name)
+  }
+  if ("simulate" %in% plots) {
+    simdat <- rbinom(1000, prob = object$comp_value, object$n) %>%
+                divide_by(object$n) %>%
+                data.frame %>%
+                set_colnames(lev_name)
 
     cip <- ci_perc(simdat[[lev_name]], object$alternative, object$conf_lev) %>% set_names(NULL)
 
-		bw <- simdat %>% range %>% diff %>% divide_by(20)
+    bw <- simdat %>% range %>% diff %>% divide_by(20)
 
-		# to avoid problems with levels that start with numbers or contain spaces
-		# http://stackoverflow.com/questions/13445435/ggplot2-aes-string-fails-to-handle-names-starting-with-numbers-or-containing-s
-		names(simdat) <- "col1"
+    # to avoid problems with levels that start with numbers or contain spaces
+    # http://stackoverflow.com/questions/13445435/ggplot2-aes-string-fails-to-handle-names-starting-with-numbers-or-containing-s
+    names(simdat) <- "col1"
 
-		plot_list[[which("simulate" == plots)]] <-
-			ggplot(simdat, aes(x = col1)) +
-				geom_histogram(fill = 'blue', binwidth = bw, alpha = .3) +
-				geom_vline(xintercept = object$comp_value, color = 'red',
-				           linetype = 'solid', size = 1) +
-				geom_vline(xintercept = object$res$estimate, color = 'black',
-				           linetype = 'solid', size = 1) +
-				geom_vline(xintercept = cip, color = 'red', linetype = 'longdash', size = .5) +
-	 	 		ggtitle(paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", object$var, ")")) +
-	 	 		labs(x = paste0("Level ",lev_name, " in variable ", object$var))
-	}
+    plot_list[[which("simulate" == plots)]] <-
+      ggplot(simdat, aes(x = col1)) +
+        geom_histogram(fill = 'blue', binwidth = bw, alpha = .3) +
+        geom_vline(xintercept = object$comp_value, color = 'red',
+                   linetype = 'solid', size = 1) +
+        geom_vline(xintercept = object$res$estimate, color = 'black',
+                   linetype = 'solid', size = 1) +
+        geom_vline(xintercept = cip, color = 'red', linetype = 'longdash', size = .5) +
+        labs(
+          title = paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", object$var, ")"),
+          x = paste0("Level ",lev_name, " in variable ", object$var)
+        )
+  }
 
   if (custom)
     if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
 
-	sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
-	  {if (shiny) . else print(.)}
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
+    {if (shiny) . else print(.)}
 }
