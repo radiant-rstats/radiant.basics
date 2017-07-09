@@ -52,7 +52,7 @@ compare_props <- function(dataset, var1, var2,
   rn <- ""
   prop_input <-
     dat %>%
-    group_by_(var1, var2) %>%
+    group_by_at(.vars = c(var1, var2)) %>%
     summarise(n = n()) %>%
     spread_(var2, "n") %>%
     as.data.frame %>%
@@ -179,7 +179,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
     ## apparantely you can get negative number here
     res$ci_low[res$ci_low < 0] <- 0
     res$df[res_sim] <- "*1*"
-    res <- rename_(res, .dots = setNames(c("ci_low","ci_high"), ci_perc))
+    res <- rename(res, !!! setNames(c("ci_low","ci_high"), ci_perc))
   } else {
     res <- res[,c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
   }
@@ -235,21 +235,21 @@ plot.compare_props <- function(x,
         geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue") +
         theme(legend.position = "none") +
         scale_y_continuous(labels = scales::percent) +
-        ylab(paste0("Proportion of \"", lev_name, "\" in ", v2))
+        labs(y = paste0("Proportion of \"", lev_name, "\" in ", v2))
 
   }
 
   if ("dodge" %in% plots) {
     plot_list[[which("dodge" == plots)]] <-
       dat %>%
-        group_by_(v1, v2) %>%
+        group_by_at(.vars = c(v1, v2)) %>%
         summarise(count = n()) %>%
-        group_by_(v1) %>%
+        group_by_at(.vars = v1) %>%
         mutate(perc = count/ sum(count)) %>%
         ggplot(aes_string(x = v1, y = "perc", fill = v2)) +
           geom_bar(stat = "identity", position = "dodge") +
           scale_y_continuous(labels = scales::percent) +
-          ylab(paste0("Proportions per level of ", v1))
+          labs(y = paste0("Proportions per level of ", v1))
   }
 
   if (custom)

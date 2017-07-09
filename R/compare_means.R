@@ -84,18 +84,20 @@ compare_means <- function(dataset, var1, var2,
   for (i in 1:nrow(cmb)) {
     sel <- cmb[i,]
 
-    x <- filter_(dat, paste0("variable == '", sel[[1]], "'")) %>% .[["values"]]
-    y <- filter_(dat, paste0("variable == '", sel[[2]], "'")) %>% .[["values"]]
+    x <- filter(dat, variable == sel[[1]]) %>% .[["values"]]
+    y <- filter(dat, variable == sel[[2]]) %>% .[["values"]]
 
-      res[i,c("t.value","p.value", "df", "ci_low", "ci_high")] <-
-        t.test(x, y, paired = samples == "paired", alternative = alternative, conf.level = conf_lev) %>%
-        tidy %>% .[1, c("statistic", "p.value","parameter", "conf.low", "conf.high")]
+    res[i,c("t.value","p.value", "df", "ci_low", "ci_high")] <-
+      t.test(x, y, paired = samples == "paired", alternative = alternative, conf.level = conf_lev) %>%
+      tidy %>% 
+      .[1, c("statistic", "p.value","parameter", "conf.low", "conf.high")]
 
     if (test != "t") {
         res[i,"p.value"] <-
           wilcox.test(x, y, paired = samples == "paired", alternative = alternative,
                       conf.int = FALSE, conf.level = conf_lev) %>%
-          tidy %>% .[1,"p.value"]
+          tidy %>% 
+          .[1, "p.value"]
     }
 
     ## bootstrap confidence intervals
@@ -122,10 +124,16 @@ compare_means <- function(dataset, var1, var2,
 
   dat_summary <-
     dat %>%
-    group_by_("variable") %>%
-    summarise_all(funs(mean = mean, n = length(.), sd, se = sd/sqrt(n),
-                        ci = ci_calc(se, n, conf_lev))) %>%
-    rename_(.dots = setNames("variable", cname))
+    group_by_at(.vars = "variable") %>%
+    summarise_all(
+      funs(
+        mean = mean, 
+        n = length(.), 
+        sd, 
+        se = sd/sqrt(n), 
+        ci = ci_calc(se, n, conf_lev)
+      )
+    ) %>% rename(!!! setNames("variable", cname))
 
   vars <- paste0(vars, collapse = ", ")
   as.list(environment()) %>% add_class("compare_means")
@@ -191,7 +199,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
     # mod <- mod[,c("Alt. hyp.", "Null hyp.", "diff", "t.value", "df", "ci_low", "ci_high", "cis_low", "cis_high", "p.value")]
     if (!is.integer(mod[["df"]])) mod[["df"]] %<>% round(dec)
     mod[,c("t.value", "ci_low","ci_high")] %<>% round(dec)
-    mod <- rename_(mod, .dots = setNames(c("ci_low","ci_high"), ci_perc))
+    mod <- rename(mod, !!! setNames(c("ci_low","ci_high"), ci_perc))
   } else {
     mod <- mod[,c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
   }

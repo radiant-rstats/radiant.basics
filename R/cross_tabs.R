@@ -288,7 +288,7 @@ plot.cross_tabs <- function(x,
   if ("row_perc" %in% check) {
     plot_list[["row_perc"]] <-
       as.data.frame(object$cst$observed, check.names = FALSE) %>%
-        group_by_("Var1") %>%
+        group_by_at(.vars = "Var1") %>%
         mutate(perc = Freq / sum(Freq)) %>%
         ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
           geom_bar(stat = "identity", position = "dodge", alpha = .7) +
@@ -304,7 +304,7 @@ plot.cross_tabs <- function(x,
   if ("col_perc" %in% check) {
     plot_list[["col_perc"]] <-
       as.data.frame(object$cst$observed, check.names = FALSE) %>%
-        group_by_("Var2") %>%
+        group_by_at(.vars = "Var2") %>%
         mutate(perc = Freq / sum(Freq)) %>%
         ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
           geom_bar(stat = "identity", position = "dodge", alpha = .7) +

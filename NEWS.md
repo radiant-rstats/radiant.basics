@@ -1,3 +1,7 @@
+# CHANGES IN radiant.basics 0.8.7.1
+
+* Upgraded dplyr dependency to 0.7.1
+
 # CHANGES IN radiant.basics 0.8.3
 
 * `correlation` defaults to all variables if no value for `var` is provided
