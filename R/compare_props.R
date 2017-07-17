@@ -90,9 +90,8 @@ compare_props <- function(dataset, var1, var2,
                correct = FALSE) ) %>%
       tidy %>% .[1, c("statistic", "p.value", "parameter", "conf.low", "conf.high")]
 
-    n <- rowSums(pinp)
-    p <- pinp[[1]] / n
-    E <- cbind(n * p, n * (1 - p))
+    ## calculate expected values
+    E <- (rowSums(pinp) %*% t(colSums(pinp))) / sum(pinp)
     if (any(E < 5)) {
       res[i, "p.value"] <- sshhr( chisq.test(pinp, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value )
       res[i, "df"] <- NA
