@@ -21,8 +21,6 @@
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #' @seealso \code{\link{plot.compare_props}} to plot results
 #'
-#' @importFrom tidyr spread_
-#'
 #' @export
 compare_props <- function(dataset, var1, var2,
                           levs = "",
@@ -54,7 +52,7 @@ compare_props <- function(dataset, var1, var2,
     dat %>%
     group_by_at(.vars = c(var1, var2)) %>%
     summarise(n = n()) %>%
-    spread_(var2, "n") %>%
+    spread(!! var2, "n") %>%
     as.data.frame %>%
     { rn <<- .[[1]] %>% as.character
       select(., -1) %>%

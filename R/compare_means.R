@@ -40,7 +40,7 @@ compare_means <- function(dataset, var1, var2,
   vars <- colnames(dat)
 
   if (is.numeric(dat[[var1]])) {
-    dat %<>% gather_("variable", "values", vars)
+    dat %<>% gather("variable", "values", !! vars)
     dat[["variable"]] %<>% factor(levels = vars)
     cname <- " "
   } else {
