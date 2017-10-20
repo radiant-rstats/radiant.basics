@@ -84,9 +84,9 @@ compare_props <- function(dataset, var1, var2,
     pinp <- prop_input[ind,]
 
     res[i, c("chisq.value","p.value", "df", "ci_low", "ci_high")] <-
-      sshhr( prop.test(pinp, alternative = alternative, conf.level = conf_lev,
-               correct = FALSE) ) %>%
-      tidy %>% .[1, c("statistic", "p.value", "parameter", "conf.low", "conf.high")]
+      sshhr(prop.test(pinp, alternative = alternative, conf.level = conf_lev, correct = FALSE)) %>% 
+      tidy %>% 
+      .[1, c("statistic", "p.value", "parameter", "conf.low", "conf.high")]
 
     ## calculate expected values
     E <- (rowSums(pinp) %*% t(colSums(pinp))) / sum(pinp)
@@ -171,10 +171,10 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
   res_sim <- is.na(res$df)
   if (show) {
     res <- res[,c("Null hyp.", "Alt. hyp.", "diff", "p.value", "chisq.value", "df", "ci_low", "ci_high")]
-    res[,c("chisq.value","ci_low","ci_high")] %<>% round(dec)
+    res[,c("chisq.value","ci_low","ci_high")] %<>% formatdf(dec)
 
     ## apparantely you can get negative number here
-    res$ci_low[res$ci_low < 0] <- 0
+    # res$ci_low[res$ci_low < 0] <- 0
     res$df[res_sim] <- "*1*"
     res <- rename(res, !!! setNames(c("ci_low","ci_high"), ci_perc))
   } else {

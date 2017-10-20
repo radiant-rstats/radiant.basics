@@ -1,5 +1,5 @@
-trim_trailing <- function(x) sub("\\s+$", "", x)
-trim_leading <- function(x) sub("^\\s+", "", x)
+# trim_trailing <- function(x) sub("\\s+$", "", x)
+# trim_leading <- function(x) sub("^\\s+", "", x)
 trim <- function(x) gsub("^\\s+|\\s+$", "", x)
 
 compare_output <- function(res1, res2) {
@@ -50,7 +50,7 @@ test_that("compare_props 2", {
   result <- compare_props("titanic", "pclass", "survived")
   res1 <- capture.output(summary(result, show = TRUE))[14] %>% trim
   # cat(paste0(res1, "\n"))
-  res2 <- "1st = 2nd   1st not equal to 2nd   0.194 < .001   20.576     1  0.112 0.277 ***"
+  res2 <- "1st = 2nd   1st not equal to 2nd   0.194 < .001  20.576      1  0.112 0.277 ***"
   expect_equal(res1,res2)
 })
 

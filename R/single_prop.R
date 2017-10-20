@@ -58,8 +58,8 @@ single_prop <- function(dataset, var,
   )
 
   ## use binom.test for exact
-  res <- binom.test(ns, n, p = comp_value, alternative = alternative,
-                    conf.level = conf_lev) %>% tidy
+  res <- binom.test(ns, n, p = comp_value, alternative = alternative, conf.level = conf_lev) %>% 
+    tidy
 
   as.list(environment()) %>% add_class("single_prop")
 }

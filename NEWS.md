@@ -1,6 +1,7 @@
-# CHANGES IN radiant.basics 0.8.7.4
+# CHANGES IN radiant.basics 0.8.7.5
 
 * Upgraded tidyr dependency to 0.7
+* Fixed CI printing error for `compare_prop`
 
 # CHANGES IN radiant.basics 0.8.7.1
 
