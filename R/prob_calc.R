@@ -83,7 +83,7 @@ plot.prob_norm <- function(x, type = "values", ...) {
   mean <- object$mean
   stdev <- object$stdev
 
-  limits <- c(mean - 3*stdev, mean + 3*stdev)
+  limits <- c(mean - 3 * stdev, mean + 3 * stdev)
 
   dnorm_limit <- function(x) {
     y <- dnorm(x, mean = mean, sd = stdev)
@@ -105,7 +105,7 @@ plot.prob_norm <- function(x, type = "values", ...) {
     y
   }
 
-  dnorm_lines <- c(ub,lb) %>% na.omit
+  dnorm_lines <- c(ub, lb) %>% na.omit
   if (length(dnorm_lines) == 0) dnorm_lines <- c(-Inf, Inf)
 
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
