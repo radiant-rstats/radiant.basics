@@ -1,11 +1,10 @@
-# CHANGES IN radiant.basics 0.8.7.5
+# CHANGES IN radiant.basics 0.8.9
 
-* Upgraded tidyr dependency to 0.7
+* Upgraded broom dependency to 0.4.3
+* Upgraded dplyr dependency to 0.7.4
+* Upgraded tidyr dependency to 0.7.2
 * Fixed CI printing error for `compare_prop`
-
-# CHANGES IN radiant.basics 0.8.7.1
-
-* Upgraded dplyr dependency to 0.7.1
+* Applied `styler` to code
 
 # CHANGES IN radiant.basics 0.8.3
 
