@@ -13,7 +13,7 @@ cp_inputs <- reactive({
   cp_args$data_filter <- if (input$show_filter) input$data_filter else ""
   cp_args$dataset <- input$dataset
   for (i in r_drop(names(cp_args)))
-    cp_args[[i]] <- input[[paste0("cp_",i)]]
+    cp_args[[i]] <- input[[paste0("cp_", i)]]
   cp_args
 })
 
@@ -22,9 +22,10 @@ cp_inputs <- reactive({
 ###############################
 output$ui_cp_var1 <- renderUI({
   vars <- c("None" = "", groupable_vars())
-  selectInput("cp_var1", "Select a grouping variable:",
-    choices = vars, 
-    selected = state_single("cp_var1",vars), 
+  selectInput(
+    "cp_var1", "Select a grouping variable:",
+    choices = vars,
+    selected = state_single("cp_var1", vars),
     multiple = FALSE
   )
 })
@@ -35,22 +36,25 @@ output$ui_cp_var2 <- renderUI({
   if (input$cp_var1 %in% vars) vars <- vars[-which(vars == input$cp_var1)]
 
   vars <- c("None" = "", vars)
-  selectInput(inputId = "cp_var2", "Variable (select one):",
+  selectInput(
+    inputId = "cp_var2", "Variable (select one):",
     selected = state_single("cp_var2", vars),
-    choices = vars, 
+    choices = vars,
     multiple = FALSE
   )
 })
 
 output$ui_cp_levs <- renderUI({
-  if (not_available(input$cp_var2))
+  if (not_available(input$cp_var2)) {
     return()
-  else
-    levs <- .getdata()[[input$cp_var2]] %>% as.factor %>% levels
+  } else {
+    levs <- .getdata()[[input$cp_var2]] %>% as.factor() %>% levels()
+  }
 
-  selectInput(inputId = "cp_levs", "Choose level:",
+  selectInput(
+    inputId = "cp_levs", "Choose level:",
     choices = levs,
-    selected = state_single("cp_levs", levs), 
+    selected = state_single("cp_levs", levs),
     multiple = FALSE
   )
 })
@@ -58,8 +62,8 @@ output$ui_cp_levs <- renderUI({
 output$ui_cp_comb <- renderUI({
   if (not_available(input$cp_var1)) return()
 
-  levs <- .getdata()[[input$cp_var1]] %>% as.factor %>% levels
-  alevs <- .getdata()[[input$cp_var1]] %>% unique
+  levs <- .getdata()[[input$cp_var1]] %>% as.factor() %>% levels()
+  alevs <- .getdata()[[input$cp_var1]] %>% unique()
   levs <- levs[levs %in% alevs]
 
   if (length(levs) > 2) {
@@ -68,7 +72,8 @@ output$ui_cp_comb <- renderUI({
     return()
   }
 
-  selectizeInput("cp_comb", "Choose combinations:",
+  selectizeInput(
+    "cp_comb", "Choose combinations:",
     choices = cmb,
     selected = state_multiple("cp_comb", cmb, cmb[1]),
     multiple = TRUE,
@@ -80,9 +85,11 @@ output$ui_cp_comb <- renderUI({
 output$ui_compare_props <- renderUI({
   req(input$dataset)
   tagList(
-    conditionalPanel(condition = "input.tabs_compare_props == 'Plot'",
+    conditionalPanel(
+      condition = "input.tabs_compare_props == 'Plot'",
       wellPanel(
-        selectizeInput(inputId = "cp_plots", label = "Select plots:",
+        selectizeInput(
+          inputId = "cp_plots", label = "Select plots:",
           choices = cp_plots,
           selected = state_multiple("cp_plots", cp_plots, "bar"),
           multiple = TRUE,
@@ -94,20 +101,25 @@ output$ui_compare_props <- renderUI({
       uiOutput("ui_cp_var1"),
       uiOutput("ui_cp_var2"),
       uiOutput("ui_cp_levs"),
-      conditionalPanel(condition = "input.tabs_compare_props == 'Summary'",
+      conditionalPanel(
+        condition = "input.tabs_compare_props == 'Summary'",
         uiOutput("ui_cp_comb"),
-        selectInput(inputId = "cp_alternative", "Alternative hypothesis:",
+        selectInput(
+          inputId = "cp_alternative", "Alternative hypothesis:",
           choices = cp_alt,
           selected = state_single("cp_alternative", cp_alt, cp_args$alternative)
         ),
-        checkboxInput("cp_show", "Show additional statistics", 
+        checkboxInput(
+          "cp_show", "Show additional statistics",
           value = state_init("cp_show", FALSE)
         ),
-        sliderInput("cp_conf_lev","Confidence level:", 
-          min = 0.85, max = 0.99, step = 0.01, 
-          value = state_init("cp_conf_lev",cp_args$conf_lev)
+        sliderInput(
+          "cp_conf_lev", "Confidence level:",
+          min = 0.85, max = 0.99, step = 0.01,
+          value = state_init("cp_conf_lev", cp_args$conf_lev)
         ),
-        radioButtons(inputId = "cp_adjust", "Multiple comp. adjustment:", 
+        radioButtons(
+          inputId = "cp_adjust", "Multiple comp. adjustment:",
           cp_adjust,
           selected = state_init("cp_adjust", cp_args$adjust),
           inline = TRUE
@@ -115,9 +127,9 @@ output$ui_compare_props <- renderUI({
       )
     ),
     help_and_report(
-      modal_title = "Compare proportions", 
-      fun_name = "compare_props", 
-      help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/compare_props.md"))
+      modal_title = "Compare proportions",
+      fun_name = "compare_props",
+      help_file = inclMD(file.path(getOption("radiant.path.basics"), "app/tools/help/compare_props.md"))
     )
   )
 })
@@ -127,16 +139,20 @@ cp_plot <- reactive({
 })
 
 cp_plot_width <- function()
-  cp_plot() %>% { if (is.list(.)) .$plot_width else 650 }
+  cp_plot() %>% {
+    if (is.list(.)) .$plot_width else 650
+  }
 
 cp_plot_height <- function()
-  cp_plot() %>% { if (is.list(.)) .$plot_height else 400 }
+  cp_plot() %>% {
+    if (is.list(.)) .$plot_height else 400
+  }
 
 # output is called from the main radiant ui.R
 output$compare_props <- renderUI({
-
   register_print_output("summary_compare_props", ".summary_compare_props", )
-  register_plot_output("plot_compare_props", ".plot_compare_props",
+  register_plot_output(
+    "plot_compare_props", ".plot_compare_props",
     height_fun = "cp_plot_height"
   )
 
@@ -144,24 +160,25 @@ output$compare_props <- renderUI({
   cp_output_panels <- tabsetPanel(
     id = "tabs_compare_props",
     tabPanel("Summary", verbatimTextOutput("summary_compare_props")),
-    tabPanel("Plot", 
-      plot_downloader("compare_props", height = cp_plot_height), 
+    tabPanel(
+      "Plot",
+      plot_downloader("compare_props", height = cp_plot_height),
       plotOutput("plot_compare_props", height = "100%")
     )
   )
 
   stat_tab_panel(
-    menu = "Basics > Proportions", 
-    tool = "Compare proportions", 
-    tool_ui = "ui_compare_props", 
+    menu = "Basics > Proportions",
+    tool = "Compare proportions",
+    tool_ui = "ui_compare_props",
     output_panels = cp_output_panels
   )
 })
 
 cp_available <- reactive({
-
-  if (not_available(input$cp_var1) || not_available(input$cp_var2))
+  if (not_available(input$cp_var1) || not_available(input$cp_var2)) {
     return("This analysis requires two categorical variables. The first must have\ntwo or more levels. The second can have only two levels. If these\nvariable types are not available please select another dataset.\n\n" %>% suggest_data("titanic"))
+  }
 
   ## cp_var2 may be equal to cp_var1 when changing cp_var1 to cp_var2
   if (input$cp_var1 %in% input$cp_var2) return(" ")
@@ -189,18 +206,18 @@ observeEvent(input$compare_props_report, {
   outputs <- c("summary")
   inp_out <- list(list(show = input$cp_show), "")
   if (length(input$cp_plots) > 0) {
-    outputs <- c("summary","plot")
+    outputs <- c("summary", "plot")
     inp_out[[2]] <- list(plots = input$cp_plots, custom = FALSE)
     figs <- TRUE
   }
 
   update_report(
-    inp_main = clean_args(cp_inputs(), cp_args), 
-    fun_name = "compare_props", 
-    inp_out = inp_out, 
-    outputs = outputs, 
-    figs = figs, 
-    fig.width = cp_plot_width(), 
+    inp_main = clean_args(cp_inputs(), cp_args),
+    fun_name = "compare_props",
+    inp_out = inp_out,
+    outputs = outputs,
+    figs = figs,
+    fig.width = cp_plot_width(),
     fig.height = cp_plot_height()
   )
 })

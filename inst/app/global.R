@@ -2,13 +2,13 @@
 options(radiant.path.data = system.file(package = "radiant.data"))
 source(file.path(getOption("radiant.path.data"), "app/global.R"), encoding = getOption("radiant.encoding", default = "UTF-8"), local = TRUE)
 
-ifelse (grepl("radiant.basics", getwd()) && file.exists("../../inst") , "..", system.file(package = "radiant.basics")) %>%
+ifelse(grepl("radiant.basics", getwd()) && file.exists("../../inst"), "..", system.file(package = "radiant.basics")) %>%
   options(radiant.path.basics = .)
 
 ## setting path for figures in help files
 addResourcePath("figures_basics", "tools/help/figures/")
 
-## setting path for www resources 
+## setting path for www resources
 addResourcePath("www_basics", file.path(getOption("radiant.path.basics"), "app/www/"))
 
 ## loading urls and ui

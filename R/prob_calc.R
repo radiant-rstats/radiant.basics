@@ -18,7 +18,7 @@ prob_norm <- function(mean,
                       plb = NA,
                       pub = NA,
                       dec = 3) {
-
+  
   p_ub <- pnorm(ub, mean, stdev)
   p_lb <- pnorm(lb, mean, stdev)
   p_int <- max(p_ub - p_lb, 0) %>% round(dec)
@@ -66,11 +66,11 @@ prob_norm <- function(mean,
 #'
 #' @export
 plot.prob_norm <- function(x, type = "values", ...) {
-
-  mess <- paste0("mess_",type)
+  mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
-  object <- x; rm(x)
+  object <- x
+  rm(x)
 
   if (type == "values") {
     lb <- object$lb
@@ -105,7 +105,7 @@ plot.prob_norm <- function(x, type = "values", ...) {
     y
   }
 
-  dnorm_lines <- c(ub, lb) %>% na.omit
+  dnorm_lines <- c(ub, lb) %>% na.omit()
   if (length(dnorm_lines) == 0) dnorm_lines <- c(-Inf, Inf)
 
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
@@ -116,9 +116,9 @@ plot.prob_norm <- function(x, type = "values", ...) {
     stat_function(fun = dnorm_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
     stat_function(fun = dnorm_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +
     geom_vline(xintercept = dnorm_lines, color = "black", linetype = "dashed", size = .5) +
-    xlab("") + ylab("")
+    labs(x = "", y = "")
 
-   sshhr(plt)
+  sshhr(plt)
 }
 
 #' Summary method for the probability calculator function (normal)
@@ -130,8 +130,7 @@ plot.prob_norm <- function(x, type = "values", ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-summary.prob_norm <- function(object, type = "values",  ...) {
-
+summary.prob_norm <- function(object, type = "values", ...) {
   mean <- object$mean
   stdev <- object$stdev
   dec <- object$dec
@@ -153,7 +152,7 @@ summary.prob_norm <- function(object, type = "values",  ...) {
   cat("Mean        :", round(mean, dec), "\n")
   cat("St. dev     :", round(stdev, dec), "\n")
 
-  mess <- object[[paste0("mess_",type)]]
+  mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
 
   if (type == "values") {
@@ -164,21 +163,20 @@ summary.prob_norm <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (!is.na(lb)) {
-        cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
-        cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+        cat(paste0("P(X < ", lb, ") = ", p_lb, "\n"))
+        cat(paste0("P(X > ", lb, ") = ", round(1 - p_lb, dec), "\n"))
       }
 
       if (!is.na(ub)) {
-        cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
-        cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+        cat(paste0("P(X < ", ub, ") = ", p_ub, "\n"))
+        cat(paste0("P(X > ", ub, ") = ", round(1 - p_ub, dec), "\n"))
       }
 
       if (!is.na(lb) && !is.na(ub)) {
-        cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
-        cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+        cat(paste0("P(", lb, " < X < ", ub, ")     = ", p_int, "\n"))
+        cat(paste0("1 - P(", lb, " < X < ", ub, ") = ", round(1 - p_int, dec), "\n"))
       }
     }
-
   } else {
     pub <- if (is.na(pub)) 2 else pub
     plb <- if (is.na(plb)) -1 else plb
@@ -190,18 +188,18 @@ summary.prob_norm <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (plb >= 0) {
-        cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
-        cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+        cat(paste0("P(X < ", v_lb, ") = ", plb, "\n"))
+        cat(paste0("P(X > ", v_lb, ") = ", round(1 - plb, dec), "\n"))
       }
 
       if (pub <= 1) {
-        cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
-        cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+        cat(paste0("P(X < ", v_ub, ") = ", pub, "\n"))
+        cat(paste0("P(X > ", v_ub, ") = ", round(1 - pub, dec), "\n"))
       }
 
       if (pub <= 1 && plb >= 0) {
-        cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
-        cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+        cat(paste0("P(", v_lb, " < X < ", v_ub, ")     = ", pub - plb, "\n"))
+        cat(paste0("1 - P(", v_lb, " < X < ", v_ub, ") = ", round(1 - (pub - plb), dec), "\n"))
       }
     }
   }
@@ -229,7 +227,7 @@ prob_tdist <- function(df,
                        plb = NA,
                        pub = NA,
                        dec = 3) {
-
+  
   p_ub <- pt(ub, df)
   p_lb <- pt(lb, df)
   p_int <- max(p_ub - p_lb, 0)
@@ -281,11 +279,12 @@ prob_tdist <- function(df,
 #'
 #' @export
 plot.prob_tdist <- function(x, type = "values", ...) {
-
-  mess <- paste0("mess_",type)
+  
+  mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
-  object <- x; rm(x)
+  object <- x
+  rm(x)
   if (type == "values") {
     lb <- object$lb
     ub <- object$ub
@@ -317,7 +316,7 @@ plot.prob_tdist <- function(x, type = "values", ...) {
     y
   }
 
-  dt_lines <- c(ub, lb) %>% na.omit
+  dt_lines <- c(ub, lb) %>% na.omit()
   if (length(dt_lines) == 0) dt_lines <- c(-Inf, Inf)
 
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
@@ -330,7 +329,7 @@ plot.prob_tdist <- function(x, type = "values", ...) {
     geom_vline(xintercept = dt_lines, color = "black", linetype = "dashed", size = .5) +
     labs(x = "", y = "")
 
-   sshhr(plt)
+  sshhr(plt)
 }
 
 
@@ -343,8 +342,7 @@ plot.prob_tdist <- function(x, type = "values", ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-summary.prob_tdist <- function(object, type = "values",  ...) {
-
+summary.prob_tdist <- function(object, type = "values", ...) {
   df <- object$df
   n <- df + 1
   dec <- object$dec
@@ -367,7 +365,7 @@ summary.prob_tdist <- function(object, type = "values",  ...) {
   cat("Mean        :", 0, "\n")
   cat("St. dev     :", {if (n > 2) round(n / (n - 2), dec) else "NA"}, "\n")
 
-  mess <- object[[paste0("mess_",type)]]
+  mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
 
   if (type == "values") {
@@ -378,21 +376,20 @@ summary.prob_tdist <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (!is.na(lb)) {
-        cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
-        cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+        cat(paste0("P(X < ", lb, ") = ", p_lb, "\n"))
+        cat(paste0("P(X > ", lb, ") = ", round(1 - p_lb, dec), "\n"))
       }
 
       if (!is.na(ub)) {
-        cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
-        cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+        cat(paste0("P(X < ", ub, ") = ", p_ub, "\n"))
+        cat(paste0("P(X > ", ub, ") = ", round(1 - p_ub, dec), "\n"))
       }
 
       if (!is.na(lb) && !is.na(ub)) {
-        cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
-        cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+        cat(paste0("P(", lb, " < X < ", ub, ")     = ", p_int, "\n"))
+        cat(paste0("1 - P(", lb, " < X < ", ub, ") = ", round(1 - p_int, dec), "\n"))
       }
     }
-
   } else {
     pub <- if (is.na(pub)) 2 else pub
     plb <- if (is.na(plb)) -1 else plb
@@ -404,18 +401,18 @@ summary.prob_tdist <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (plb >= 0) {
-        cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
-        cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+        cat(paste0("P(X < ", v_lb, ") = ", plb, "\n"))
+        cat(paste0("P(X > ", v_lb, ") = ", round(1 - plb, dec), "\n"))
       }
 
       if (pub <= 1) {
-        cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
-        cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+        cat(paste0("P(X < ", v_ub, ") = ", pub, "\n"))
+        cat(paste0("P(X > ", v_ub, ") = ", round(1 - pub, dec), "\n"))
       }
 
       if (pub <= 1 && plb >= 0) {
-        cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
-        cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+        cat(paste0("P(", v_lb, " < X < ", v_ub, ")     = ", pub - plb, "\n"))
+        cat(paste0("1 - P(", v_lb, " < X < ", v_ub, ") = ", round(1 - (pub - plb), dec), "\n"))
       }
     }
   }
@@ -495,12 +492,11 @@ prob_fdist <- function(df1, df2,
 #'
 #' @export
 plot.prob_fdist <- function(x, type = "values", ...) {
-
-
-  mess <- paste0("mess_",type)
+  mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
-  object <- x; rm(x)
+  object <- x
+  rm(x)
   if (type == "values") {
     lb <- object$lb
     ub <- object$ub
@@ -512,14 +508,17 @@ plot.prob_fdist <- function(x, type = "values", ...) {
   df1 <- object$df1
   df2 <- object$df2
 
-  limits <- c(qf(0.01, df1 = df1, df2 = df2) %>% floor,
-              qf(1 - 0.01, df1 = df1, df2 = df2) %>% ceiling)
+  limits <- c(
+    qf(0.01, df1 = df1, df2 = df2) %>% floor(),
+    qf(1 - 0.01, df1 = df1, df2 = df2) %>% ceiling()
+  )
 
   dat <- data.frame(
     x = limits,
     Probability = df(limits, df1 = df1, df2 = df2),
     df1 = df1,
-    df2 = df2
+    df2 = df2,
+    stringsAsFactors = FALSE
   )
 
   df_line <- function(x) df(x, df1 = df1, df2 = df2)
@@ -544,20 +543,20 @@ plot.prob_fdist <- function(x, type = "values", ...) {
     y
   }
 
-  vlines <- c(ub,lb) %>% na.omit
+  vlines <- c(ub, lb) %>% na.omit()
   if (length(vlines) == 0) vlines <- c(-Inf, Inf)
 
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(dat, aes_string(x = "x"))  +
+  plt <- ggplot(dat, aes_string(x = "x")) +
     stat_function(fun = df_line, geom = "line") +
     stat_function(fun = df_limit, geom = "area", fill = "blue", alpha = 0.2, n = 501) +
     stat_function(fun = df_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
     stat_function(fun = df_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +
     geom_vline(xintercept = vlines, color = "black", linetype = "dashed", size = 0.5) +
-    xlab("") + ylab("")
+    labs(x = "", y = "")
 
-   sshhr(plt)
+  sshhr(plt)
 }
 
 
@@ -570,8 +569,7 @@ plot.prob_fdist <- function(x, type = "values", ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-summary.prob_fdist <- function(object, type = "values",  ...) {
-
+summary.prob_fdist <- function(object, type = "values", ...) {
   df1 <- object$df1
   df2 <- object$df2
   dec <- object$dec
@@ -594,14 +592,14 @@ summary.prob_fdist <- function(object, type = "values",  ...) {
   cat("Df 2        :", df2, "\n")
   m <- if (df2 > 2) round(df2 / (df2 - 2), dec) else "NA"
   variance <- if (df2 > 4) {
-    round((2 * df2^2 * (df1 + df2 - 2)) / (df1 * (df2 - 2)^2 * (df2 - 4)), dec)
+    round((2 * df2 ^ 2 * (df1 + df2 - 2)) / (df1 * (df2 - 2) ^ 2 * (df2 - 4)), dec)
   } else {
     "NA"
   }
   cat("Mean        :", m, "\n")
   cat("Variance    :", variance, "\n")
 
-  mess <- object[[paste0("mess_",type)]]
+  mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
 
   if (type == "values") {
@@ -612,21 +610,20 @@ summary.prob_fdist <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (!is.na(lb)) {
-        cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
-        cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+        cat(paste0("P(X < ", lb, ") = ", p_lb, "\n"))
+        cat(paste0("P(X > ", lb, ") = ", round(1 - p_lb, dec), "\n"))
       }
 
       if (!is.na(ub)) {
-        cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
-        cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+        cat(paste0("P(X < ", ub, ") = ", p_ub, "\n"))
+        cat(paste0("P(X > ", ub, ") = ", round(1 - p_ub, dec), "\n"))
       }
 
       if (!is.na(lb) && !is.na(ub)) {
-        cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
-        cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+        cat(paste0("P(", lb, " < X < ", ub, ")     = ", p_int, "\n"))
+        cat(paste0("1 - P(", lb, " < X < ", ub, ") = ", round(1 - p_int, dec), "\n"))
       }
     }
-
   } else {
     pub <- if (is.na(pub)) 2 else pub
     plb <- if (is.na(plb)) -1 else plb
@@ -638,18 +635,18 @@ summary.prob_fdist <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (plb >= 0) {
-        cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
-        cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+        cat(paste0("P(X < ", v_lb, ") = ", plb, "\n"))
+        cat(paste0("P(X > ", v_lb, ") = ", round(1 - plb, dec), "\n"))
       }
 
       if (pub <= 1) {
-        cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
-        cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+        cat(paste0("P(X < ", v_ub, ") = ", pub, "\n"))
+        cat(paste0("P(X > ", v_ub, ") = ", round(1 - pub, dec), "\n"))
       }
 
       if (pub <= 1 && plb >= 0) {
-        cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
-        cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+        cat(paste0("P(", v_lb, " < X < ", v_ub, ")     = ", pub - plb, "\n"))
+        cat(paste0("1 - P(", v_lb, " < X < ", v_ub, ") = ", round(1 - (pub - plb), dec), "\n"))
       }
     }
   }
@@ -673,7 +670,7 @@ prob_chisq <- function(df,
                        plb = NA,
                        pub = NA,
                        dec = 3) {
-
+  
   if (!is_not(lb) && lb < 0) lb <- 0
   if (!is_not(ub) && ub < 0) ub <- 0
 
@@ -728,11 +725,12 @@ prob_chisq <- function(df,
 #'
 #' @export
 plot.prob_chisq <- function(x, type = "values", ...) {
-
-  mess <- paste0("mess_",type)
+  
+  mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
-  object <- x; rm(x)
+  object <- x
+  rm(x)
   if (type == "values") {
     lb <- object$lb
     ub <- object$ub
@@ -743,13 +741,16 @@ plot.prob_chisq <- function(x, type = "values", ...) {
 
   df <- object$df
 
-  limits <- c(qchisq(0.001, df = df) %>% floor,
-              qchisq(1 - 0.001, df = df) %>% ceiling)
+  limits <- c(
+    qchisq(0.001, df = df) %>% floor(),
+    qchisq(1 - 0.001, df = df) %>% ceiling()
+  )
 
   dat <- data.frame(
     x = limits,
     Probability = dchisq(limits, df = df),
-    df = df
+    df = df,
+    stringsAsFactors = FALSE
   )
 
   dchisq_limit <- function(x) {
@@ -772,7 +773,7 @@ plot.prob_chisq <- function(x, type = "values", ...) {
     y
   }
 
-  vlines <- c(ub,lb) %>% na.omit
+  vlines <- c(ub, lb) %>% na.omit()
   if (length(vlines) == 0) vlines <- c(-Inf, Inf)
 
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
@@ -785,7 +786,7 @@ plot.prob_chisq <- function(x, type = "values", ...) {
     geom_vline(xintercept = vlines, color = "black", linetype = "dashed", size = 0.5) +
     labs(x = "", y = "")
 
-   sshhr(plt)
+  sshhr(plt)
 }
 
 
@@ -798,8 +799,7 @@ plot.prob_chisq <- function(x, type = "values", ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-summary.prob_chisq <- function(object, type = "values",  ...) {
-
+summary.prob_chisq <- function(object, type = "values", ...) {
   df <- object$df
   dec <- object$dec
 
@@ -832,21 +832,20 @@ summary.prob_chisq <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (!is.na(lb)) {
-        cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
-        cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+        cat(paste0("P(X < ", lb, ") = ", p_lb, "\n"))
+        cat(paste0("P(X > ", lb, ") = ", round(1 - p_lb, dec), "\n"))
       }
 
       if (!is.na(ub)) {
-        cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
-        cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+        cat(paste0("P(X < ", ub, ") = ", p_ub, "\n"))
+        cat(paste0("P(X > ", ub, ") = ", round(1 - p_ub, dec), "\n"))
       }
 
       if (!is.na(lb) && !is.na(ub)) {
-        cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
-        cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+        cat(paste0("P(", lb, " < X < ", ub, ")     = ", p_int, "\n"))
+        cat(paste0("1 - P(", lb, " < X < ", ub, ") = ", round(1 - p_int, dec), "\n"))
       }
     }
-
   } else {
     pub <- if (is.na(pub)) 2 else pub
     plb <- if (is.na(plb)) -1 else plb
@@ -858,18 +857,18 @@ summary.prob_chisq <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (plb >= 0) {
-        cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
-        cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+        cat(paste0("P(X < ", v_lb, ") = ", plb, "\n"))
+        cat(paste0("P(X > ", v_lb, ") = ", round(1 - plb, dec), "\n"))
       }
 
       if (pub <= 1) {
-        cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
-        cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+        cat(paste0("P(X < ", v_ub, ") = ", pub, "\n"))
+        cat(paste0("P(X > ", v_ub, ") = ", round(1 - pub, dec), "\n"))
       }
 
       if (pub <= 1 && plb >= 0) {
-        cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
-        cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+        cat(paste0("P(", v_lb, " < X < ", v_ub, ")     = ", pub - plb, "\n"))
+        cat(paste0("1 - P(", v_lb, " < X < ", v_ub, ") = ", round(1 - (pub - plb), dec), "\n"))
       }
     }
   }
@@ -895,7 +894,6 @@ prob_unif <- function(min,
                       plb = NA,
                       pub = NA,
                       dec = 3) {
-
   if (min > max) {
     mess_values <- "\nThe maximum value must be larger than the minimum value"
     mess_probs <- "\nThe maximum value must be larger than the minimum value"
@@ -935,8 +933,8 @@ prob_unif <- function(min,
   v_ub <- qunif(pub, min, max) %>% round(dec)
   v_lb <- qunif(plb, min, max) %>% round(dec)
 
-  mean <- (max+min) / 2
-  stdev <- sqrt((max-min)^2 / 12)
+  mean <- (max + min) / 2
+  stdev <- sqrt((max - min) ^ 2 / 12)
 
   as.list(environment()) %>% add_class("prob_unif")
 }
@@ -951,11 +949,11 @@ prob_unif <- function(min,
 #'
 #' @export
 plot.prob_unif <- function(x, type = "values", ...) {
-
-  mess <- paste0("mess_",type)
+  mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
-  object <- x; rm(x)
+  object <- x
+  rm(x)
   if (type == "values") {
     lb <- object$lb
     ub <- object$ub
@@ -990,12 +988,12 @@ plot.prob_unif <- function(x, type = "values", ...) {
     y
   }
 
-  dunif_lines <- c(ub,lb) %>% na.omit %>% setdiff(c(min,max))
+  dunif_lines <- c(ub, lb) %>% na.omit() %>% setdiff(c(min, max))
   if (length(dunif_lines) == 0) dunif_lines <- c(-Inf, Inf)
 
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(data.frame(x = limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub), aes_string(x="x")) +
+  plt <- ggplot(data.frame(x = limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub), aes_string(x = "x")) +
     stat_function(fun = dunif_limit, geom = "area", fill = "blue", alpha = 0.2, n = 501) +
     stat_function(fun = dunif_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
     stat_function(fun = dunif_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +
@@ -1005,7 +1003,7 @@ plot.prob_unif <- function(x, type = "values", ...) {
     geom_segment(aes(x = x[1], y = y[1], xend = x[2], yend = y[2])) +
     labs(x = "", y = "")
 
-   sshhr(plt)
+  sshhr(plt)
 }
 
 #' Summary method for the probability calculator function (uniform)
@@ -1017,8 +1015,7 @@ plot.prob_unif <- function(x, type = "values", ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-summary.prob_unif <- function(object, type = "values",  ...) {
-
+summary.prob_unif <- function(object, type = "values", ...) {
   min <- object$min
   max <- object$max
   mean <- object$mean
@@ -1050,28 +1047,31 @@ summary.prob_unif <- function(object, type = "values",  ...) {
   if (!is.null(mess)) return(mess)
 
   if (type == "values") {
-    cat("Lower bound :", {if (is.na(lb)) min else lb}, "\n")
-    cat("Upper bound :", {if (is.na(ub)) max else ub}, "\n")
+    cat("Lower bound :", {
+      if (is.na(lb)) min else lb
+    }, "\n")
+    cat("Upper bound :", {
+      if (is.na(ub)) max else ub
+    }, "\n")
 
     if (!is.na(ub) || !is.na(lb)) {
       cat("\n")
 
       if (!is.na(lb)) {
-        cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
-        cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+        cat(paste0("P(X < ", lb, ") = ", p_lb, "\n"))
+        cat(paste0("P(X > ", lb, ") = ", round(1 - p_lb, dec), "\n"))
       }
 
       if (!is.na(ub)) {
-        cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
-        cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+        cat(paste0("P(X < ", ub, ") = ", p_ub, "\n"))
+        cat(paste0("P(X > ", ub, ") = ", round(1 - p_ub, dec), "\n"))
       }
 
       if (!is.na(lb) && !is.na(ub)) {
-        cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
-        cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+        cat(paste0("P(", lb, " < X < ", ub, ")     = ", p_int, "\n"))
+        cat(paste0("1 - P(", lb, " < X < ", ub, ") = ", round(1 - p_int, dec), "\n"))
       }
     }
-
   } else {
     pub <- if (is.na(pub)) 2 else pub
     plb <- if (is.na(plb)) -1 else plb
@@ -1083,18 +1083,18 @@ summary.prob_unif <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (plb >= 0) {
-        cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
-        cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+        cat(paste0("P(X < ", v_lb, ") = ", plb, "\n"))
+        cat(paste0("P(X > ", v_lb, ") = ", round(1 - plb, dec), "\n"))
       }
 
       if (pub <= 1) {
-        cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
-        cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+        cat(paste0("P(X < ", v_ub, ") = ", pub, "\n"))
+        cat(paste0("P(X > ", v_ub, ") = ", round(1 - pub, dec), "\n"))
       }
 
       if (pub <= 1 && plb >= 0) {
-        cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
-        cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+        cat(paste0("P(", v_lb, " < X < ", v_ub, ")     = ", pub - plb, "\n"))
+        cat(paste0("1 - P(", v_lb, " < X < ", v_ub, ") = ", round(1 - (pub - plb), dec), "\n"))
       }
     }
   }
@@ -1134,10 +1134,11 @@ prob_binom <- function(n,
     if (lb > n) lb <- n
     p_elb <- dbinom(lb, n, p) %>% round(dec)
     p_lelb <- pbinom(lb, n, p) %>% round(dec)
-    if (lb > 0)
-      p_lb <- sum(dbinom(0:max((lb-1),0), n, p)) %>% round(dec)
-    else
+    if (lb > 0) {
+      p_lb <- sum(dbinom(0:max((lb - 1), 0), n, p)) %>% round(dec)
+    } else {
       p_lb <- 0
+    }
   }
 
   if (is.na(ub) || ub < 0) {
@@ -1147,10 +1148,11 @@ prob_binom <- function(n,
     if (ub > n) ub <- n
     p_eub <- dbinom(ub, n, p) %>% round(dec)
     p_leub <- pbinom(ub, n, p) %>% round(dec)
-    if (ub > 0)
-      p_ub <- sum(dbinom(0:max((ub-1),0), n, p)) %>% round(dec)
-    else
+    if (ub > 0) {
+      p_ub <- sum(dbinom(0:max((ub - 1), 0), n, p)) %>% round(dec)
+    } else {
       p_ub <- 0
+    }
   }
 
   if (!is.na(ub) && !is.na(lb)) {
@@ -1168,10 +1170,11 @@ prob_binom <- function(n,
 
     vp_elb <- dbinom(vlb, n, p) %>% round(dec)
     vp_lelb <- pbinom(vlb, n, p) %>% round(dec)
-    if (vlb > 0)
-      vp_lb <- sum(dbinom(0:max((vlb-1),0), n, p)) %>% round(dec)
-    else
+    if (vlb > 0) {
+      vp_lb <- sum(dbinom(0:max((vlb - 1), 0), n, p)) %>% round(dec)
+    } else {
       vp_lb <- 0
+    }
   }
 
   if (is.na(pub)) {
@@ -1183,10 +1186,11 @@ prob_binom <- function(n,
 
     vp_eub <- dbinom(vub, n, p) %>% round(dec)
     vp_leub <- pbinom(vub, n, p) %>% round(dec)
-    if (vub > 0)
-      vp_ub <- sum(dbinom(0:max((vub-1),0), n, p)) %>% round(dec)
-    else
+    if (vub > 0) {
+      vp_ub <- sum(dbinom(0:max((vub - 1), 0), n, p)) %>% round(dec)
+    } else {
       vp_ub <- 0
+    }
   }
 
   if (!is.na(pub) && !is.na(plb)) {
@@ -1222,11 +1226,11 @@ prob_binom <- function(n,
 #'
 #' @export
 plot.prob_binom <- function(x, type = "values", ...) {
-
-  mess <- paste0("mess_",type)
+  mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
-  object <- x; rm(x)
+  object <- x
+  rm(x)
   if (type == "values") {
     lb <- object$lb
     ub <- object$ub
@@ -1240,23 +1244,25 @@ plot.prob_binom <- function(x, type = "values", ...) {
 
   limits <- 0:n
 
-  k <- factor(rep("below",n+1), levels = c("below","equal","above"))
+  k <- factor(rep("below", n + 1), levels = c("below", "equal", "above"))
   if (!is_not(ub)) {
-    k[ub+1] <- "equal"
-    if (!is.na(lb)) k[(lb:ub)+1] <- "equal"
+    k[ub + 1] <- "equal"
+    if (!is.na(lb)) k[(lb:ub) + 1] <- "equal"
     k[0:n > ub] <- "above"
   } else if (!is_not(lb)) {
-    k[lb+1] <- "equal"
+    k[lb + 1] <- "equal"
     k[0:n > lb] <- "above"
   } else {
     return(invisible())
   }
 
   dat <- data.frame(
-    x = limits %>% as_factor,
+    x = limits %>% as_factor(),
     Probability = dbinom(limits, size = n, prob = p),
-    k = k
-  ) %>% filter(., .$Probability > 0.00001)
+    k = k,
+    stringsAsFactors = FALSE
+  ) %>%
+    filter(., .$Probability > 0.00001)
 
   if (nrow(dat) < 40) {
     breaks <- dat$x
@@ -1271,12 +1277,12 @@ plot.prob_binom <- function(x, type = "values", ...) {
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
     geom_bar(stat = "identity", alpha = 0.3) +
-    labs(x = "") + 
+    labs(x = "") +
     scale_fill_manual(values = cols) +
     theme(legend.position = "none") +
     scale_x_discrete(breaks = breaks)
 
-   sshhr(plt)
+  sshhr(plt)
 }
 
 #' Summary method for the probability calculator function
@@ -1288,8 +1294,7 @@ plot.prob_binom <- function(x, type = "values", ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-summary.prob_binom <- function(object, type = "values",  ...) {
-
+summary.prob_binom <- function(object, type = "values", ...) {
   n <- object$n
   p <- object$p
   dec <- object$dec
@@ -1324,48 +1329,50 @@ summary.prob_binom <- function(object, type = "values",  ...) {
   cat("Mean        :", round(n * p, dec), "\n")
   cat("St. dev     :", sqrt(n * p * (1 - p)) %>% round(dec), "\n")
 
-  mess <- object[[paste0("mess_",type)]]
+  mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
 
   if (type == "values") {
-    cat("Lower bound :", {if (is.na(lb)) "" else lb}, "\n")
-    cat("Upper bound :", {if (is.na(ub)) "" else ub}, "\n")
+    cat("Lower bound :", {
+      if (is.na(lb)) "" else lb
+    }, "\n")
+    cat("Upper bound :", {
+      if (is.na(ub)) "" else ub
+    }, "\n")
 
     if (!is.na(ub) || !is.na(lb)) {
       cat("\n")
 
       if (!is.na(lb)) {
-        cat(paste0("P(X  = ", lb,") = ", p_elb, "\n"))
+        cat(paste0("P(X  = ", lb, ") = ", p_elb, "\n"))
         if (lb > 0) {
-          cat(paste0("P(X  < ", lb,") = ", p_lb, "\n"))
-          cat(paste0("P(X <= ", lb,") = ", p_lelb, "\n"))
+          cat(paste0("P(X  < ", lb, ") = ", p_lb, "\n"))
+          cat(paste0("P(X <= ", lb, ") = ", p_lelb, "\n"))
         }
         if (lb < n) {
-          cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
-          cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
+          cat(paste0("P(X  > ", lb, ") = ", round(1 - (p_lb + p_elb), dec), "\n"))
+          cat(paste0("P(X >= ", lb, ") = ", round(1 - p_lb, dec), "\n"))
         }
       }
 
       if (!is.na(ub)) {
-        cat(paste0("P(X  = ", ub,") = ", p_eub, "\n"))
+        cat(paste0("P(X  = ", ub, ") = ", p_eub, "\n"))
         if (ub > 0) {
-          cat(paste0("P(X  < ", ub,") = ", p_ub, "\n"))
-          cat(paste0("P(X <= ", ub,") = ", p_leub, "\n"))
+          cat(paste0("P(X  < ", ub, ") = ", p_ub, "\n"))
+          cat(paste0("P(X <= ", ub, ") = ", p_leub, "\n"))
         }
         if (ub < n) {
-          cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
-          cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
+          cat(paste0("P(X  > ", ub, ") = ", round(1 - (p_ub + p_eub), dec), "\n"))
+          cat(paste0("P(X >= ", ub, ") = ", round(1 - p_ub, dec), "\n"))
         }
       }
 
       if (!is.na(lb) && !is.na(ub)) {
-        cat(paste0("P(", lb, " <= X <= ", ub,")     = ", p_int, "\n"))
-        cat(paste0("1 - P(", lb, " <= X <= ", ub,") = ", round(1 - p_int, dec), "\n"))
+        cat(paste0("P(", lb, " <= X <= ", ub, ")     = ", p_int, "\n"))
+        cat(paste0("1 - P(", lb, " <= X <= ", ub, ") = ", round(1 - p_int, dec), "\n"))
       }
     }
-
   } else {
-
     cat("Lower bound :", if (is.na(plb)) "\n" else paste0(plb, " (", vlb, ")\n"))
     cat("Upper bound :", if (is.na(pub)) "\n" else paste0(pub, " (", vub, ")\n"))
 
@@ -1373,32 +1380,32 @@ summary.prob_binom <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (!is.na(plb)) {
-        cat(paste0("P(X  = ", vlb,") = ", vp_elb, "\n"))
+        cat(paste0("P(X  = ", vlb, ") = ", vp_elb, "\n"))
         if (vlb > 0) {
-          cat(paste0("P(X  < ", vlb,") = ", vp_lb, "\n"))
-          cat(paste0("P(X <= ", vlb,") = ", vp_lelb, "\n"))
+          cat(paste0("P(X  < ", vlb, ") = ", vp_lb, "\n"))
+          cat(paste0("P(X <= ", vlb, ") = ", vp_lelb, "\n"))
         }
         if (vlb < n) {
-          cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
-          cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
+          cat(paste0("P(X  > ", vlb, ") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
+          cat(paste0("P(X >= ", vlb, ") = ", round(1 - vp_lb, dec), "\n"))
         }
       }
 
       if (!is.na(pub)) {
-        cat(paste0("P(X  = ", vub,") = ", vp_eub, "\n"))
+        cat(paste0("P(X  = ", vub, ") = ", vp_eub, "\n"))
         if (vub > 0) {
-          cat(paste0("P(X  < ", vub,") = ", vp_ub, "\n"))
-          cat(paste0("P(X <= ", vub,") = ", vp_leub, "\n"))
+          cat(paste0("P(X  < ", vub, ") = ", vp_ub, "\n"))
+          cat(paste0("P(X <= ", vub, ") = ", vp_leub, "\n"))
         }
         if (vub < n) {
-          cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
-          cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
+          cat(paste0("P(X  > ", vub, ") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
+          cat(paste0("P(X >= ", vub, ") = ", round(1 - vp_ub, dec), "\n"))
         }
       }
 
       if (!is.na(plb) && !is.na(pub)) {
-        cat(paste0("P(", vlb, " <= X <= ", vub,")     = ", vp_int, "\n"))
-        cat(paste0("1 - P(", vlb, " <= X <= ", vub,") = ", round(1 - vp_int, dec), "\n"))
+        cat(paste0("P(", vlb, " <= X <= ", vub, ")     = ", vp_int, "\n"))
+        cat(paste0("1 - P(", vlb, " <= X <= ", vub, ") = ", round(1 - vp_int, dec), "\n"))
       }
     }
   }
@@ -1428,10 +1435,11 @@ prob_disc <- function(v, p,
   # Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
   # expand.grid(height = 1:6, weight = 1:6)
 
-  v <- gsub(","," ", v) %>% strsplit("\\s+") %>% unlist
-  p <- gsub(","," ", p) %>% strsplit("\\s+") %>% unlist
+  v <- gsub(",", " ", v) %>% strsplit("\\s+") %>% unlist()
+  p <- gsub(",", " ", p) %>% strsplit("\\s+") %>% unlist()
 
-  lp <- length(p); lv <- length(v)
+  lp <- length(p)
+  lv <- length(v)
   if (lv != lp && lv %% lp == 0) p <- rep(p, lv / lp)
 
   if (length(v) != length(p)) {
@@ -1439,9 +1447,9 @@ prob_disc <- function(v, p,
     return(list(mess_probs = mess, mess_values = mess) %>% add_class("prob_disc"))
   }
 
-  asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1])/as.numeric(x[2]), as.numeric(x[1]))
-  p <- sshhr( strsplit(p, "/") %>% sapply(asNum) )
-  v <- sshhr( strsplit(v, "/") %>% sapply(asNum) )
+  asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1]) / as.numeric(x[2]), as.numeric(x[1]))
+  p <- sshhr(strsplit(p, "/") %>% sapply(asNum))
+  v <- sshhr(strsplit(v, "/") %>% sapply(asNum))
 
   if (anyNA(p) | anyNA(v)) {
     mess <- "The number of probabilities entered must be a multiple of the number of values"
@@ -1450,25 +1458,26 @@ prob_disc <- function(v, p,
   }
 
   ## make sure values and probabilities are ordered correctly
-  df <- data.frame(v = v, p = p) %>% arrange(v)
+  df <- data.frame(v = v, p = p, stringsAsFactors = FALSE) %>%
+    arrange(v)
   p <- df$p
   v <- df$v
 
   if (sum(p) < .99 || sum(p) > 1.01) {
-    mess_probs <- mess_values <- paste0("Probabilities for a discrete variable do not sum to 1 (",round(sum(p),3),")")
+    mess_probs <- mess_values <- paste0("Probabilities for a discrete variable do not sum to 1 (", round(sum(p), 3), ")")
     return(as.list(environment()) %>% add_class("prob_disc"))
   }
 
   ddisc <- function(b, df) filter(df, v == b)$p
-  pdisc <- function(b, df) filter(df, v < b)$p  %>% sum
+  pdisc <- function(b, df) filter(df, v < b)$p %>% sum()
   ## consistent with http://www.stat.umn.edu/geyer/old/5101/rlook.html#qbinom
-  qdisc <- function(prob, df) mutate(df, p = cumsum(df$p)) %>% filter(p >= prob) %>% .$v %>% min
+  qdisc <- function(prob, df) mutate(df, p = cumsum(df$p)) %>% filter(p >= prob) %>% .$v %>% min()
 
   if (is.na(lb)) {
     p_elb <- p_lb <- lb <- NA
   } else if (!lb %in% v) {
     p_elb <- 0
-    p_lb <- ifelse ( lb < min(v), 0, pdisc(lb, df) %>% round(dec))
+    p_lb <- ifelse(lb < min(v), 0, pdisc(lb, df) %>% round(dec))
     p_lelb <- p_elb + p_lb
   } else {
     p_elb <- ddisc(lb, df) %>% round(dec)
@@ -1480,7 +1489,7 @@ prob_disc <- function(v, p,
     p_eub <- p_ub <- ub <- NA
   } else if (!ub %in% v) {
     p_eub <- 0
-    p_ub <- ifelse ( ub < min(v), 0, pdisc(ub, df) %>% round(dec))
+    p_ub <- ifelse(ub < min(v), 0, pdisc(ub, df) %>% round(dec))
     p_leub <- p_eub + p_ub
   } else {
     p_eub <- ddisc(ub, df) %>% round(dec)
@@ -1505,7 +1514,7 @@ prob_disc <- function(v, p,
     vlb <- qdisc(plb, df)
     vp_elb <- ddisc(vlb, df) %>% round(dec)
     vp_lb <- pdisc(vlb, df) %>% round(dec)
-    vp_lelb <-  vp_elb + vp_lb
+    vp_lelb <- vp_elb + vp_lb
   }
 
   if (is.na(pub)) {
@@ -1519,7 +1528,7 @@ prob_disc <- function(v, p,
     vub <- qdisc(pub, df)
     vp_eub <- ddisc(vub, df) %>% round(dec)
     vp_ub <- pdisc(vub, df) %>% round(dec)
-    vp_leub <-  vp_eub + vp_ub
+    vp_leub <- vp_eub + vp_ub
   }
 
   if (!is.na(pub) && !is.na(plb)) {
@@ -1559,11 +1568,11 @@ prob_disc <- function(v, p,
 #'
 #' @export
 plot.prob_disc <- function(x, type = "values", ...) {
-
-  mess <- paste0("mess_",type)
+  mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
-  object <- x; rm(x)
+  object <- x
+  rm(x)
   if (type == "values") {
     lb <- object$lb
     ub <- object$ub
@@ -1577,7 +1586,7 @@ plot.prob_disc <- function(x, type = "values", ...) {
 
   limits <- v
 
-  k <- factor(rep("below",length(v)), levels = c("below","equal","above"))
+  k <- factor(rep("below", length(v)), levels = c("below", "equal", "above"))
   if (!is_empty(ub)) {
     if (!is.na(lb)) {
       k[v >= lb & v <= ub] <- "equal"
@@ -1593,9 +1602,10 @@ plot.prob_disc <- function(x, type = "values", ...) {
   }
 
   dat <- data.frame(
-    x = limits %>% as_factor,
+    x = limits %>% as_factor(),
     Probability = p,
-    k = k
+    k = k,
+    stringsAsFactors = FALSE
   )
 
   if (nrow(dat) < 30) {
@@ -1611,12 +1621,12 @@ plot.prob_disc <- function(x, type = "values", ...) {
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
     geom_bar(stat = "identity", alpha = 0.3) +
-    labs(x = "") + 
+    labs(x = "") +
     scale_fill_manual(values = cols) +
     theme(legend.position = "none") +
     scale_x_discrete(breaks = breaks)
 
-   sshhr(plt)
+  sshhr(plt)
 }
 
 #' Summary method for the probability calculator function (discrete)
@@ -1632,8 +1642,7 @@ plot.prob_disc <- function(x, type = "values", ...) {
 #' summary(result, type = "probs")
 #'
 #' @export
-summary.prob_disc <- function(object, type = "values",  ...) {
-
+summary.prob_disc <- function(object, type = "values", ...) {
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
 
@@ -1666,51 +1675,54 @@ summary.prob_disc <- function(object, type = "values",  ...) {
 
   cat("Probability calculator\n")
   cat("Distribution : Discrete\n")
-  cat("Values       :", paste0(v, collapse=" "), "\n")
-  cat("Probabilities:", paste0(p %>% round(dec), collapse=" "), "\n")
-  m <- sum(v * p); std <- sum(p * (v - m)^2) %>% sqrt
+  cat("Values       :", paste0(v, collapse = " "), "\n")
+  cat("Probabilities:", paste0(p %>% round(dec), collapse = " "), "\n")
+  m <- sum(v * p)
+  std <- sum(p * (v - m) ^ 2) %>% sqrt()
   cat("Mean         :", round(m, dec), "\n")
   cat("St. dev      :", round(std, dec), "\n")
 
   if (type == "values") {
-    cat("Lower bound  :", {if (is.na(lb)) "" else lb}, "\n")
-    cat("Upper bound  :", {if (is.na(ub)) "" else ub}, "\n")
+    cat("Lower bound  :", {
+      if (is.na(lb)) "" else lb
+    }, "\n")
+    cat("Upper bound  :", {
+      if (is.na(ub)) "" else ub
+    }, "\n")
 
     if (!is.na(ub) || !is.na(lb)) {
       cat("\n")
 
       if (!is.na(lb)) {
-        cat(paste0("P(X  = ", lb,") = ", p_elb, "\n"))
+        cat(paste0("P(X  = ", lb, ") = ", p_elb, "\n"))
         if (lb > min(v)) {
-          cat(paste0("P(X  < ", lb,") = ", p_lb, "\n"))
-          cat(paste0("P(X <= ", lb,") = ", p_lelb, "\n"))
+          cat(paste0("P(X  < ", lb, ") = ", p_lb, "\n"))
+          cat(paste0("P(X <= ", lb, ") = ", p_lelb, "\n"))
         }
         if (lb < max(v)) {
-          cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
-          cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
+          cat(paste0("P(X  > ", lb, ") = ", round(1 - (p_lb + p_elb), dec), "\n"))
+          cat(paste0("P(X >= ", lb, ") = ", round(1 - p_lb, dec), "\n"))
         }
       }
 
       if (!is.na(ub)) {
-        cat(paste0("P(X  = ", ub,") = ", p_eub, "\n"))
+        cat(paste0("P(X  = ", ub, ") = ", p_eub, "\n"))
         if (ub > min(v)) {
-          cat(paste0("P(X  < ", ub,") = ", p_ub, "\n"))
-          cat(paste0("P(X <= ", ub,") = ", p_leub, "\n"))
+          cat(paste0("P(X  < ", ub, ") = ", p_ub, "\n"))
+          cat(paste0("P(X <= ", ub, ") = ", p_leub, "\n"))
         }
         if (ub < max(v)) {
-          cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
-          cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
+          cat(paste0("P(X  > ", ub, ") = ", round(1 - (p_ub + p_eub), dec), "\n"))
+          cat(paste0("P(X >= ", ub, ") = ", round(1 - p_ub, dec), "\n"))
         }
       }
 
       if (!is.na(lb) && !is.na(ub)) {
-        cat(paste0("P(", lb, " <= X <= ", ub,")     = ", p_int, "\n"))
-        cat(paste0("1 - P(", lb, " <= X <= ", ub,") = ", round(1 - p_int, dec), "\n"))
+        cat(paste0("P(", lb, " <= X <= ", ub, ")     = ", p_int, "\n"))
+        cat(paste0("1 - P(", lb, " <= X <= ", ub, ") = ", round(1 - p_int, dec), "\n"))
       }
     }
-
   } else {
-
     cat("Lower bound  :", if (is.na(plb)) "\n" else paste0(plb, " (", vlb, ")\n"))
     cat("Upper bound  :", if (is.na(pub)) "\n" else paste0(pub, " (", vub, ")\n"))
 
@@ -1718,32 +1730,32 @@ summary.prob_disc <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (!is.na(plb)) {
-        cat(paste0("P(X  = ", vlb,") = ", vp_elb, "\n"))
+        cat(paste0("P(X  = ", vlb, ") = ", vp_elb, "\n"))
         if (vlb > min(v)) {
-          cat(paste0("P(X  < ", vlb,") = ", vp_lb, "\n"))
-          cat(paste0("P(X <= ", vlb,") = ", vp_lelb, "\n"))
+          cat(paste0("P(X  < ", vlb, ") = ", vp_lb, "\n"))
+          cat(paste0("P(X <= ", vlb, ") = ", vp_lelb, "\n"))
         }
         if (vlb < max(v)) {
-          cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
-          cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
+          cat(paste0("P(X  > ", vlb, ") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
+          cat(paste0("P(X >= ", vlb, ") = ", round(1 - vp_lb, dec), "\n"))
         }
       }
 
       if (!is.na(pub)) {
-        cat(paste0("P(X  = ", vub,") = ", vp_eub, "\n"))
+        cat(paste0("P(X  = ", vub, ") = ", vp_eub, "\n"))
         if (vub > min(v)) {
-          cat(paste0("P(X  < ", vub,") = ", vp_ub, "\n"))
-          cat(paste0("P(X <= ", vub,") = ", vp_leub, "\n"))
+          cat(paste0("P(X  < ", vub, ") = ", vp_ub, "\n"))
+          cat(paste0("P(X <= ", vub, ") = ", vp_leub, "\n"))
         }
         if (vub < max(v)) {
-          cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
-          cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
+          cat(paste0("P(X  > ", vub, ") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
+          cat(paste0("P(X >= ", vub, ") = ", round(1 - vp_ub, dec), "\n"))
         }
       }
 
       if (!is.na(plb) && !is.na(pub)) {
-        cat(paste0("P(", vlb, " <= X <= ", vub,")     = ", vp_int, "\n"))
-        cat(paste0("1 - P(", vlb, " <= X <= ", vub,") = ", round(1 - vp_int, dec), "\n"))
+        cat(paste0("P(", vlb, " <= X <= ", vub, ")     = ", vp_int, "\n"))
+        cat(paste0("1 - P(", vlb, " <= X <= ", vub, ") = ", round(1 - vp_int, dec), "\n"))
       }
     }
   }
@@ -1767,7 +1779,6 @@ prob_expo <- function(rate,
                       plb = NA,
                       pub = NA,
                       dec = 3) {
-
   if (!is_not(lb) && lb < 0) lb <- 0
   if (!is_not(ub) && ub < 0) ub <- 0
 
@@ -1819,11 +1830,11 @@ prob_expo <- function(rate,
 #'
 #' @export
 plot.prob_expo <- function(x, type = "values", ...) {
-
-  mess <- paste0("mess_",type)
+  mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
-  object <- x; rm(x)
+  object <- x
+  rm(x)
   if (type == "values") {
     lb <- object$lb
     ub <- object$ub
@@ -1834,13 +1845,16 @@ plot.prob_expo <- function(x, type = "values", ...) {
 
   rate <- object$rate
 
-  limits <- c(qexp(0.001, rate = rate) %>% floor,
-              qexp(1 - 0.001, rate = rate) %>% ceiling)
+  limits <- c(
+    qexp(0.001, rate = rate) %>% floor(),
+    qexp(1 - 0.001, rate = rate) %>% ceiling()
+  )
 
   dat <- data.frame(
     x = limits,
     Probability = dexp(limits, rate = rate),
-    rate = rate
+    rate = rate,
+    stringsAsFactors = FALSE
   )
 
   dexp_limit <- function(x) {
@@ -1863,7 +1877,7 @@ plot.prob_expo <- function(x, type = "values", ...) {
     y
   }
 
-  vlines <- c(ub,lb) %>% na.omit
+  vlines <- c(ub, lb) %>% na.omit()
   if (length(vlines) == 0) vlines <- c(-Inf, Inf)
 
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
@@ -1877,7 +1891,7 @@ plot.prob_expo <- function(x, type = "values", ...) {
     geom_vline(xintercept = vlines, color = "black", linetype = "dashed", size = 0.5) +
     labs(x = "", y = "")
 
-   sshhr(plt)
+  sshhr(plt)
 }
 
 
@@ -1890,8 +1904,7 @@ plot.prob_expo <- function(x, type = "values", ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-summary.prob_expo <- function(object, type = "values",  ...) {
-
+summary.prob_expo <- function(object, type = "values", ...) {
   rate <- object$rate
   dec <- object$dec
 
@@ -1911,9 +1924,9 @@ summary.prob_expo <- function(object, type = "values",  ...) {
   cat("Distribution: Exponential\n")
   cat("Rate        :", rate, "\n")
   cat("Mean        :", round(1 / rate, dec), "\n")
-  cat("Variance    :", round(rate^-2, dec), "\n")
+  cat("Variance    :", round(rate ^ -2, dec), "\n")
 
-  mess <- object[[paste0("mess_",type)]]
+  mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
 
   if (type == "values") {
@@ -1924,21 +1937,20 @@ summary.prob_expo <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (!is.na(lb)) {
-        cat(paste0("P(X < ", lb,") = ", p_lb, "\n"))
-        cat(paste0("P(X > ", lb,") = ", round(1 - p_lb, dec), "\n"))
+        cat(paste0("P(X < ", lb, ") = ", p_lb, "\n"))
+        cat(paste0("P(X > ", lb, ") = ", round(1 - p_lb, dec), "\n"))
       }
 
       if (!is.na(ub)) {
-        cat(paste0("P(X < ", ub,") = ", p_ub, "\n"))
-        cat(paste0("P(X > ", ub,") = ", round(1 - p_ub, dec), "\n"))
+        cat(paste0("P(X < ", ub, ") = ", p_ub, "\n"))
+        cat(paste0("P(X > ", ub, ") = ", round(1 - p_ub, dec), "\n"))
       }
 
       if (!is.na(lb) && !is.na(ub)) {
-        cat(paste0("P(", lb, " < X < ", ub,")     = ", p_int, "\n"))
-        cat(paste0("1 - P(", lb, " < X < ", ub,") = ", round(1 - p_int, dec), "\n"))
+        cat(paste0("P(", lb, " < X < ", ub, ")     = ", p_int, "\n"))
+        cat(paste0("1 - P(", lb, " < X < ", ub, ") = ", round(1 - p_int, dec), "\n"))
       }
     }
-
   } else {
     pub <- if (is.na(pub)) 2 else pub
     plb <- if (is.na(plb)) -1 else plb
@@ -1950,18 +1962,18 @@ summary.prob_expo <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (plb >= 0) {
-        cat(paste0("P(X < ", v_lb,") = ", plb, "\n"))
-        cat(paste0("P(X > ", v_lb,") = ", round(1 - plb, dec), "\n"))
+        cat(paste0("P(X < ", v_lb, ") = ", plb, "\n"))
+        cat(paste0("P(X > ", v_lb, ") = ", round(1 - plb, dec), "\n"))
       }
 
       if (pub <= 1) {
-        cat(paste0("P(X < ", v_ub,") = ", pub, "\n"))
-        cat(paste0("P(X > ", v_ub,") = ", round(1 - pub, dec), "\n"))
+        cat(paste0("P(X < ", v_ub, ") = ", pub, "\n"))
+        cat(paste0("P(X > ", v_ub, ") = ", round(1 - pub, dec), "\n"))
       }
 
       if (pub <= 1 && plb >= 0) {
-        cat(paste0("P(", v_lb, " < X < ", v_ub,")     = ", pub - plb, "\n"))
-        cat(paste0("1 - P(", v_lb, " < X < ", v_ub,") = ", round(1 - (pub - plb), dec), "\n"))
+        cat(paste0("P(", v_lb, " < X < ", v_ub, ")     = ", pub - plb, "\n"))
+        cat(paste0("1 - P(", v_lb, " < X < ", v_ub, ") = ", round(1 - (pub - plb), dec), "\n"))
       }
     }
   }
@@ -1985,7 +1997,6 @@ prob_pois <- function(lambda,
                       plb = NA,
                       pub = NA,
                       dec = 3) {
-
   if (lambda <= 0) mess_values <- "\nLambda must be positive"
 
   if (!is_not(lb) && lb < 0) lb <- 0
@@ -1996,10 +2007,11 @@ prob_pois <- function(lambda,
   } else {
     p_elb <- dpois(lb, lambda) %>% round(dec)
     p_lelb <- ppois(lb, lambda) %>% round(dec)
-    if (lb > 0)
+    if (lb > 0) {
       p_lb <- (ppois(lb, lambda) - dpois(lb, lambda)) %>% round(dec)
-    else
+    } else {
       p_lb <- 0
+    }
   }
 
   if (is.na(ub) || ub < 0) {
@@ -2007,10 +2019,11 @@ prob_pois <- function(lambda,
   } else {
     p_eub <- dpois(ub, lambda) %>% round(dec)
     p_leub <- ppois(ub, lambda) %>% round(dec)
-    if (ub > 0)
+    if (ub > 0) {
       p_ub <- (ppois(ub, lambda) - dpois(ub, lambda)) %>% round(dec)
-    else
+    } else {
       p_ub <- 0
+    }
   }
 
   if (!is.na(ub) && !is.na(lb)) {
@@ -2028,10 +2041,11 @@ prob_pois <- function(lambda,
 
     vp_elb <- dpois(vlb, lambda) %>% round(dec)
     vp_lelb <- ppois(vlb, lambda) %>% round(dec)
-    if (vlb > 0)
+    if (vlb > 0) {
       vp_lb <- (ppois(vlb, lambda) - dpois(vlb, lambda)) %>% round(dec)
-    else
+    } else {
       vp_lb <- 0
+    }
   }
 
   if (is.na(pub)) {
@@ -2043,10 +2057,11 @@ prob_pois <- function(lambda,
 
     vp_eub <- dpois(vub, lambda) %>% round(dec)
     vp_leub <- ppois(vub, lambda) %>% round(dec)
-    if (vub > 0)
+    if (vub > 0) {
       vp_ub <- (ppois(vub, lambda) - dpois(vub, lambda)) %>% round(dec)
-    else
+    } else {
       vp_ub <- 0
+    }
   }
 
   if (!is.na(pub) && !is.na(plb)) {
@@ -2083,11 +2098,11 @@ prob_pois <- function(lambda,
 #'
 #' @export
 plot.prob_pois <- function(x, type = "values", ...) {
-
-  mess <- paste0("mess_",type)
+  mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
-  object <- x; rm(x)
+  object <- x
+  rm(x)
   if (type == "values") {
     lb <- object$lb
     ub <- object$ub
@@ -2097,7 +2112,7 @@ plot.prob_pois <- function(x, type = "values", ...) {
   }
 
   lambda <- object$lambda
-  limits <- 0:(qpois(1 - 0.00001, lambda) %>% ceiling)
+  limits <- 0:(qpois(1 - 0.00001, lambda) %>% ceiling())
   n <- max(limits)
 
   if (!is.na(lb) && lb > n) {
@@ -2110,22 +2125,23 @@ plot.prob_pois <- function(x, type = "values", ...) {
     n <- ub
   }
 
-  k <- factor(rep("below",n+1), levels = c("below","equal","above"))
+  k <- factor(rep("below", n + 1), levels = c("below", "equal", "above"))
   if (!is_not(ub)) {
-    k[ub+1] <- "equal"
-    if (!is.na(lb)) k[(lb:ub)+1] <- "equal"
+    k[ub + 1] <- "equal"
+    if (!is.na(lb)) k[(lb:ub) + 1] <- "equal"
     k[0:n > ub] <- "above"
   } else if (!is_not(lb)) {
-    k[lb+1] <- "equal"
+    k[lb + 1] <- "equal"
     k[0:n > lb] <- "above"
   } else {
     return(invisible())
   }
 
   dat <- data.frame(
-    x = limits %>% as_factor,
+    x = limits %>% as_factor(),
     Probability = dpois(limits, lambda),
-    k = k
+    k = k,
+    stringsAsFactors = FALSE
   ) %>% filter(., .$Probability > 0.00001)
 
   if (nrow(dat) < 40) {
@@ -2141,12 +2157,12 @@ plot.prob_pois <- function(x, type = "values", ...) {
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
     geom_bar(stat = "identity", alpha = .3) +
-    labs(x = "") + 
+    labs(x = "") +
     scale_fill_manual(values = cols) +
     theme(legend.position = "none") +
     scale_x_discrete(breaks = breaks)
 
-   sshhr(plt)
+  sshhr(plt)
 }
 
 #' Summary method for the probability calculator function (Poisson distribution)
@@ -2158,8 +2174,7 @@ plot.prob_pois <- function(x, type = "values", ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-summary.prob_pois <- function(object, type = "values",  ...) {
-
+summary.prob_pois <- function(object, type = "values", ...) {
   lambda <- object$lambda
   dec <- object$dec
 
@@ -2192,44 +2207,46 @@ summary.prob_pois <- function(object, type = "values",  ...) {
   cat("Mean        :", lambda, "\n")
   cat("Variance    :", lambda, "\n")
 
-  mess <- object[[paste0("mess_",type)]]
+  mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
 
   if (type == "values") {
-    cat("Lower bound :", {if (is.na(lb)) "" else lb}, "\n")
-    cat("Upper bound :", {if (is.na(ub)) "" else ub}, "\n")
+    cat("Lower bound :", {
+      if (is.na(lb)) "" else lb
+    }, "\n")
+    cat("Upper bound :", {
+      if (is.na(ub)) "" else ub
+    }, "\n")
 
     if (!is.na(ub) || !is.na(lb)) {
       cat("\n")
 
       if (!is.na(lb)) {
-        cat(paste0("P(X  = ", lb,") = ", p_elb, "\n"))
+        cat(paste0("P(X  = ", lb, ") = ", p_elb, "\n"))
         if (lb > 0) {
-          cat(paste0("P(X  < ", lb,") = ", p_lb, "\n"))
-          cat(paste0("P(X <= ", lb,") = ", p_lelb, "\n"))
+          cat(paste0("P(X  < ", lb, ") = ", p_lb, "\n"))
+          cat(paste0("P(X <= ", lb, ") = ", p_lelb, "\n"))
         }
-        cat(paste0("P(X  > ", lb,") = ", round(1 - (p_lb + p_elb), dec), "\n"))
-        cat(paste0("P(X >= ", lb,") = ", round(1 - p_lb, dec), "\n"))
+        cat(paste0("P(X  > ", lb, ") = ", round(1 - (p_lb + p_elb), dec), "\n"))
+        cat(paste0("P(X >= ", lb, ") = ", round(1 - p_lb, dec), "\n"))
       }
 
       if (!is.na(ub)) {
-        cat(paste0("P(X  = ", ub,") = ", p_eub, "\n"))
+        cat(paste0("P(X  = ", ub, ") = ", p_eub, "\n"))
         if (ub > 0) {
-          cat(paste0("P(X  < ", ub,") = ", p_ub, "\n"))
-          cat(paste0("P(X <= ", ub,") = ", p_leub, "\n"))
+          cat(paste0("P(X  < ", ub, ") = ", p_ub, "\n"))
+          cat(paste0("P(X <= ", ub, ") = ", p_leub, "\n"))
         }
-        cat(paste0("P(X  > ", ub,") = ", round(1 - (p_ub + p_eub), dec), "\n"))
-        cat(paste0("P(X >= ", ub,") = ", round(1 - p_ub, dec), "\n"))
+        cat(paste0("P(X  > ", ub, ") = ", round(1 - (p_ub + p_eub), dec), "\n"))
+        cat(paste0("P(X >= ", ub, ") = ", round(1 - p_ub, dec), "\n"))
       }
 
       if (!is.na(lb) && !is.na(ub)) {
-        cat(paste0("P(", lb, " <= X <= ", ub,")     = ", p_int, "\n"))
-        cat(paste0("1 - P(", lb, " <= X <= ", ub,") = ", round(1 - p_int, dec), "\n"))
+        cat(paste0("P(", lb, " <= X <= ", ub, ")     = ", p_int, "\n"))
+        cat(paste0("1 - P(", lb, " <= X <= ", ub, ") = ", round(1 - p_int, dec), "\n"))
       }
     }
-
   } else {
-
     cat("Lower bound :", if (is.na(plb)) "\n" else paste0(plb, " (", vlb, ")\n"))
     cat("Upper bound :", if (is.na(pub)) "\n" else paste0(pub, " (", vub, ")\n"))
 
@@ -2237,28 +2254,28 @@ summary.prob_pois <- function(object, type = "values",  ...) {
       cat("\n")
 
       if (!is.na(plb)) {
-        cat(paste0("P(X  = ", vlb,") = ", vp_elb, "\n"))
+        cat(paste0("P(X  = ", vlb, ") = ", vp_elb, "\n"))
         if (vlb > 0) {
-          cat(paste0("P(X  < ", vlb,") = ", vp_lb, "\n"))
-          cat(paste0("P(X <= ", vlb,") = ", vp_lelb, "\n"))
+          cat(paste0("P(X  < ", vlb, ") = ", vp_lb, "\n"))
+          cat(paste0("P(X <= ", vlb, ") = ", vp_lelb, "\n"))
         }
-        cat(paste0("P(X  > ", vlb,") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
-        cat(paste0("P(X >= ", vlb,") = ", round(1 - vp_lb, dec), "\n"))
+        cat(paste0("P(X  > ", vlb, ") = ", round(1 - (vp_lb + vp_elb), dec), "\n"))
+        cat(paste0("P(X >= ", vlb, ") = ", round(1 - vp_lb, dec), "\n"))
       }
 
       if (!is.na(pub)) {
-        cat(paste0("P(X  = ", vub,") = ", vp_eub, "\n"))
+        cat(paste0("P(X  = ", vub, ") = ", vp_eub, "\n"))
         if (vub > 0) {
-          cat(paste0("P(X  < ", vub,") = ", vp_ub, "\n"))
-          cat(paste0("P(X <= ", vub,") = ", vp_leub, "\n"))
+          cat(paste0("P(X  < ", vub, ") = ", vp_ub, "\n"))
+          cat(paste0("P(X <= ", vub, ") = ", vp_leub, "\n"))
         }
-        cat(paste0("P(X  > ", vub,") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
-        cat(paste0("P(X >= ", vub,") = ", round(1 - vp_ub, dec), "\n"))
+        cat(paste0("P(X  > ", vub, ") = ", round(1 - (vp_ub + vp_eub), dec), "\n"))
+        cat(paste0("P(X >= ", vub, ") = ", round(1 - vp_ub, dec), "\n"))
       }
 
       if (!is.na(plb) && !is.na(pub)) {
-        cat(paste0("P(", vlb, " <= X <= ", vub,")     = ", vp_int, "\n"))
-        cat(paste0("1 - P(", vlb, " <= X <= ", vub,") = ", round(1 - vp_int, dec), "\n"))
+        cat(paste0("P(", vlb, " <= X <= ", vub, ")     = ", vp_int, "\n"))
+        cat(paste0("1 - P(", vlb, " <= X <= ", vub, ") = ", round(1 - vp_int, dec), "\n"))
       }
     }
   }

@@ -1,9 +1,11 @@
 ## alternative hypothesis options
-ct_check <- c("Observed" = "observed", "Expected" = "expected",
-              "Chi-squared" = "chi_sq", "Deviation std." = "dev_std",
-              "Row percentages" = "row_perc",
-              "Column percentages" = "col_perc",
-              "Table percentages" = "perc")
+ct_check <- c(
+  "Observed" = "observed", "Expected" = "expected",
+  "Chi-squared" = "chi_sq", "Deviation std." = "dev_std",
+  "Row percentages" = "row_perc",
+  "Column percentages" = "col_perc",
+  "Table percentages" = "perc"
+)
 
 ## list of function arguments
 ct_args <- as.list(formals(cross_tabs))
@@ -14,7 +16,7 @@ ct_inputs <- reactive({
   ct_args$data_filter <- if (input$show_filter) input$data_filter else ""
   ct_args$dataset <- input$dataset
   for (i in r_drop(names(ct_args)))
-    ct_args[[i]] <- input[[paste0("ct_",i)]]
+    ct_args[[i]] <- input[[paste0("ct_", i)]]
   ct_args
 })
 
@@ -23,8 +25,10 @@ ct_inputs <- reactive({
 ###############################
 output$ui_ct_var1 <- renderUI({
   vars <- c("None" = "", groupable_vars())
-  selectInput(inputId = "ct_var1", label = "Select a categorical variable:",
-    choices = vars, selected = state_single("ct_var1",vars), multiple = FALSE)
+  selectInput(
+    inputId = "ct_var1", label = "Select a categorical variable:",
+    choices = vars, selected = state_single("ct_var1", vars), multiple = FALSE
+  )
 })
 
 output$ui_ct_var2 <- renderUI({
@@ -32,9 +36,11 @@ output$ui_ct_var2 <- renderUI({
   vars <- c("None" = "", groupable_vars())
 
   if (length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
-  selectInput(inputId = "ct_var2", label = "Select a categorical variable:",
+  selectInput(
+    inputId = "ct_var2", label = "Select a categorical variable:",
     selected = state_single("ct_var2", vars),
-    choices = vars, multiple = FALSE)
+    choices = vars, multiple = FALSE
+  )
 })
 
 output$ui_cross_tabs <- renderUI({
@@ -43,16 +49,17 @@ output$ui_cross_tabs <- renderUI({
     wellPanel(
       uiOutput("ui_ct_var1"),
       uiOutput("ui_ct_var2"),
-      checkboxGroupInput("ct_check", NULL, 
+      checkboxGroupInput(
+        "ct_check", NULL,
         choices = ct_check,
-        selected = state_group("ct_check"), 
+        selected = state_group("ct_check"),
         inline = FALSE
       )
     ),
     help_and_report(
-      modal_title = "Cross-tabs", 
-      fun_name = "cross_tabs", 
-      help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/cross_tabs.md"))
+      modal_title = "Cross-tabs",
+      fun_name = "cross_tabs",
+      help_file = inclMD(file.path(getOption("radiant.path.basics"), "app/tools/help/cross_tabs.md"))
     )
   )
 })
@@ -62,16 +69,21 @@ ct_plot <- reactive({
 })
 
 ct_plot_width <- function()
-  ct_plot() %>% { if (is.list(.)) .$plot_width else 650 }
+  ct_plot() %>% {
+    if (is.list(.)) .$plot_width else 650
+  }
 
 ct_plot_height <- function()
-  ct_plot() %>% { if (is.list(.)) .$plot_height else 400 }
+  ct_plot() %>% {
+    if (is.list(.)) .$plot_height else 400
+  }
 
 ## output is called from the main radiant ui.R
 output$cross_tabs <- renderUI({
   register_print_output("summary_cross_tabs", ".summary_cross_tabs")
-  register_plot_output("plot_cross_tabs", ".plot_cross_tabs",
-    height_fun = "ct_plot_height", 
+  register_plot_output(
+    "plot_cross_tabs", ".plot_cross_tabs",
+    height_fun = "ct_plot_height",
     width_fun = "ct_plot_width"
   )
 
@@ -79,23 +91,25 @@ output$cross_tabs <- renderUI({
   ct_output_panels <- tabsetPanel(
     id = "tabs_cross_tabs",
     tabPanel("Summary", verbatimTextOutput("summary_cross_tabs")),
-    tabPanel("Plot", 
-      plot_downloader("cross_tabs", height = ct_plot_height), 
+    tabPanel(
+      "Plot",
+      plot_downloader("cross_tabs", height = ct_plot_height),
       plotOutput("plot_cross_tabs", width = "100%", height = "100%")
     )
   )
 
   stat_tab_panel(
-    menu = "Basics > Tables", 
-    tool = "Cross-tabs", 
-    tool_ui = "ui_cross_tabs", 
+    menu = "Basics > Tables",
+    tool = "Cross-tabs",
+    tool_ui = "ui_cross_tabs",
     output_panels = ct_output_panels
   )
 })
 
 ct_available <- reactive({
-  if (not_available(input$ct_var1) || not_available(input$ct_var2))
+  if (not_available(input$ct_var1) || not_available(input$ct_var2)) {
     return("This analysis requires two categorical variables. Both must have two or more levels.\n If these variable types\nare not available please select another dataset.\n\n" %>% suggest_data("newspaper"))
+  }
 
   "available"
 })
@@ -116,9 +130,9 @@ ct_available <- reactive({
 
 observeEvent(input$cross_tabs_report, {
   if (is_empty(input$ct_var1) || is_empty(input$ct_var2)) return(invisible())
-  inp_out <- list("","")
+  inp_out <- list("", "")
   if (length(input$ct_check) > 0) {
-    outputs <- c("summary","plot")
+    outputs <- c("summary", "plot")
     inp_out[[1]] <- list(check = input$ct_check)
     inp_out[[2]] <- list(check = input$ct_check, custom = FALSE)
     figs <- TRUE
@@ -129,12 +143,12 @@ observeEvent(input$cross_tabs_report, {
   }
 
   update_report(
-    inp_main = clean_args(ct_inputs(), ct_args), 
-    inp_out = inp_out, 
-    fun_name = "cross_tabs", 
-    outputs = outputs, 
-    figs = figs, 
-    fig.width = ct_plot_width(), 
+    inp_main = clean_args(ct_inputs(), ct_args),
+    inp_out = inp_out,
+    fun_name = "cross_tabs",
+    outputs = outputs,
+    figs = figs,
+    fig.width = ct_plot_width(),
     fig.height = ct_plot_height()
   )
 })

@@ -31,12 +31,18 @@ single_mean <- function(dataset, var,
   miss <- n_missing(dat)
   dat <- na.omit(dat)
 
-  res <- t.test(dat[[var]], mu = comp_value, alternative = alternative,
-                conf.level = conf_lev) %>% tidy
+  res <- t.test(dat[[var]], mu = comp_value, alternative = alternative, conf.level = conf_lev) %>% 
+    tidy()
 
-  dat_summary <-
-    dat %>% summarise_all(funs(diff = mean_rm(.) - comp_value, se = se(.), mean = mean_rm(.),
-                           sd = sd_rm(.), n = length(na.omit(.))))
+  dat_summary <- summarise_all(dat, 
+    funs(
+      diff = mean_rm(.) - comp_value, 
+      se = se(.), 
+      mean = mean_rm(.),
+      sd = sd_rm(.), 
+      n = length(na.omit(.))
+    )
+  )
   dat_summary$n_missing <- miss
 
   as.list(environment()) %>% add_class("single_mean")
@@ -60,39 +66,46 @@ single_mean <- function(dataset, var,
 #'
 #' @export
 summary.single_mean <- function(object, dec = 3, ...) {
-
   cat("Single mean test\n")
   cat("Data      :", object$dataset, "\n")
-  if (object$data_filter %>% gsub("\\s","",.) != "")
-    cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
+  if (object$data_filter %>% gsub("\\s", "", .) != "") {
+    cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
+  }
   cat("Variable  :", object$var, "\n")
   cat("Confidence:", object$conf_lev, "\n")
 
-  hyp_symbol <- c("two.sided" = "not equal to",
-                  "less" = "<",
-                  "greater" = ">")[object$alternative]
+  hyp_symbol <- c(
+    "two.sided" = "not equal to",
+    "less" = "<",
+    "greater" = ">"
+  )[object$alternative]
 
   cat("Null hyp. : the mean of", object$var, "=", object$comp_value, "\n")
-  cat("Alt. hyp. : the mean of", object$var, "is", hyp_symbol,
-      object$comp_value, "\n\n")
+  cat("Alt. hyp. : the mean of", object$var, "is", hyp_symbol, object$comp_value, "\n\n")
 
   ## determine lower and upper % for ci
   ci_perc <- ci_label(object$alternative, object$conf_lev)
 
   ## print summary statistics
-  print(object$dat_summary[-(1:2)] %>% round(dec) %>% as.data.frame, row.names = FALSE)
+  object$dat_summary[ ,-(1:2)] %>% 
+    round(dec) %>% 
+    as.data.frame(stingsAsFactors = FALSE) %>%
+    print(row.names = FALSE)
   cat("\n")
 
   res <- object$res
   res <- bind_cols(
-           data.frame(
-             diff = object$dat_summary[["diff"]],
-             se = object$dat_summary[["se"]]
-           ),
-           res[,-1]
-         ) %>% as.data.frame %>%
-         select(-matches("method"), -matches("alternative")) %>%
-         mutate(parameter = as.integer(parameter))
+    data.frame(
+      diff = object$dat_summary[["diff"]],
+      se = object$dat_summary[["se"]],
+      stringsAsFactors = FALSE
+    ),
+    res[, -1]
+  ) %>%
+    as.data.frame(stringsAsFactors = FALSE) %>%
+    select(setdiff(colnames(.), c("method", "alternative"))) %>%
+    mutate(parameter = as.integer(parameter))
+
 
   names(res) <- c("diff", "se", "t.value", "p.value", "df", ci_perc[1], ci_perc[2])
   res %<>% round(dec) ## restrict the number of decimals
@@ -127,82 +140,86 @@ plot.single_mean <- function(x,
                              shiny = FALSE,
                              custom = FALSE,
                              ...) {
-
-  object <- x; rm(x)
+  object <- x
+  rm(x)
 
   plot_list <- list()
 
   if ("hist" %in% plots) {
-    bw <- object$dat %>% range(na.rm = TRUE) %>% diff %>% divide_by(10)
+    bw <- object$dat %>% range(na.rm = TRUE) %>% diff() %>% divide_by(10)
 
     plot_list[[which("hist" == plots)]] <-
       ggplot(object$dat, aes_string(x = object$var)) +
-        geom_histogram(fill = "blue", binwidth = bw, alpha = 0.3) +
-        geom_vline(
-          xintercept = object$comp_value, 
-          color = "red", 
-          linetype = "solid", 
-          size = 1
-        ) +
-        geom_vline(
-          xintercept = object$res$estimate, 
-          color = "black", 
-          linetype = "solid", 
-          size = 1
-        ) +
-        geom_vline(
-          xintercept = c(object$res$conf.low, object$res$conf.high), 
-          color = "black", 
-          linetype = "longdash", 
-          size = 0.5
-        )
+      geom_histogram(fill = "blue", binwidth = bw, alpha = 0.3) +
+      geom_vline(
+        xintercept = object$comp_value,
+        color = "red",
+        linetype = "solid",
+        size = 1
+      ) +
+      geom_vline(
+        xintercept = object$res$estimate,
+        color = "black",
+        linetype = "solid",
+        size = 1
+      ) +
+      geom_vline(
+        xintercept = c(object$res$conf.low, object$res$conf.high),
+        color = "black",
+        linetype = "longdash",
+        size = 0.5
+      )
   }
   if ("simulate" %in% plots) {
-
     var <- object$dat[[object$var]]
     nr <- length(var)
 
-    simdat <-
-      replicate(1000, mean(sample(var, nr, replace = TRUE))) %>%
-      { (. - mean(.)) + object$comp_value } %>%
-      as.data.frame %>%
+    simdat <- replicate(1000, mean(sample(var, nr, replace = TRUE))) %>%
+      {(. - mean(.)) + object$comp_value} %>%
+      as.data.frame(stringsAsFactors = FALSE) %>%
       set_colnames(object$var)
 
     cip <- ci_perc(simdat[[object$var]], object$alternative, object$conf_lev)
 
-    bw <- simdat %>% range %>% diff %>% divide_by(20)
+    bw <- simdat %>% range() %>% diff() %>% divide_by(20)
 
     plot_list[[which("simulate" == plots)]] <-
-      ggplot(simdat, aes_string(x=object$var)) +
-        geom_histogram(
-          fill = "blue", 
-          binwidth = bw, 
-          alpha = 0.3
-        ) +
-        geom_vline(
-          xintercept = object$comp_value, 
-          color = "red", 
-          linetype = "solid", 
-          size = 1
-        ) +
-        geom_vline(
-          xintercept = object$res$estimate, 
-          color = "black", 
-          linetype = "solid", 
-          size = 1
-        ) +
-        geom_vline(
-          xintercept = cip, 
-          color = "red", 
-          linetype = "longdash", 
-          size = 0.5
-        ) +
-        labs(title = paste0("Simulated means if null hyp. is true (", object$var, ")"))
+      ggplot(simdat, aes_string(x = object$var)) +
+      geom_histogram(
+        fill = "blue",
+        binwidth = bw,
+        alpha = 0.3
+      ) +
+      geom_vline(
+        xintercept = object$comp_value,
+        color = "red",
+        linetype = "solid",
+        size = 1
+      ) +
+      geom_vline(
+        xintercept = object$res$estimate,
+        color = "black",
+        linetype = "solid",
+        size = 1
+      ) +
+      geom_vline(
+        xintercept = cip,
+        color = "red",
+        linetype = "longdash",
+        size = 0.5
+      ) +
+      labs(title = paste0("Simulated means if null hyp. is true (", object$var, ")"))
   }
 
-  if (custom)
-    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
+  if (custom) {
+    if (length(plot_list) == 1) {
+      return(plot_list[[1]])
+    } else {
+      return(plot_list)
+    }
+  }
 
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
-    {if (shiny) . else print(.)}
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>% {
+    if (shiny) . else print(.)
+  }
 }

@@ -26,10 +26,12 @@ correlation <- function(dataset, vars = "",
   ## data.matrix as the last step in the chain is about 25% slower using
   ## system.time but results (using diamonds and mtcars) are identical
   dat <- getdata(dataset, vars, filt = data_filter) %>%
-    # select_if(!is.character) %>%
     mutate_all(funs(as_numeric))
 
-  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  if (!is_string(dataset)) {
+    dataset <- deparse(substitute(dataset)) %>% 
+      set_attr("df", TRUE)
+  }
   as.list(environment()) %>% add_class("correlation")
 }
 
@@ -55,10 +57,10 @@ correlation <- function(dataset, vars = "",
 #'
 #' @export
 summary.correlation <- function(object,
-                                 cutoff = 0,
-                                 covar = FALSE,
-                                 dec = 2,
-                                 ...) {
+                                cutoff = 0,
+                                covar = FALSE,
+                                dec = 2,
+                                ...) {
 
   ## calculate the correlation matrix with p.values using the psych package
   cmat <- sshhr(psych::corr.test(object$dat, method = object$method))
@@ -81,22 +83,24 @@ summary.correlation <- function(object,
   cat("Correlation\n")
   cat("Data     :", object$dataset, "\n")
   cat("Method   :", object$method, "\n")
-  if (cutoff > 0)
+  if (cutoff > 0) {
     cat("Cutoff   :", cutoff, "\n")
-  if (object$data_filter %>% gsub("\\s","",.) != "")
-    cat("Filter   :", gsub("\\n","", object$data_filter), "\n")
+  }
+  if (object$data_filter %>% gsub("\\s", "", .) != "") {
+    cat("Filter   :", gsub("\\n", "", object$data_filter), "\n")
+  }
   cat("Variables:", paste0(object$vars, collapse = ", "), "\n")
   cat("Null hyp.: variables x and y are not correlated\n")
   cat("Alt. hyp.: variables x and y are correlated\n\n")
 
   cat("Correlation matrix:\n")
-  print(cr[-1,-ncol(cr), drop = FALSE], quote = FALSE)
+  print(cr[-1, -ncol(cr), drop = FALSE], quote = FALSE)
 
   cat("\np.values:\n")
-  print(cp[-1,-ncol(cp), drop = FALSE], quote = FALSE)
+  print(cp[-1, -ncol(cp), drop = FALSE], quote = FALSE)
 
   if (covar) {
-    cvmat <- sshhr( cov(object$dat, method = object$method) )
+    cvmat <- sshhr(cov(object$dat, method = object$method))
     cvr <- apply(cvmat, 2, formatnr, dec = dec) %>%
       format(justify = "right") %>%
       set_rownames(rownames(cvmat))
@@ -105,7 +109,7 @@ summary.correlation <- function(object,
     cvr[!ltmat] <- ""
 
     cat("\nCovariance matrix:\n")
-    print(cvr[-1,-ncol(cvr), drop = FALSE], quote = FALSE)
+    print(cvr[-1, -ncol(cvr), drop = FALSE], quote = FALSE)
   }
 
   rm(object)
@@ -132,38 +136,43 @@ summary.correlation <- function(object,
 #'
 #' @export
 plot.correlation <- function(x, n = 1000, jit = .3, ...) {
-
-  object <- x; rm(x)
+  object <- x
+  rm(x)
 
   ## based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
   panel.plot <- function(x, y) {
-    usr <- par("usr"); on.exit(par(usr))
+    usr <- par("usr")
+    on.exit(par(usr))
     par(usr = c(0, 1, 0, 1))
-    ct <- sshhr(cor.test(x,y, method = object$method))
-    sig <- symnum(ct$p.value, corr = FALSE, na = FALSE,
-                  cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-                  symbols = c("***", "**", "*", ".", " "))
+    ct <- sshhr(cor.test(x, y, method = object$method))
+    sig <- symnum(
+      ct$p.value, corr = FALSE, na = FALSE,
+      cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+      symbols = c("***", "**", "*", ".", " ")
+    )
     r <- ct$estimate
     rt <- format(r, digits = 2)[1]
-    cex <- 0.5/strwidth(rt)
+    cex <- 0.5 / strwidth(rt)
 
     text(.5, .5, rt, cex = cex * abs(r))
     text(.8, .8, sig, cex = cex, col = "blue")
   }
   panel.smooth <- function(x, y) {
-    if(n > 0 & length(x) > n) {
+    if (n > 0 & length(x) > n) {
       ind <- sample(1:length(x), n)
       x <- x[ind]
       y <- y[ind]
     }
-    points(jitter(x,jit), jitter(y,jit), pch = 16, 
-      col = ggplot2::alpha("black", 0.5))
+    points(
+      jitter(x, jit), jitter(y, jit), pch = 16,
+      col = ggplot2::alpha("black", 0.5)
+    )
     ## uncomment the lines below if you want linear and loess lines
     ## in the scatter plot matrix
     # abline(lm(y~x), col="red")
     # lines(stats::lowess(y~x), col="blue")
   }
 
-  object$dat %>% {if (is.null(.)) object else . } %>%
+    {if (is.null(object$dat)) object else object$dat} %>%
     pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
 }

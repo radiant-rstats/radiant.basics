@@ -1,6 +1,8 @@
 # to avoid 'no visible binding for global variable' NOTE
-globalVariables(c(".","..count..","matches","n","se","Freq","ci","col1","n",
-                  "y","parameter","variable"))
+globalVariables(c(
+  ".", "..count..", "n", "se", "Freq", "ci", "col1", "n",
+  "y", "parameter", "variable"
+))
 
 #' radiant.basics
 #'
@@ -54,7 +56,3 @@ NULL
 #' @usage data(salary)
 #' @format A data frame with 397 rows and 6 variables
 NULL
-
-
-
-

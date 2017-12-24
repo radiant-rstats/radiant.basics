@@ -40,7 +40,7 @@ See \url{https://radiant-rstats.github.io/docs/basics/compare_means.html} for an
 }
 \examples{
 result <- compare_means("diamonds","cut","price")
-result <- diamonds \%>\% compare_means("cut","price")
+result <- diamonds \%>\% compare_means("cut","price", comb = c("Fair:Good", "Premium:Ideal"))
 
 }
 \seealso{

@@ -29,7 +29,6 @@ compare_props <- function(dataset, var1, var2,
                           comb = "",
                           adjust = "none",
                           data_filter = "") {
-
   vars <- c(var1, var2)
   dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_all(funs(as.factor))
   if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
@@ -37,80 +36,84 @@ compare_props <- function(dataset, var1, var2,
   lv <- levels(dat[[var2]])
   if (levs != "") {
     if (levs %in% lv && lv[1] != levs) {
-      dat[[var2]] %<>% as.character %>% as.factor %>% relevel(levs)
+      dat[[var2]] %<>% as.character %>% as.factor() %>% relevel(levs)
       lv <- levels(dat[[var2]])
     }
   }
 
   ## check if there is variation in the data
-  if (any(summarise_all(dat, funs(does_vary)) == FALSE))
+  if (any(summarise_all(dat, funs(does_vary)) == FALSE)) {
     return("One or more selected variables show no variation. Please select other variables." %>%
-           add_class("compare_props"))
+      add_class("compare_props"))
+  }
 
   rn <- ""
-  prop_input <-
-    dat %>%
-    group_by_at(.vars = c(var1, var2)) %>%
+  prop_input <- group_by_at(dat, .vars = c(var1, var2)) %>%
     summarise(n = n()) %>%
     spread(!! var2, "n") %>%
-    as.data.frame %>%
-    { rn <<- .[[1]] %>% as.character
+    as.data.frame(stringsAsFactors = FALSE) %>%
+    {
+      rn <<- .[[1]] %>% as.character()
       select(., -1) %>%
-      as.matrix %>%
-      set_rownames(rn)
+        as.matrix() %>%
+        set_rownames(rn)
     }
 
   prop_input[is.na(prop_input)] <- 0
 
   lv <- rownames(prop_input)
-  cmb <- combn(lv, 2) %>% t %>% as.data.frame
+  cmb <- combn(lv, 2) %>% t() %>% as.data.frame(stingsAsFactors = FALSE)
 
   rownames(cmb) <- cmb %>% apply(1, paste, collapse = ":")
-  colnames(cmb) <- c("group1","group2")
+  colnames(cmb) <- c("group1", "group2")
 
   if (!is_empty(comb)) {
     if (all(comb %in% rownames(cmb))) {
       cmb <- cmb[comb, ]
     } else {
-      cmb <- cmb[1,]
+      cmb <- cmb[1, ]
     }
   }
 
   res <- cmb
-  res[ ,c("chisq.value","p.value", "df", "ci_low", "ci_high", "sim")] <- 0
+  res[, c("chisq.value", "p.value", "df", "ci_low", "ci_high", "sim")] <- 0
   for (i in 1:nrow(cmb)) {
-    ind <- c(which(cmb[i,1] == rownames(prop_input)), which(cmb[i,2] == rownames(prop_input)))
+    ind <- c(which(cmb[i, 1] == rownames(prop_input)), which(cmb[i, 2] == rownames(prop_input)))
 
-    pinp <- prop_input[ind,]
+    pinp <- prop_input[ind, ]
 
-    res[i, c("chisq.value","p.value", "df", "ci_low", "ci_high")] <-
-      sshhr(prop.test(pinp, alternative = alternative, conf.level = conf_lev, correct = FALSE)) %>% 
-      tidy %>% 
+    res[i, c("chisq.value", "p.value", "df", "ci_low", "ci_high")] <-
+      sshhr(prop.test(pinp, alternative = alternative, conf.level = conf_lev, correct = FALSE)) %>%
+      tidy() %>%
       .[1, c("statistic", "p.value", "parameter", "conf.low", "conf.high")]
 
     ## calculate expected values
     E <- (rowSums(pinp) %*% t(colSums(pinp))) / sum(pinp)
     if (any(E < 5)) {
-      res[i, "p.value"] <- sshhr( chisq.test(pinp, simulate.p.value = TRUE, B = 2000) %>% tidy %>% .$p.value )
+      res[i, "p.value"] <- sshhr(chisq.test(pinp, simulate.p.value = TRUE, B = 2000) %>% tidy() %>% .$p.value)
       res[i, "df"] <- NA
     }
   }
 
-  if (adjust != "none")
+  if (adjust != "none") {
     res$p.value %<>% p.adjust(method = adjust)
+  }
 
   ## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
   ci_calc <- function(se, conf.lev = .95)
-    se * qnorm(conf.lev/2 + .5, lower.tail = TRUE)
+    se * qnorm(conf.lev / 2 + .5, lower.tail = TRUE)
 
-  dat_summary <-
-    prop_input %>%
-      data.frame(check.names = FALSE) %>%
-      mutate(n = rowSums(.[,1:2]), p = .[[1]] / n,
-             se = (p * (1 - p) / n) %>% sqrt,
-             ci = ci_calc(se, conf_lev)) %>%
-      set_rownames({rownames(prop_input)}) %>%
-      rownames_to_column(var = var1)
+  dat_summary <- data.frame(prop_input, check.names = FALSE, stringsAsFactors = FALSE) %>%
+    mutate(
+      n = rowSums(.[, 1:2]),
+      p = .[[1]] / n,
+      se = (p * (1 - p) / n) %>% sqrt(),
+      ci = ci_calc(se, conf_lev)
+    ) %>%
+    set_rownames({
+      rownames(prop_input)
+    }) %>%
+    rownames_to_column(var = var1)
 
   dat_summary[[var1]] %<>% factor(., levels = .)
 
@@ -137,25 +140,27 @@ compare_props <- function(dataset, var1, var2,
 #'
 #' @export
 summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
-
   if (is.character(object)) return(object)
 
   cat("Pairwise proportion comparisons\n")
   cat("Data      :", object$dataset, "\n")
-  if (object$data_filter %>% gsub("\\s","",.) != "")
-    cat("Filter    :", gsub("\\n","", object$data_filter), "\n")
+  if (object$data_filter %>% gsub("\\s", "", .) != "") {
+    cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
+  }
   cat("Variables :", object$vars, "\n")
   cat("Level     :", object$levs, "in", object$var2, "\n")
   cat("Confidence:", object$conf_lev, "\n")
   cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
-  object$dat_summary[,-1] %<>% round(dec)
-  print(object$dat_summary %>% as.data.frame, row.names = FALSE)
+  object$dat_summary[, -1] %<>% round(dec)
+  print(object$dat_summary %>% as.data.frame(stingsAsFactors = FALSE), row.names = FALSE)
   cat("\n")
 
-  hyp_symbol <- c("two.sided" = "not equal to",
-                  "less" = "<",
-                  "greater" = ">")[object$alternative]
+  hyp_symbol <- c(
+    "two.sided" = "not equal to",
+    "less" = "<",
+    "greater" = ">"
+  )[object$alternative]
 
   props <- object$dat_summary$p
   names(props) <- object$rn
@@ -164,21 +169,21 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
   ci_perc <- ci_label(object$alternative, object$conf_lev)
 
   res <- object$res
-  res$`Alt. hyp.` <- paste(res$group1,hyp_symbol,res$group2," ")
-  res$`Null hyp.` <- paste(res$group1,"=",res$group2, " ")
-  res$diff <- (props[res$group1 %>% as.character] - props[res$group2 %>% as.character]) %>% round(dec)
+  res$`Alt. hyp.` <- paste(res$group1, hyp_symbol, res$group2, " ")
+  res$`Null hyp.` <- paste(res$group1, "=", res$group2, " ")
+  res$diff <- (props[res$group1 %>% as.character()] - props[res$group2 %>% as.character()]) %>% round(dec)
 
   res_sim <- is.na(res$df)
   if (show) {
-    res <- res[,c("Null hyp.", "Alt. hyp.", "diff", "p.value", "chisq.value", "df", "ci_low", "ci_high")]
-    res[,c("chisq.value","ci_low","ci_high")] %<>% formatdf(dec)
+    res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "chisq.value", "df", "ci_low", "ci_high")]
+    res[, c("chisq.value", "ci_low", "ci_high")] %<>% formatdf(dec)
 
     ## apparantely you can get negative number here
     # res$ci_low[res$ci_low < 0] <- 0
     res$df[res_sim] <- "*1*"
-    res <- rename(res, !!! setNames(c("ci_low","ci_high"), ci_perc))
+    res <- rename(res, !!! setNames(c("ci_low", "ci_high"), ci_perc))
   } else {
-    res <- res[,c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
+    res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
   }
 
   res$` ` <- sig_stars(res$p.value)
@@ -212,9 +217,9 @@ plot.compare_props <- function(x,
                                shiny = FALSE,
                                custom = FALSE,
                                ...) {
-
   if (is.character(x)) return(x)
-  object <- x; rm(x)
+  object <- x
+  rm(x)
 
   dat <- object$dat
   v1 <- colnames(dat)[1]
@@ -227,31 +232,36 @@ plot.compare_props <- function(x,
     ## use of `which` allows the user to change the order of the plots shown
     plot_list[[which("bar" == plots)]] <-
       ggplot(object$dat_summary, aes_string(x = v1, y = "p", fill = v1)) +
-        geom_bar(stat = "identity") +
-        geom_errorbar(width = .1, aes(ymin = p-ci, ymax = p+ci)) +
-        geom_errorbar(width = .05, aes(ymin = p-se, ymax = p+se), colour = "blue") +
-        theme(legend.position = "none") +
-        scale_y_continuous(labels = scales::percent) +
-        labs(y = paste0("Proportion of \"", lev_name, "\" in ", v2))
-
+      geom_bar(stat = "identity") +
+      geom_errorbar(width = .1, aes(ymin = p - ci, ymax = p + ci)) +
+      geom_errorbar(width = .05, aes(ymin = p - se, ymax = p + se), colour = "blue") +
+      theme(legend.position = "none") +
+      scale_y_continuous(labels = scales::percent) +
+      labs(y = paste0("Proportion of \"", lev_name, "\" in ", v2))
   }
 
   if ("dodge" %in% plots) {
     plot_list[[which("dodge" == plots)]] <-
       dat %>%
-        group_by_at(.vars = c(v1, v2)) %>%
-        summarise(count = n()) %>%
-        group_by_at(.vars = v1) %>%
-        mutate(perc = count/ sum(count)) %>%
-        ggplot(aes_string(x = v1, y = "perc", fill = v2)) +
-          geom_bar(stat = "identity", position = "dodge") +
-          scale_y_continuous(labels = scales::percent) +
-          labs(y = paste0("Proportions per level of ", v1))
+      group_by_at(.vars = c(v1, v2)) %>%
+      summarise(count = n()) %>%
+      group_by_at(.vars = v1) %>%
+      mutate(perc = count / sum(count)) %>%
+      ggplot(aes_string(x = v1, y = "perc", fill = v2)) +
+      geom_bar(stat = "identity", position = "dodge") +
+      scale_y_continuous(labels = scales::percent) +
+      labs(y = paste0("Proportions per level of ", v1))
   }
 
-  if (custom)
-    if (length(plot_list) == 1) return(plot_list[[1]]) else return(plot_list)
+  if (custom) {
+    if (length(plot_list) == 1) {
+      return(plot_list[[1]])
+    } else {
+      return(plot_list)
+    }
+  }
 
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
-    {if (shiny) . else print(.)}
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>% {
+    if (shiny) . else print(.)
+  }
 }

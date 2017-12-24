@@ -1,6 +1,8 @@
 ## alternative hypothesis options
-gd_check <- c("Observed" = "observed", "Expected" = "expected",
-              "Chi-squared" = "chi_sq", "Deviation std." = "dev_std")
+gd_check <- c(
+  "Observed" = "observed", "Expected" = "expected",
+  "Chi-squared" = "chi_sq", "Deviation std." = "dev_std"
+)
 
 ## list of function arguments
 gd_args <- as.list(formals(goodness))
@@ -11,7 +13,7 @@ gd_inputs <- reactive({
   gd_args$data_filter <- if (input$show_filter) input$data_filter else ""
   gd_args$dataset <- input$dataset
   for (i in r_drop(names(gd_args)))
-    gd_args[[i]] <- input[[paste0("gd_",i)]]
+    gd_args[[i]] <- input[[paste0("gd_", i)]]
   gd_args
 })
 
@@ -20,16 +22,18 @@ gd_inputs <- reactive({
 ###############################
 output$ui_gd_var <- renderUI({
   vars <- c("None" = "", groupable_vars())
-  selectInput("gd_var", "Select a categorical variable:",
-    choices = vars, 
-    selected = state_single("gd_var",vars), 
+  selectInput(
+    "gd_var", "Select a categorical variable:",
+    choices = vars,
+    selected = state_single("gd_var", vars),
     multiple = FALSE
   )
 })
 
 output$ui_gd_p <- renderUI({
   req(input$gd_var)
-  returnTextInput("gd_p", "Probabilities:", 
+  returnTextInput(
+    "gd_p", "Probabilities:",
     value = state_init("gd_p", ""),
     placeholder = "Enter probabilities (e.g., 1/2 1/2)"
   )
@@ -41,16 +45,17 @@ output$ui_goodness <- renderUI({
     wellPanel(
       uiOutput("ui_gd_var"),
       uiOutput("ui_gd_p"),
-      checkboxGroupInput("gd_check", NULL, 
+      checkboxGroupInput(
+        "gd_check", NULL,
         choices = gd_check,
-        selected = state_group("gd_check"), 
+        selected = state_group("gd_check"),
         inline = FALSE
       )
     ),
     help_and_report(
-      modal_title = "Goodness of fit", 
-      fun_name = "goodness", 
-      help_file = inclMD(file.path(getOption("radiant.path.basics"),"app/tools/help/goodness.md"))
+      modal_title = "Goodness of fit",
+      fun_name = "goodness",
+      help_file = inclMD(file.path(getOption("radiant.path.basics"), "app/tools/help/goodness.md"))
     )
   )
 })
@@ -60,15 +65,20 @@ gd_plot <- reactive({
 })
 
 gd_plot_width <- function()
-  gd_plot() %>% { if (is.list(.)) .$plot_width else 650 }
+  gd_plot() %>% {
+    if (is.list(.)) .$plot_width else 650
+  }
 
 gd_plot_height <- function()
-  gd_plot() %>% { if (is.list(.)) .$plot_height else 400 }
+  gd_plot() %>% {
+    if (is.list(.)) .$plot_height else 400
+  }
 
 ## output is called from the main radiant ui.R
 output$goodness <- renderUI({
   register_print_output("summary_goodness", ".summary_goodness")
-  register_plot_output("plot_goodness", ".plot_goodness",
+  register_plot_output(
+    "plot_goodness", ".plot_goodness",
     height_fun = "gd_plot_height",
     width_fun = "gd_plot_width"
   )
@@ -77,23 +87,25 @@ output$goodness <- renderUI({
   gd_output_panels <- tabsetPanel(
     id = "tabs_goodness",
     tabPanel("Summary", verbatimTextOutput("summary_goodness")),
-    tabPanel("Plot", 
-      plot_downloader("goodness", height = gd_plot_height), 
+    tabPanel(
+      "Plot",
+      plot_downloader("goodness", height = gd_plot_height),
       plotOutput("plot_goodness", width = "100%", height = "100%")
     )
   )
 
   stat_tab_panel(
-    menu = "Basics > Tables", 
-    tool = "Goodness of fit", 
-    tool_ui = "ui_goodness", 
+    menu = "Basics > Tables",
+    tool = "Goodness of fit",
+    tool_ui = "ui_goodness",
     output_panels = gd_output_panels
   )
 })
 
 gd_available <- reactive({
-  if (not_available(input$gd_var))
+  if (not_available(input$gd_var)) {
     return("This analysis requires a categorical variables with two or more levels.\nIf such a variable type is not available please select another dataset.\n\n" %>% suggest_data("newspaper"))
+  }
   "available"
 })
 
@@ -113,25 +125,25 @@ gd_available <- reactive({
 
 observeEvent(input$goodness_report, {
   if (is_empty(input$gd_var)) return(invisible())
-  inp_out <- list("","")
+  inp_out <- list("", "")
   if (length(input$gd_check) > 0) {
-    outputs <- c("summary","plot")
+    outputs <- c("summary", "plot")
     inp_out[[1]] <- list(check = input$gd_check)
     inp_out[[2]] <- list(check = input$gd_check, custom = FALSE)
     figs <- TRUE
   } else {
-    outputs <- "summary" 
+    outputs <- "summary"
     inp_out[[1]] <- list(check = "")
     figs <- FALSE
   }
 
   update_report(
-    inp_main = clean_args(gd_inputs(), gd_args), 
-    inp_out = inp_out, 
-    fun_name = "goodness", 
-    outputs = outputs, 
-    figs = figs, 
-    fig.width = gd_plot_width(), 
+    inp_main = clean_args(gd_inputs(), gd_args),
+    inp_out = inp_out,
+    fun_name = "goodness",
+    outputs = outputs,
+    figs = figs,
+    fig.width = gd_plot_width(),
     fig.height = gd_plot_height()
   )
 })
