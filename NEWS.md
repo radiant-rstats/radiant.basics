@@ -5,6 +5,7 @@
 * Upgraded tidyr dependency to 0.7.2
 * Fixed CI printing error for `compare_prop`
 * Applied `styler` to code
+* Long lines of code generated for _R > Report_ will be wrapped to enhance readability 
 
 # CHANGES IN radiant.basics 0.8.3
 

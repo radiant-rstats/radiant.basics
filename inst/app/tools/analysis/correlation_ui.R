@@ -178,6 +178,7 @@ observeEvent(input$correlation_report, {
     inp_main = clean_args(cor_inputs(), cor_args),
     fun_name = "correlation",
     inp_out = inp_out,
+    wrap = TRUE,
     fig.width = cor_plot_width(),
     fig.height = cor_plot_height()
   )

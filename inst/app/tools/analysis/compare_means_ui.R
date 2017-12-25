@@ -229,7 +229,10 @@ observeEvent(input$compare_means_report, {
   update_report(
     inp_main = clean_args(cm_inputs(), cm_args),
     fun_name = "compare_means",
-    inp_out = inp_out, outputs = outputs, figs = figs,
+    inp_out = inp_out, 
+    outputs = outputs, 
+    wrap = TRUE,
+    figs = figs,
     fig.width = cm_plot_width(),
     fig.height = cm_plot_height()
   )
