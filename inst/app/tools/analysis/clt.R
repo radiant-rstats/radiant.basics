@@ -7,7 +7,7 @@ clt_stat <- c("Sum" = "Sum", "Mean" = "Mean")
 output$ui_clt <- renderUI({
   tagList(
     wellPanel(
-      actionButton("clt_resample", "Sample", width = "100%")
+      actionButton("clt_run", "Sample", width = "100%", icon = icon("play"), class = "btn-success")
     ),
     wellPanel(
       selectInput(
@@ -164,7 +164,7 @@ output$clt <- renderUI({
   )
 })
 
-.clt <- eventReactive(input$clt_resample, {
+.clt <- eventReactive(input$clt_run, {
   if (is.null(input$clt_dist)) return("Please choose a distribution")
 
   ## avoiding input errors
@@ -223,21 +223,21 @@ clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
 }
 
 .plot_clt <- function(result = .clt()) {
-  if (not_pressed(input$clt_resample)) return("** Press the Sample button to simulate data **")
+  if (not_pressed(input$clt_run)) return("** Press the Sample button to simulate data **")
   if (is.character(result)) return(result)
   req(input$clt_bins)
 
   clt_stat <- input$clt_stat
   if (is.null(clt_stat)) return()
   if (clt_stat == "Sum") {
-    sstat <- data.frame(Sum = colSums(result))
+    sstat <- data.frame(Sum = colSums(result), stringsAsFactors = FALSE)
   } else {
-    sstat <- data.frame(Mean = colMeans(result))
+    sstat <- data.frame(Mean = colMeans(result), stringsAsFactors = FALSE)
   }
 
   m <- dim(result)[2]
-  data1 <- data.frame(sample_1 = result[, 1])
-  datam <- data.frame(sample_m = result[, m])
+  data1 <- data.frame(sample_1 = result[, 1], stringsAsFactors = FALSE)
+  datam <- data.frame(sample_m = result[, m], stringsAsFactors = FALSE)
 
   plots <- list()
 
