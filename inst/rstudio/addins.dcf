@@ -1,4 +1,9 @@
-Name: Radiant - Basics
-Description: Start Radiant - Basics
+Name: Start radiant.basics (viewer)
+Description: Start radiant.basics in rstudio viewer
+Binding: radiant.basics_viewer
+Interactive: true
+
+Name: Start radiant.basics (browser)
+Description: Start radiant.basics in default browser
 Binding: radiant.basics
 Interactive: true

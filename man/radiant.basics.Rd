@@ -7,23 +7,18 @@
 \alias{radiant.basics}
 \title{radiant.basics}
 \usage{
-radiant.basics(run = "browser")
-}
-\arguments{
-\item{run}{Run radiant.basics in an external browser ("browser") or in the Rstudio viewer ("viewer")}
+radiant.basics()
 }
 \description{
 radiant.basics
 
-Launch radiant.basics in default browser or Rstudio Viewer
+Launch radiant.basics in default browser
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
 }
 \examples{
 \dontrun{
-radiant.basics::radiant.basics()
-radiant.basics::radiant.basics("viewer")
+radiant.basics()
 }
-
 }
