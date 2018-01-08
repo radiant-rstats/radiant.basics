@@ -54,10 +54,6 @@ output$ui_correlation <- renderUI({
   req(input$dataset)
   tagList(
     wellPanel(
-      checkboxInput(
-        "cor_pause", "Pause estimation",
-        state_init("cor_pause", FALSE)
-      ),
       uiOutput("ui_cor_vars"),
       selectInput(
         "cor_method", "Method:",
@@ -115,15 +111,10 @@ output$correlation <- renderUI({
   cor_output_panels <- tabsetPanel(
     id = "tabs_correlation",
     tabPanel("Summary", verbatimTextOutput("summary_correlation")),
-    tabPanel(
-      "Plot",
-      conditionalPanel(
-        "input.cor_pause == false",
-        plot_downloader(
-          "correlation",
-          width = cor_plot_width,
-          height = cor_plot_height
-        )
+    tabPanel("Plot",
+      plot_downloader("correlation",
+        width = cor_plot_width,
+        height = cor_plot_height
       ),
       plotOutput(
         "plot_correlation",
@@ -149,7 +140,6 @@ cor_available <- reactive({
 })
 
 .correlation <- reactive({
-  req(input$cor_pause == FALSE, cancelOutput = TRUE)
   validate(
     need(
       input$cor_cutoff >= 0 && input$cor_cutoff <= 1,
@@ -178,7 +168,6 @@ observeEvent(input$correlation_report, {
     inp_main = clean_args(cor_inputs(), cor_args),
     fun_name = "correlation",
     inp_out = inp_out,
-    wrap = TRUE,
     fig.width = cor_plot_width(),
     fig.height = cor_plot_height()
   )
