@@ -1,3 +1,7 @@
+# CHANGES IN radiant.basics 0.9.0
+
+* Enhanced keyboard shortcuts
+
 # CHANGES IN radiant.basics 0.8.9
 
 * Upgraded broom dependency to 0.4.3

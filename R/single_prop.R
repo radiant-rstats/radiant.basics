@@ -54,7 +54,8 @@ single_prop <- function(dataset, var,
     mean = n * p,
     sd = sqrt(n * p * (1 - p)),
     n = n,
-    n_missing = miss
+    n_missing = miss,
+    stringsAsFactors = FALSE
   )
 
   ## use binom.test for exact
