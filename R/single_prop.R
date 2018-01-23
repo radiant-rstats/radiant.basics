@@ -108,8 +108,8 @@ summary.single_prop <- function(object, dec = 3, ...) {
   ## print summary statistics
   object$dat_summary[-1] %>%
     round(dec) %>%
-    as.data.frame(stingsAsFactors = FALSE, row.names = NULL) %>%
-    print
+    as.data.frame(stringsAsFactors = FALSE) %>%
+    print(row.names = FALSE)
   cat("\n")
 
   res <- object$res

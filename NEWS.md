@@ -1,6 +1,7 @@
-# CHANGES IN radiant.basics 0.9.0
+# CHANGES IN radiant.basics 0.9.0.1
 
 * Enhanced keyboard shortcuts
+* `summary.single_prop` will not print row numbers 
 
 # CHANGES IN radiant.basics 0.8.9
 
@@ -9,7 +10,7 @@
 * Upgraded tidyr dependency to 0.7.2
 * Fixed CI printing error for `compare_prop`
 * Applied `styler` to code
-* Long lines of code generated for _R > Report_ will be wrapped to enhance readability 
+* Long lines of code generated for _Report > Rmd_ and _Report > R_ will be wrapped to enhance readability 
 
 # CHANGES IN radiant.basics 0.8.3
 
