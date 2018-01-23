@@ -89,7 +89,7 @@ summary.single_mean <- function(object, dec = 3, ...) {
   ## print summary statistics
   object$dat_summary[ ,-(1:2)] %>% 
     round(dec) %>% 
-    as.data.frame(stingsAsFactors = FALSE) %>%
+    as.data.frame(stringsAsFactors = FALSE) %>%
     print(row.names = FALSE)
   cat("\n")
 

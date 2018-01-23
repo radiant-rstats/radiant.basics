@@ -69,7 +69,9 @@ compare_means <- function(dataset, var1, var2,
 
   levs <- levels(dat[["variable"]])
 
-  cmb <- combn(levs, 2) %>% t() %>% as.data.frame(stingsAsFactors = FALSE)
+  cmb <- combn(levs, 2) %>% 
+    t() %>% 
+    as.data.frame(stringsAsFactors = FALSE)
   rownames(cmb) <- cmb %>% 
     apply(1, paste, collapse = ":")
   colnames(cmb) <- c("group1", "group2")
@@ -179,7 +181,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
   cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
   object$dat_summary[, -1] %<>% round(dec)
-  print(object$dat_summary %>% as.data.frame(stingsAsFactors = FALSE), row.names = FALSE)
+  print(as.data.frame(object$dat_summary, stringsAsFactors = FALSE), row.names = FALSE)
   cat("\n")
 
   hyp_symbol <- c(
@@ -189,7 +191,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
   )[object$alternative]
 
   means <- object$dat_summary$mean
-  names(means) <- object$dat_summary[[1]] %>% as.character()
+  names(means) <- as.character(object$dat_summary[[1]])
 
   ## determine lower and upper % for ci
   ci_perc <- ci_label(object$alternative, object$conf_lev)

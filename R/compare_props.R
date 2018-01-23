@@ -62,7 +62,9 @@ compare_props <- function(dataset, var1, var2,
   prop_input[is.na(prop_input)] <- 0
 
   lv <- rownames(prop_input)
-  cmb <- combn(lv, 2) %>% t() %>% as.data.frame(stingsAsFactors = FALSE)
+  cmb <- combn(lv, 2) %>% 
+    t() %>% 
+    as.data.frame(stringsAsFactors = FALSE)
 
   rownames(cmb) <- cmb %>% apply(1, paste, collapse = ":")
   colnames(cmb) <- c("group1", "group2")
@@ -153,7 +155,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
   cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
   object$dat_summary[, -1] %<>% round(dec)
-  print(object$dat_summary %>% as.data.frame(stingsAsFactors = FALSE), row.names = FALSE)
+  print(object$dat_summary %>% as.data.frame(stringsAsFactors = FALSE), row.names = FALSE)
   cat("\n")
 
   hyp_symbol <- c(
