@@ -1,7 +1,7 @@
 ######### tests ########
 trim <- function(x) gsub("^\\s+|\\s+$", "", x)
-library(radiant.basics)
-library(testthat)
+# library(radiant.basics)
+# library(testthat)
 
 context("Compare means")
 
@@ -44,7 +44,7 @@ test_that("single_prop 1", {
   result <- single_prop("diamonds", "color")
   expect_equal(result$lev, "D")
   res1 <- capture_output(summary(result))
-  res2 <- "Single proportion test (binomial exact)\nData      : diamonds \nVariable  : color \nLevel     : D in color \nConfidence: 0.95 \nNull hyp. : the proportion of D in color = 0.5 \nAlt. hyp. : the proportion of D in color not equal to 0.5 \n\n   prop mean     sd    n n_missing\n1 0.127  382 18.258 3000         0\n\n   diff      ns p.value  2.5% 97.5%    \n -0.373 382.000  < .001 0.116 0.140 ***\n\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
+  res2 <- "Single proportion test (binomial exact)\nData      : diamonds \nVariable  : color \nLevel     : D in color \nConfidence: 0.95 \nNull hyp. : the proportion of D in color = 0.5 \nAlt. hyp. : the proportion of D in color not equal to 0.5 \n\n  prop mean     sd    n n_missing\n 0.127  382 18.258 3000         0\n\n   diff      ns p.value  2.5% 97.5%    \n -0.373 382.000  < .001 0.116 0.140 ***\n\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
   expect_equal(res1, res2)
 })
 
@@ -52,7 +52,7 @@ test_that("single_prop 2", {
   result <- single_prop("diamonds", "clarity", lev = "IF", comp_value = 0.05)
   expect_equal(result$lev, "IF")
   res1 <- capture_output(summary(result))
-  res2 <- "Single proportion test (binomial exact)\nData      : diamonds \nVariable  : clarity \nLevel     : IF in clarity \nConfidence: 0.95 \nNull hyp. : the proportion of IF in clarity = 0.05 \nAlt. hyp. : the proportion of IF in clarity not equal to 0.05 \n\n   prop mean    sd    n n_missing\n1 0.033   99 9.784 3000         0\n\n   diff     ns p.value  2.5% 97.5%    \n -0.017 99.000  < .001 0.027 0.040 ***\n\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
+  res2 <- "Single proportion test (binomial exact)\nData      : diamonds \nVariable  : clarity \nLevel     : IF in clarity \nConfidence: 0.95 \nNull hyp. : the proportion of IF in clarity = 0.05 \nAlt. hyp. : the proportion of IF in clarity not equal to 0.05 \n\n  prop mean    sd    n n_missing\n 0.033   99 9.784 3000         0\n\n   diff     ns p.value  2.5% 97.5%    \n -0.017 99.000  < .001 0.027 0.040 ***\n\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
   expect_equal(res1, res2)
 })
 

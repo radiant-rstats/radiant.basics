@@ -1,7 +1,8 @@
-# CHANGES IN radiant.basics 0.9.0.1
+# CHANGES IN radiant.basics 0.9.0.2
 
 * Enhanced keyboard shortcuts
 * `summary.single_prop` will not print row numbers 
+* Added log.normal as an option in the probability calculator
 
 # CHANGES IN radiant.basics 0.8.9
 
@@ -18,7 +19,7 @@
 * Renamed methods `summary.correlation_` and `plot.correlation_` to `summary.correlation` and `plot.correlation`
 * Added `tab` argument to `goodness` and `cross_tabs` so a table object can be passed directly
 * Documentation updates
-* Scatter plots in _Correlation > Plot_ are now based on 1,000 data points by default. Use _R > Report_ to adjust (e.g., `plot(result, n = -1)`)
+* Scatter plots in _Correlation > Plot_ are now based on 1,000 data points by default. Use _Report > Rmd_ or _Report > R_ to adjust (e.g., `plot(result, n = -1)`)
 * Fix for level ordering in goodness-of-fit expected-values plot
 * Code clean-up and various minor fixes and improvements
 
@@ -29,7 +30,7 @@
 - Show dataset name in output if dataframe passed directly to analysis function
 - Scatter plots in Basics > Correlation > Plot now based on 1,000 data points by default. Add n = -1 to use all data points 
 - As an alternative to using the Estimate button to run a model you can now also use CTRL-enter or CMD-enter
-- Use ALT-enter to put code into R > Report
+- Use ALT-enter to put code into _Report > Rmd_ or _Report > R_
 - Documentation added on how to customize plots
 
 ## BUG FIXES
