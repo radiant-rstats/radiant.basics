@@ -1,7 +1,7 @@
 pc_dist <- c(
   "Binomial" = "binom", "Chi-squared" = "chisq", "Discrete" = "disc",
-  "Exponential" = "expo", "F" = "fdist", "Normal" = "norm",
-  "Poisson" = "pois", "t" = "tdist", "Uniform" = "unif"
+  "Exponential" = "expo", "F" = "fdist", "Log normal" = "lnorm", 
+  "Normal" = "norm", "Poisson" = "pois", "t" = "tdist", "Uniform" = "unif"
 )
 
 pc_type <- c("Values" = "values", "Probabilities" = "probs")
@@ -391,6 +391,70 @@ output$ui_pc_input_norm <- renderUI({
   }
 })
 
+output$ui_pc_lnorm <- renderUI({
+  tagList(
+    div(
+      class = "row",
+      div(
+        class = "col-xs-6",
+        numericInput(
+          "pcln_meanlog", "Mean log:",
+          value = state_init("pcln_meanlog", 0)
+        )
+      ),
+      div(
+        class = "col-xs-6",
+        numericInput(
+          "pcln_sdlog", "St. dev log:",
+          min = 0,
+          value = state_init("pcln_sdlog", 1)
+        )
+      )
+    )
+  )
+})
+
+output$ui_pc_input_lnorm <- renderUI({
+  if (input$pc_type == "values") {
+    div(
+      class = "row",
+      div(
+        class = "col-xs-6",
+        numericInput(
+          "pcln_lb", "Lower bound:",
+          value = state_init("pcln_lb", 0)
+        )
+      ),
+      div(
+        class = "col-xs-6",
+        numericInput(
+          "pcln_ub", "Upper bound:",
+          value = state_init("pcln_ub", 1)
+        )
+      )
+    )
+  } else {
+    div(
+      class = "row",
+      div(
+        class = "col-xs-6",
+        numericInput(
+          "pcln_plb", "Lower bound:",
+          value = state_init("pcln_plb", .025),
+          step = .005
+        )
+      ),
+      div(
+        class = "col-xs-6",
+        numericInput(
+          "pcln_pub", "Upper bound:",
+          value = state_init("pcln_pub", 0.975),
+          step = .005
+        )
+      )
+    )
+  }
+})
 
 output$ui_pc_binom <- renderUI({
   tagList(
@@ -537,6 +601,10 @@ output$ui_prob_calc <- renderUI({
         uiOutput("ui_pc_norm")
       ),
       conditionalPanel(
+        "input.pc_dist == 'lnorm'",
+        uiOutput("ui_pc_lnorm")
+      ),
+      conditionalPanel(
         "input.pc_dist == 'binom'",
         uiOutput("ui_pc_binom")
       ),
@@ -579,6 +647,10 @@ output$ui_prob_calc <- renderUI({
       conditionalPanel(
         "input.pc_dist == 'norm'",
         uiOutput("ui_pc_input_norm")
+      ),
+      conditionalPanel(
+        "input.pc_dist == 'lnorm'",
+        uiOutput("ui_pc_input_lnorm")
       ),
       conditionalPanel(
         "input.pc_dist == 'binom'",
@@ -635,6 +707,8 @@ pc_args <- reactive({
   pc_dist <- input$pc_dist
   if (is_empty(pc_dist) || pc_dist == "norm") {
     as.list(formals(prob_norm))
+  } else if (pc_dist == "lnorm") {
+    as.list(formals(prob_lnorm))
   } else if (pc_dist == "binom") {
     as.list(formals(prob_binom))
   } else if (pc_dist == "unif") {
@@ -659,6 +733,8 @@ pc_inputs <- reactive({
   pc_dist <- input$pc_dist
   if (is_empty(pc_dist) || pc_dist == "norm") {
     pre <- "pc_"
+  } else if (pc_dist == "lnorm") {
+    pre <- "pcln_"
   } else if (pc_dist == "binom") {
     pre <- "pcb_"
   } else if (pc_dist == "unif") {
@@ -728,6 +804,10 @@ pc_available <- reactive({
     a <- "available"
     if (input$pc_dist == "norm") {
       if (is_not(input$pc_mean) || is_not(input$pc_stdev) || input$pc_stdev <= 0) {
+        a <- "Please provide a mean and standard deviation (> 0)"
+      }
+    } else if (input$pc_dist == "lnorm") {
+      if (is_not(input$pcln_meanlog) || is_not(input$pcln_sdlog) || input$pcln_sdlog <= 0) {
         a <- "Please provide a mean and standard deviation (> 0)"
       }
     } else if (input$pc_dist == "binom") {
