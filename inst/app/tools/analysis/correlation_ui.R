@@ -50,6 +50,18 @@ output$ui_cor_vars <- renderUI({
   )
 })
 
+output$ui_cor_nrobs <- renderUI({
+  nrobs <- nrow(.getdata())
+  req(nrobs > 1000)
+  choices <- c("1,000" = 1000, "5,000" = 5000, "10,000" = 10000, "All" = -1) %>%
+    .[. < nrobs]
+  selectInput(
+    "cor_nrobs", "Number of data points plotted:", 
+    choices = choices,
+    selected = state_single("cor_nrobs", choices, 1000)
+  )
+})
+
 output$ui_correlation <- renderUI({
   req(input$dataset)
   tagList(
@@ -72,6 +84,10 @@ output$ui_correlation <- renderUI({
           "cor_covar", "Show covariance matrix",
           value = state_init("cor_covar", FALSE)
         )
+      ),
+      conditionalPanel(
+        condition = "input.tabs_correlation == 'Plot'",
+        uiOutput("ui_cor_nrobs")
       )
     ),
     help_and_report(
@@ -156,14 +172,16 @@ cor_available <- reactive({
 
 .plot_correlation <- reactive({
   if (cor_available() != "available") return(cor_available())
-  capture_plot(plot(.correlation()))
+  req(input$cor_nrobs)
+  capture_plot(plot(.correlation(), nrobs = input$cor_nrobs))
 })
 
 observeEvent(input$correlation_report, {
   if (length(input$cor_vars) < 2) return(invisible())
   inp_out <- list("", "")
+  nrobs <- ifelse(is_empty(input$cor_nrobs), 1000, as_integer(input$cor_nrobs))
   inp_out[[1]] <- clean_args(cor_sum_inputs(), cor_sum_args[-1])
-  inp_out[[2]] <- list(n = 1000)
+  inp_out[[2]] <- list(nrobs = nrobs)
   update_report(
     inp_main = clean_args(cor_inputs(), cor_args),
     fun_name = "correlation",

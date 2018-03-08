@@ -4,12 +4,12 @@
 \alias{plot.correlation}
 \title{Plot method for the correlation function}
 \usage{
-\method{plot}{correlation}(x, n = 1000, jit = 0.3, ...)
+\method{plot}{correlation}(x, nrobs = -1, jit = 0.3, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{correlation}}}
 
-\item{n}{Number of datapoints to use in the plot (1,000 is default). Use -1 for all observations}
+\item{nrobs}{Number of data points to show in scatter plots (-1 for all)}
 
 \item{jit}{Level of jittering to apply to scatter plot. Default is .3. Use 0 for no jittering}
 
@@ -24,7 +24,7 @@ See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an e
 \examples{
 result <- correlation("diamonds",c("price","carat","table"))
 plot(result)
-diamonds \%>\% correlation("price:carat") \%>\% plot
+diamonds \%>\% correlation("price:carat") \%>\% plot()
 
 }
 \seealso{

@@ -19,9 +19,11 @@
 #' @seealso \code{\link{plot.correlation}} to plot results
 #'
 #' @export
-correlation <- function(dataset, vars = "",
-                        method = "pearson",
-                        data_filter = "") {
+correlation <- function(
+  dataset, vars = "",
+  method = "pearson",
+  data_filter = ""
+) {
 
   ## data.matrix as the last step in the chain is about 25% slower using
   ## system.time but results (using diamonds and mtcars) are identical
@@ -56,11 +58,11 @@ correlation <- function(dataset, vars = "",
 #' @importFrom psych corr.test
 #'
 #' @export
-summary.correlation <- function(object,
-                                cutoff = 0,
-                                covar = FALSE,
-                                dec = 2,
-                                ...) {
+summary.correlation <- function(
+  object, cutoff = 0,
+  covar = FALSE, dec = 2, 
+  ...
+) {
 
   ## calculate the correlation matrix with p.values using the psych package
   cmat <- sshhr(psych::corr.test(object$dat, method = object$method))
@@ -120,14 +122,14 @@ summary.correlation <- function(object,
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{correlation}}
-#' @param n Number of datapoints to use in the plot (1,000 is default). Use -1 for all observations
+#' @param nrobs Number of data points to show in scatter plots (-1 for all)
 #' @param jit Level of jittering to apply to scatter plot. Default is .3. Use 0 for no jittering
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
 #' result <- correlation("diamonds",c("price","carat","table"))
 #' plot(result)
-#' diamonds %>% correlation("price:carat") %>% plot
+#' diamonds %>% correlation("price:carat") %>% plot()
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{summary.correlation}} to summarize results
@@ -135,9 +137,8 @@ summary.correlation <- function(object,
 #' @importFrom ggplot2 alpha
 #'
 #' @export
-plot.correlation <- function(x, n = 1000, jit = .3, ...) {
-  object <- x
-  rm(x)
+plot.correlation <- function(x, nrobs = -1, jit = .3, ...) {
+  object <- x; rm(x)
 
   ## based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
   panel.plot <- function(x, y) {
@@ -158,8 +159,8 @@ plot.correlation <- function(x, n = 1000, jit = .3, ...) {
     text(.8, .8, sig, cex = cex, col = "blue")
   }
   panel.smooth <- function(x, y) {
-    if (n > 0 & length(x) > n) {
-      ind <- sample(1:length(x), n)
+    if (nrobs > 0 & length(x) > nrobs) {
+      ind <- sample(1:length(x), nrobs)
       x <- x[ind]
       y <- y[ind]
     }
