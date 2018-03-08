@@ -1,8 +1,8 @@
 Package: radiant.basics
 Type: Package
 Title: Basics Menu for Radiant: Business Analytics using R and Shiny
-Version: 0.9.0.2
-Date: 2018-2-16
+Version: 0.9.0.3
+Date: 2018-3-7
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description: The Radiant Basics menu includes interfaces for probability calculation, central limit theorem simulation, comparing means and proportions, goodness-of-fit testing, cross-tabs, and correlation. The application extends the functionality in radiant.data.
 Depends:

@@ -296,21 +296,21 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
   limits <- c(0, meanlog + 3 * sdlog)
 
   dlnorm_limit <- function(x) {
-    y <- dlnorm(x, meanlog = meanlog, sd = sdlog)
+    y <- dlnorm(x, meanlog = meanlog, sdlog = sdlog)
     y[x < lb | x > ub] <- 0
     y
   }
 
   dlnorm_lb <- function(x) {
     if (is.na(lb)) return(0)
-    y <- dlnorm(x, meanlog = meanlog, sd = sdlog)
+    y <- dlnorm(x, meanlog = meanlog, sdlog = sdlog)
     y[x > lb] <- 0
     y
   }
 
   dlnorm_ub <- function(x) {
     if (is.na(ub)) return(0)
-    y <- dlnorm(x, meanlog = meanlog, sd = sdlog)
+    y <- dlnorm(x, meanlog = meanlog, sdlog = sdlog)
     y[x < ub] <- 0
     y
   }
@@ -321,7 +321,7 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
-    stat_function(fun = dlnorm, args = list(meanlog = meanlog, sd = sdlog)) +
+    stat_function(fun = dlnorm, args = list(meanlog = meanlog, sdlog = sdlog)) +
     stat_function(fun = dlnorm_limit, geom = "area", fill = "blue", alpha = 0.2, n = 501) +
     stat_function(fun = dlnorm_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
     stat_function(fun = dlnorm_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +

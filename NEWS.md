@@ -1,8 +1,9 @@
-# CHANGES IN radiant.basics 0.9.0.2
+# CHANGES IN radiant.basics 0.9.0.3
 
 * Enhanced keyboard shortcuts
 * `summary.single_prop` will not print row numbers 
 * Added log.normal as an option in the probability calculator
+* The correlation plot now has an option to select a sample of data for scatter plots (e.g., 1K, 5K, 10K, or All)
 
 # CHANGES IN radiant.basics 0.8.9
 
