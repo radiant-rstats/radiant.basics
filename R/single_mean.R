@@ -18,11 +18,11 @@
 #' @seealso \code{\link{plot.single_mean}} to plot results
 #'
 #' @export
-single_mean <- function(dataset, var,
-                        comp_value = 0,
-                        alternative = "two.sided",
-                        conf_lev = .95,
-                        data_filter = "") {
+single_mean <- function(
+  dataset, var, comp_value = 0,
+  alternative = "two.sided", conf_lev = .95,
+  data_filter = ""
+) {
 
   dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE)
   if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
@@ -88,8 +88,9 @@ summary.single_mean <- function(object, dec = 3, ...) {
 
   ## print summary statistics
   object$dat_summary[ ,-(1:2)] %>% 
-    round(dec) %>% 
+    # round(dec) %>% 
     as.data.frame(stringsAsFactors = FALSE) %>%
+    formatdf(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
   cat("\n")
 

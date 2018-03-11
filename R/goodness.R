@@ -17,10 +17,7 @@
 #' @seealso \code{\link{plot.goodness}} to plot results
 #'
 #' @export
-goodness <- function(dataset, var,
-                     p = NULL,
-                     tab = NULL,
-                     data_filter = "") {
+goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") { 
 
   if (!missing(dataset) && !is.table(tab)) {
     dat <- getdata(dataset, var, filt = data_filter)
@@ -111,9 +108,11 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 
   if ("observed" %in% check) {
     cat("\nObserved:\n")
+    # print(class(object$cst$observed))
     object$cst$observed %>%
       {.["Total"] <- sum(.); .} %>%
-      print()
+      format(big.mark = ",", scientific = FALSE) %>%
+      print(quote = FALSE)
   }
 
   if ("expected" %in% check) {
@@ -121,7 +120,8 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
     object$cst$expected %>%
       {.["Total"] <- sum(.); .} %>%
       round(dec) %>%
-      print()
+      format(big.mark = ",", scientific = FALSE) %>%
+      print(quote = FALSE)
   }
 
   if ("chi_sq" %in% check) {
@@ -129,7 +129,8 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
     object$cst$chi_sq %>%
       {.["Total"] <- sum(.); .} %>%
       round(dec) %>%
-      print()
+      format(big.mark = ",", scientific = FALSE) %>%
+      print(quote = FALSE)
   }
 
   if ("dev_std" %in% check) {
@@ -137,7 +138,7 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
     print(round(object$cst$residuals, dec))
   }
 
-  object$res <- formatdf(object$res, dec = dec + 1)
+  object$res <- formatdf(object$res, dec = dec + 1, mark = ",")
 
   if (object$res$p.value < .001) object$res$p.value <- "< .001"
   cat(paste0("\nChi-squared: ", object$res$statistic, " df(", object$res$parameter, "), p.value ", object$res$p.value), "\n\n")
@@ -165,13 +166,12 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 #' @seealso \code{\link{summary.goodness}} to summarize results
 #'
 #' @export
-plot.goodness <- function(x, check = "",
-                          fillcol = "blue",
-                          shiny = FALSE,
-                          custom = FALSE,
-                          ...) {
-  object <- x
-  rm(x)
+plot.goodness <- function(
+  x, check = "", fillcol = "blue",
+  shiny = FALSE, custom = FALSE, ...
+) {
+
+  object <- x; rm(x)
   if (is.character(object)) return(object)
   plot_list <- list()
   if (is_empty(check)) check <- "observed"

@@ -11,13 +11,10 @@
 #' @param dec Number of decimals to show
 #'
 #' @export
-prob_norm <- function(mean,
-                      stdev,
-                      lb = NA,
-                      ub = NA,
-                      plb = NA,
-                      pub = NA,
-                      dec = 3) {
+prob_norm <- function(
+  mean, stdev, lb = NA, ub = NA, 
+  plb = NA, pub = NA, dec = 3
+) {
   
   p_ub <- pnorm(ub, mean, stdev)
   p_lb <- pnorm(lb, mean, stdev)
@@ -220,13 +217,10 @@ summary.prob_norm <- function(object, type = "values", ...) {
 #' @param dec Number of decimals to show
 #'
 #' @export
-prob_lnorm <- function(meanlog,
-                       sdlog,
-                       lb = NA,
-                       ub = NA,
-                       plb = NA,
-                       pub = NA,
-                       dec = 3) {
+prob_lnorm <- function(
+  meanlog, sdlog, lb = NA, ub = NA,
+  plb = NA, pub = NA, dec = 3
+) {
   
   p_ub <- plnorm(ub, meanlog, sdlog)
   p_lb <- plnorm(lb, meanlog, sdlog)
@@ -429,14 +423,10 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
 #' @param dec Number of decimals to show
 #'
 #' @export
-prob_tdist <- function(df,
-                       mean = 0,
-                       stdev = 1,
-                       lb = NA,
-                       ub = NA,
-                       plb = NA,
-                       pub = NA,
-                       dec = 3) {
+prob_tdist <- function(
+  df, mean = 0, stdev = 1, lb = NA,
+  ub = NA, plb = NA, pub = NA, dec = 3
+) {
   
   p_ub <- pt(ub, df)
   p_lb <- pt(lb, df)
@@ -641,12 +631,10 @@ summary.prob_tdist <- function(object, type = "values", ...) {
 #' @param dec Number of decimals to show
 #'
 #' @export
-prob_fdist <- function(df1, df2,
-                       lb = NA,
-                       ub = NA,
-                       plb = NA,
-                       pub = NA,
-                       dec = 3) {
+prob_fdist <- function(
+  df1, df2, lb = NA, ub = NA,
+  plb = NA, pub = NA, dec = 3
+) {
 
   if (!is_not(lb) && lb < 0) lb <- 0
   if (!is_not(ub) && ub < 0) ub <- 0
@@ -874,12 +862,10 @@ summary.prob_fdist <- function(object, type = "values", ...) {
 #' @param dec Number of decimals to show
 #'
 #' @export
-prob_chisq <- function(df,
-                       lb = NA,
-                       ub = NA,
-                       plb = NA,
-                       pub = NA,
-                       dec = 3) {
+prob_chisq <- function(
+  df, lb = NA, ub = NA, plb = NA,
+  pub = NA, dec = 3
+) {
   
   if (!is_not(lb) && lb < 0) lb <- 0
   if (!is_not(ub) && ub < 0) ub <- 0
@@ -1097,13 +1083,11 @@ summary.prob_chisq <- function(object, type = "values", ...) {
 #' @param dec Number of decimals to show
 #'
 #' @export
-prob_unif <- function(min,
-                      max,
-                      lb = NA,
-                      ub = NA,
-                      plb = NA,
-                      pub = NA,
-                      dec = 3) {
+prob_unif <- function(
+  min, max, lb = NA, ub = NA,
+  plb = NA, pub = NA, dec = 3
+) {
+
   if (min > max) {
     mess_values <- "\nThe maximum value must be larger than the minimum value"
     mess_probs <- "\nThe maximum value must be larger than the minimum value"
@@ -1323,13 +1307,10 @@ summary.prob_unif <- function(object, type = "values", ...) {
 #' @param dec Number of decimals to show
 #'
 #' @export
-prob_binom <- function(n,
-                       p,
-                       lb = NA,
-                       ub = NA,
-                       plb = NA,
-                       pub = NA,
-                       dec = 3) {
+prob_binom <- function(
+  n, p, lb = NA, ub = NA, 
+  plb = NA, pub = NA, dec = 3
+) {
 
   ## making sure n is integer
   n <- as_integer(n)
@@ -1436,6 +1417,7 @@ prob_binom <- function(n,
 #'
 #' @export
 plot.prob_binom <- function(x, type = "values", ...) {
+
   mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
@@ -1635,12 +1617,10 @@ summary.prob_binom <- function(object, type = "values", ...) {
 
 #'
 #' @export
-prob_disc <- function(v, p,
-                      lb = NA,
-                      ub = NA,
-                      plb = NA,
-                      pub = NA,
-                      dec = 3) {
+prob_disc <- function(
+  v, p, lb = NA, ub = NA,
+  plb = NA, pub = NA, dec = 3
+) {
 
   # Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
   # expand.grid(height = 1:6, weight = 1:6)
@@ -1983,12 +1963,11 @@ summary.prob_disc <- function(object, type = "values", ...) {
 #' @param dec Number of decimals to show
 #'
 #' @export
-prob_expo <- function(rate,
-                      lb = NA,
-                      ub = NA,
-                      plb = NA,
-                      pub = NA,
-                      dec = 3) {
+prob_expo <- function(
+  rate, lb = NA, ub = NA,
+  plb = NA, pub = NA, dec = 3
+) {
+
   if (!is_not(lb) && lb < 0) lb <- 0
   if (!is_not(ub) && ub < 0) ub <- 0
 
@@ -2201,12 +2180,11 @@ summary.prob_expo <- function(object, type = "values", ...) {
 #' @param dec Number of decimals to show
 #'
 #' @export
-prob_pois <- function(lambda,
-                      lb = NA,
-                      ub = NA,
-                      plb = NA,
-                      pub = NA,
-                      dec = 3) {
+prob_pois <- function(
+  lambda, lb = NA, ub = NA,
+  plb = NA, pub = NA, dec = 3
+) {
+  
   if (lambda <= 0) mess_values <- "\nLambda must be positive"
 
   if (!is_not(lb) && lb < 0) lb <- 0

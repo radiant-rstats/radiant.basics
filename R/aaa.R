@@ -9,7 +9,7 @@ globalVariables(c(
 #' @name radiant.basics
 #' @docType package
 #' @import radiant.data shiny ggplot2
-#' @importFrom dplyr mutate_all summarise_all funs rename bind_cols select filter group_by_at summarise arrange mutate count
+#' @importFrom dplyr mutate_all mutate_if summarise_all funs rename bind_cols select filter group_by_at summarise arrange mutate count
 #' @importFrom tidyr gather spread
 #' @importFrom gridExtra grid.arrange
 #' @importFrom scales percent

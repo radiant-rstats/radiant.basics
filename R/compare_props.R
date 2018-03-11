@@ -22,13 +22,12 @@
 #' @seealso \code{\link{plot.compare_props}} to plot results
 #'
 #' @export
-compare_props <- function(dataset, var1, var2,
-                          levs = "",
-                          alternative = "two.sided",
-                          conf_lev = .95,
-                          comb = "",
-                          adjust = "none",
-                          data_filter = "") {
+compare_props <- function(
+  dataset, var1, var2, levs = "",
+  alternative = "two.sided", conf_lev = .95,
+  comb = "", adjust = "none", data_filter = ""
+) {
+
   vars <- c(var1, var2)
   dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_all(funs(as.factor))
   if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
@@ -106,16 +105,15 @@ compare_props <- function(dataset, var1, var2,
     se * qnorm(conf.lev / 2 + .5, lower.tail = TRUE)
 
   dat_summary <- data.frame(prop_input, check.names = FALSE, stringsAsFactors = FALSE) %>%
+    mutate_if(is.numeric, as.integer) %>%
     mutate(
-      n = rowSums(.[, 1:2]),
+      n = as.integer(rowSums(.[, 1:2])),
       p = .[[1]] / n,
       se = (p * (1 - p) / n) %>% sqrt(),
       ci = ci_calc(se, conf_lev)
     ) %>%
-    set_rownames({
-      rownames(prop_input)
-    }) %>%
-    rownames_to_column(var = var1)
+      set_rownames(rownames(prop_input)) %>%
+      rownames_to_column(var = var1)
 
   dat_summary[[var1]] %<>% factor(., levels = .)
 
@@ -154,8 +152,11 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
   cat("Confidence:", object$conf_lev, "\n")
   cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
-  object$dat_summary[, -1] %<>% round(dec)
-  print(object$dat_summary %>% as.data.frame(stringsAsFactors = FALSE), row.names = FALSE)
+  # object$dat_summary[, -1] %<>% round(dec)
+  object$dat_summary %>% 
+    as.data.frame(stringsAsFactors = FALSE) %>% 
+    formatdf(dec = dec, mark = ",") %>%
+    print(row.names = FALSE)
   cat("\n")
 
   hyp_symbol <- c(
@@ -178,7 +179,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
   res_sim <- is.na(res$df)
   if (show) {
     res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "chisq.value", "df", "ci_low", "ci_high")]
-    res[, c("chisq.value", "ci_low", "ci_high")] %<>% formatdf(dec)
+    res[, c("chisq.value", "ci_low", "ci_high")] %<>% formatdf(dec, mark = ",")
 
     ## apparantely you can get negative number here
     # res$ci_low[res$ci_low < 0] <- 0

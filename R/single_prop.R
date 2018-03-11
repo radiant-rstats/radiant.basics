@@ -20,12 +20,11 @@
 #' @seealso \code{\link{plot.single_prop}} to plot the results
 #'
 #' @export
-single_prop <- function(dataset, var,
-                        lev = "",
-                        comp_value = 0.5,
-                        alternative = "two.sided",
-                        conf_lev = .95,
-                        data_filter = "") {
+single_prop <- function(
+  dataset, var, lev = "", comp_value = 0.5,
+  alternative = "two.sided", conf_lev = .95,
+  data_filter = ""
+) {
 
   dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE) %>% mutate_all(funs(as.factor))
   if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
@@ -51,7 +50,7 @@ single_prop <- function(dataset, var,
   dat_summary <- data.frame(
     diff = p - comp_value,
     prop = p,
-    mean = n * p,
+    mean = ns, ## or mean = n * p,
     sd = sqrt(n * p * (1 - p)),
     n = n,
     n_missing = miss,
@@ -59,8 +58,11 @@ single_prop <- function(dataset, var,
   )
 
   ## use binom.test for exact
-  res <- binom.test(ns, n, p = comp_value, alternative = alternative, conf.level = conf_lev) %>%
-    tidy()
+  res <- binom.test(
+    ns, n, p = comp_value, alternative = alternative, 
+    conf.level = conf_lev
+  ) %>%
+    tidy() 
 
   as.list(environment()) %>% add_class("single_prop")
 }
@@ -107,8 +109,9 @@ summary.single_prop <- function(object, dec = 3, ...) {
 
   ## print summary statistics
   object$dat_summary[-1] %>%
-    round(dec) %>%
+    # round(dec) %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
+    formatdf(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
   cat("\n")
 
@@ -117,7 +120,7 @@ summary.single_prop <- function(object, dec = 3, ...) {
     select(setdiff(colnames(.), c("parameter", "method", "alternative")))
 
   names(res) <- c("diff", "ns", "p.value", ci_perc[1], ci_perc[2])
-  res <- formatdf(res, dec = dec) # restrict the number of decimals
+  res <- formatdf(mutate(res, ns = as.integer(res$ns)), dec = dec, mark = ",") # restrict the number of decimals
 
   res$` ` <- sig_stars(res$p.value)
   if (res$p.value < .001) res$p.value <- "< .001"

@@ -1,3 +1,8 @@
+# CHANGES IN radiant.basics 0.9.0.4
+
+* Format tables with thousand separator
+* Added print method for return from `correlation`
+
 # CHANGES IN radiant.basics 0.9.0.3
 
 * Enhanced keyboard shortcuts

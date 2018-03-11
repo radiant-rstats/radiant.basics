@@ -18,9 +18,7 @@
 #' @seealso \code{\link{plot.cross_tabs}} to plot results
 #'
 #' @export
-cross_tabs <- function(dataset, var1, var2,
-                       tab = NULL,
-                       data_filter = "") {
+cross_tabs <- function(dataset, var1, var2, tab = NULL, data_filter = "") {
 
   if (missing(dataset) && missing(var1) && missing(var2) && is.table(tab)) {
     nm <- names(dimnames(tab))
@@ -35,7 +33,11 @@ cross_tabs <- function(dataset, var1, var2,
     # http://stats.stackexchange.com/questions/14226/given-the-power-of-computers-these-days-is-there-ever-a-reason-to-do-a-chi-squa/14230#14230
     # http://stats.stackexchange.com/questions/62445/rules-to-apply-monte-carlo-simulation-of-p-values-for-chi-squared-test
 
-    ## creating and cleaning up the table
+    if (any(summarise_all(dat, funs(does_vary)) == FALSE)) {
+      return("One or more selected variables show no variation. Please select other variables." %>%
+        add_class("cross_tabs"))
+    }
+
     tab <- table(dat[[var1]], dat[[var2]])
     tab[is.na(tab)] <- 0
     tab <- tab[, colSums(tab) > 0] %>% 
@@ -80,11 +82,9 @@ cross_tabs <- function(dataset, var1, var2,
 #' @seealso \code{\link{plot.cross_tabs}} to plot results
 #'
 #' @export
-summary.cross_tabs <- function(object,
-                               check = "",
-                               dec = 2,
-                               ...) {
+summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
   
+  if (is.character(object)) return(object)
   cat("Cross-tabs\n")
   cat("Data     :", object$dataset, "\n")
   if (object$data_filter %>% gsub("\\s", "", .) != "") {
@@ -104,7 +104,8 @@ summary.cross_tabs <- function(object,
       set_rownames(rnames) %>%
       cbind(rowSums(.)) %>%
       set_colnames(cnames) %>%
-      print()
+      format(big.mark = ",", scientific = FALSE) %>%
+      print(quote = FALSE)
   }
 
   if ("expected" %in% check) {
@@ -115,7 +116,8 @@ summary.cross_tabs <- function(object,
       cbind(rowSums(.)) %>%
       set_colnames(cnames) %>%
       round(dec) %>%
-      print()
+      format(big.mark = ",", scientific = FALSE) %>%
+      print(quote = FALSE)
   }
 
   if ("chi_sq" %in% check) {
@@ -126,7 +128,8 @@ summary.cross_tabs <- function(object,
       cbind(rowSums(.)) %>%
       set_colnames(cnames) %>%
       round(dec) %>%
-      print()
+      format(big.mark = ",", scientific = FALSE) %>%
+      print(quote = FALSE)
   }
 
   if ("dev_std" %in% check) {
@@ -171,7 +174,7 @@ summary.cross_tabs <- function(object,
       print()
   }
 
-  object$res <- formatdf(object$res, dec = dec + 1)
+  object$res <- formatdf(object$res, dec = dec + 1, mark = ",")
 
   if (object$res$p.value < .001) object$res$p.value <- "< .001"
   cat(paste0("\nChi-squared: ", object$res$statistic, " df(", object$res$parameter, "), p.value ", object$res$p.value), "\n\n")
@@ -198,13 +201,10 @@ summary.cross_tabs <- function(object,
 #' @seealso \code{\link{summary.cross_tabs}} to summarize results
 #'
 #' @export
-plot.cross_tabs <- function(x,
-                            check = "",
-                            shiny = FALSE,
-                            custom = FALSE,
-                            ...) {
-  object <- x
-  rm(x)
+plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
+
+  if (is.character(x)) return(x)
+  object <- x; rm(x)
 
   gather_table <- function(tab) {
     data.frame(tab, check.names = FALSE, stringsAsFactors = FALSE) %>%
@@ -221,7 +221,6 @@ plot.cross_tabs <- function(x,
     colnames(tab)[1:2] <- c(object$var1, object$var2)
     tab[[1]] %<>% factor(levels = fact_names[[1]])
     tab[[2]] %<>% factor(levels = fact_names[[2]])
-
 
     plot_list[["observed"]] <-
       ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +

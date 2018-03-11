@@ -23,14 +23,13 @@
 #' @seealso \code{\link{plot.compare_means}} to plot results
 #'
 #' @export
-compare_means <- function(dataset, var1, var2,
-                          samples = "independent",
-                          alternative = "two.sided",
-                          conf_lev = .95,
-                          comb = "",
-                          adjust = "none",
-                          test = "t",
-                          data_filter = "") {
+compare_means <- function(
+  dataset, var1, var2, samples = "independent",
+  alternative = "two.sided", conf_lev = .95,
+  comb = "", adjust = "none", test = "t",
+  data_filter = ""
+) {
+
   vars <- c(var1, var2)
   dat <- getdata(dataset, vars, filt = data_filter)
   if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
@@ -180,8 +179,11 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
   cat("Confidence:", object$conf_lev, "\n")
   cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
-  object$dat_summary[, -1] %<>% round(dec)
-  print(as.data.frame(object$dat_summary, stringsAsFactors = FALSE), row.names = FALSE)
+  # object$dat_summary[, -1] %<>% round(dec)
+  object$dat_summary %>% 
+    as.data.frame(stringsAsFactors = FALSE) %>% 
+    formatdf(dec = dec, mark = ",") %>%
+    print(row.names = FALSE)
   cat("\n")
 
   hyp_symbol <- c(
