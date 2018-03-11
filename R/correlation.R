@@ -19,11 +19,7 @@
 #' @seealso \code{\link{plot.correlation}} to plot results
 #'
 #' @export
-correlation <- function(
-  dataset, vars = "",
-  method = "pearson",
-  data_filter = ""
-) {
+correlation <- function(dataset, vars = "", method = "pearson", data_filter = "") {
 
   ## data.matrix as the last step in the chain is about 25% slower using
   ## system.time but results (using diamonds and mtcars) are identical
@@ -58,11 +54,7 @@ correlation <- function(
 #' @importFrom psych corr.test
 #'
 #' @export
-summary.correlation <- function(
-  object, cutoff = 0,
-  covar = FALSE, dec = 2, 
-  ...
-) {
+summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...) {
 
   ## calculate the correlation matrix with p.values using the psych package
   cmat <- sshhr(psych::corr.test(object$dat, method = object$method))
@@ -113,8 +105,17 @@ summary.correlation <- function(
     cat("\nCovariance matrix:\n")
     print(cvr[-1, -ncol(cvr), drop = FALSE], quote = FALSE)
   }
-
   rm(object)
+}
+
+#' Print method for radiant.basics::correlation
+#'
+#' @param x Return value from correlation
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+print.correlation <- function(x, ...) {
+  summary.correlation(x, ...)
 }
 
 #' Plot method for the correlation function
