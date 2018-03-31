@@ -12,7 +12,7 @@ radiant.basics()
 \description{
 radiant.basics
 
-Launch radiant.basics in default browser
+Launch radiant.basics in the default browser
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
