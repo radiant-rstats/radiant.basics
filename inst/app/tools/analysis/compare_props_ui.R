@@ -85,24 +85,12 @@ output$ui_cp_comb <- renderUI({
 output$ui_compare_props <- renderUI({
   req(input$dataset)
   tagList(
-    conditionalPanel(
-      condition = "input.tabs_compare_props == 'Plot'",
-      wellPanel(
-        selectizeInput(
-          inputId = "cp_plots", label = "Select plots:",
-          choices = cp_plots,
-          selected = state_multiple("cp_plots", cp_plots, "bar"),
-          multiple = TRUE,
-          options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop"))
-        )
-      )
-    ),
     wellPanel(
-      uiOutput("ui_cp_var1"),
-      uiOutput("ui_cp_var2"),
-      uiOutput("ui_cp_levs"),
       conditionalPanel(
         condition = "input.tabs_compare_props == 'Summary'",
+        uiOutput("ui_cp_var1"),
+        uiOutput("ui_cp_var2"),
+        uiOutput("ui_cp_levs"),
         uiOutput("ui_cp_comb"),
         selectInput(
           inputId = "cp_alternative", "Alternative hypothesis:",
@@ -123,6 +111,16 @@ output$ui_compare_props <- renderUI({
           cp_adjust,
           selected = state_init("cp_adjust", cp_args$adjust),
           inline = TRUE
+        )
+      ),
+      conditionalPanel(
+        condition = "input.tabs_compare_props == 'Plot'",
+        selectizeInput(
+          inputId = "cp_plots", label = "Select plots:",
+          choices = cp_plots,
+          selected = state_multiple("cp_plots", cp_plots, "bar"),
+          multiple = TRUE,
+          options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop"))
         )
       )
     ),
@@ -162,7 +160,7 @@ output$compare_props <- renderUI({
     tabPanel("Summary", verbatimTextOutput("summary_compare_props")),
     tabPanel(
       "Plot",
-      plot_downloader("compare_props", height = cp_plot_height),
+      download_link("dlp_compare_props"),
       plotOutput("plot_compare_props", height = "100%")
     )
   )
@@ -197,7 +195,9 @@ cp_available <- reactive({
 
 .plot_compare_props <- reactive({
   if (cp_available() != "available") return(cp_available())
-  plot(.compare_props(), plots = input$cp_plots, shiny = TRUE)
+  withProgress(message = "Generating plots", value = 1, {
+    plot(.compare_props(), plots = input$cp_plots, shiny = TRUE)
+  })
 })
 
 observeEvent(input$compare_props_report, {
@@ -221,3 +221,13 @@ observeEvent(input$compare_props_report, {
     fig.height = cp_plot_height()
   )
 })
+
+download_handler(
+  id = "dlp_compare_props", 
+  fun = download_handler_plot, 
+  fn = paste0(input$dataset, "_compare_props.png"),
+  caption = "Download compare proportions plot",
+  plot = .plot_compare_props,
+  width = cp_plot_width,
+  height = cp_plot_height
+)

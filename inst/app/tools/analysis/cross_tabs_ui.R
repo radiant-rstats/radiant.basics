@@ -47,8 +47,11 @@ output$ui_cross_tabs <- renderUI({
   req(input$dataset)
   tagList(
     wellPanel(
-      uiOutput("ui_ct_var1"),
-      uiOutput("ui_ct_var2"),
+      conditionalPanel(
+        condition = "input.tabs_cross_tabs == 'Summary'",
+        uiOutput("ui_ct_var1"),
+        uiOutput("ui_ct_var2")
+      ),
       checkboxGroupInput(
         "ct_check", NULL,
         choices = ct_check,
@@ -69,14 +72,10 @@ ct_plot <- reactive({
 })
 
 ct_plot_width <- function()
-  ct_plot() %>% {
-    if (is.list(.)) .$plot_width else 650
-  }
+  ct_plot() %>% {if (is.list(.)) .$plot_width else 650}
 
 ct_plot_height <- function()
-  ct_plot() %>% {
-    if (is.list(.)) .$plot_height else 400
-  }
+  ct_plot() %>% {if (is.list(.)) .$plot_height else 400}
 
 ## output is called from the main radiant ui.R
 output$cross_tabs <- renderUI({
@@ -93,7 +92,7 @@ output$cross_tabs <- renderUI({
     tabPanel("Summary", verbatimTextOutput("summary_cross_tabs")),
     tabPanel(
       "Plot",
-      plot_downloader("cross_tabs", height = ct_plot_height),
+      download_link("dlp_cross_tabs"),
       plotOutput("plot_cross_tabs", width = "100%", height = "100%")
     )
   )
@@ -108,10 +107,11 @@ output$cross_tabs <- renderUI({
 
 ct_available <- reactive({
   if (not_available(input$ct_var1) || not_available(input$ct_var2)) {
-    return("This analysis requires two categorical variables. Both must have two or more levels.\n If these variable types\nare not available please select another dataset.\n\n" %>% suggest_data("newspaper"))
+    "This analysis requires two categorical variables. Both must have two or more levels.\nIf these variable types are not available please select another dataset.\n\n" %>% 
+      suggest_data("newspaper")
+  } else {
+    "available"
   }
-
-  "available"
 })
 
 .cross_tabs <- reactive({
@@ -125,7 +125,9 @@ ct_available <- reactive({
 
 .plot_cross_tabs <- reactive({
   if (ct_available() != "available") return(ct_available())
-  plot(.cross_tabs(), check = input$ct_check, shiny = TRUE)
+  withProgress(message = "Generating plots", value = 1, {
+    plot(.cross_tabs(), check = input$ct_check, shiny = TRUE)
+  })
 })
 
 observeEvent(input$cross_tabs_report, {
@@ -152,3 +154,13 @@ observeEvent(input$cross_tabs_report, {
     fig.height = ct_plot_height()
   )
 })
+
+download_handler(
+  id = "dlp_cross_tabs", 
+  fun = download_handler_plot, 
+  fn = paste0(input$dataset, "_cross_tabs.png"),
+  caption = "Download cross-tabs plot",
+  plot = .plot_cross_tabs,
+  width = ct_plot_width,
+  height = ct_plot_height
+)

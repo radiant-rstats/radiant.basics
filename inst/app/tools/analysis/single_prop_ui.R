@@ -44,9 +44,33 @@ output$up_sp_lev <- renderUI({
 output$ui_single_prop <- renderUI({
   req(input$dataset)
   tagList(
-    conditionalPanel(
-      condition = "input.tabs_single_prop == 'Plot'",
-      wellPanel(
+    wellPanel(
+      conditionalPanel(
+        condition = "input.tabs_single_prop == 'Summary'",
+        uiOutput("ui_sp_var"),
+        uiOutput("up_sp_lev"),
+        selectInput(
+          "sp_alternative", "Alternative hypothesis:",
+          choices = sp_alt,
+          selected = state_single("sp_alternative", sp_alt, sp_args$alternative),
+          multiple = FALSE
+        ),
+        sliderInput(
+          "sp_conf_lev", "Confidence level:",
+          min = 0.85, max = 0.99, step = 0.01,
+          value = state_init("sp_conf_lev", sp_args$conf_lev)
+        ),
+        numericInput(
+          "sp_comp_value", "Comparison value:",
+          value = state_init("sp_comp_value", sp_args$comp_value),
+          min = 0.01, max = 0.99, step = 0.01
+        )
+        # radioButtons("sp_type", label = "Test:", c("Binomial" = "binom", "Chi-square" = "chisq"),
+        #     selected = state_init("sp_type", "binom"),
+        #     inline = TRUE)
+      ),
+      conditionalPanel(
+        condition = "input.tabs_single_prop == 'Plot'",
         selectizeInput(
           "sp_plots", "Select plots:",
           choices = sp_plots,
@@ -55,29 +79,6 @@ output$ui_single_prop <- renderUI({
           options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop"))
         )
       )
-    ),
-    wellPanel(
-      uiOutput("ui_sp_var"),
-      uiOutput("up_sp_lev"),
-      selectInput(
-        "sp_alternative", "Alternative hypothesis:",
-        choices = sp_alt,
-        selected = state_single("sp_alternative", sp_alt, sp_args$alternative),
-        multiple = FALSE
-      ),
-      sliderInput(
-        "sp_conf_lev", "Confidence level:",
-        min = 0.85, max = 0.99, step = 0.01,
-        value = state_init("sp_conf_lev", sp_args$conf_lev)
-      ),
-      numericInput(
-        "sp_comp_value", "Comparison value:",
-        value = state_init("sp_comp_value", sp_args$comp_value),
-        min = 0.01, max = 0.99, step = 0.01
-      )
-      # radioButtons("sp_type", label = "Test:", c("Binomial" = "binom", "Chi-square" = "chisq"),
-      #     selected = state_init("sp_type", "binom"),
-      #     inline = TRUE)
     ),
     help_and_report(
       modal_title = "Single proportion",
@@ -115,7 +116,7 @@ output$single_prop <- renderUI({
     tabPanel("Summary", verbatimTextOutput("summary_single_prop")),
     tabPanel(
       "Plot",
-      plot_downloader("single_prop", height = sp_plot_height),
+      download_link("dlp_single_prop"),
       plotOutput("plot_single_prop", height = "100%")
     )
   )
@@ -153,7 +154,9 @@ sp_available <- reactive({
 
 .plot_single_prop <- reactive({
   if (sp_available() != "available") return(sp_available())
-  plot(.single_prop(), plots = input$sp_plots, shiny = TRUE)
+  withProgress(message = "Generating plots", value = 1, {
+    plot(.single_prop(), plots = input$sp_plots, shiny = TRUE)
+  })
 })
 
 observeEvent(input$single_prop_report, {
@@ -175,3 +178,13 @@ observeEvent(input$single_prop_report, {
     fig.height = sp_plot_height()
   )
 })
+
+download_handler(
+  id = "dlp_single_prop", 
+  fun = download_handler_plot, 
+  fn = paste0(input$dataset, "_single_prop.png"),
+  caption = "Download single proportion plot",
+  plot = .plot_single_prop,
+  width = sp_plot_width,
+  height = sp_plot_height
+)

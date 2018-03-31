@@ -48,7 +48,7 @@ output$ui_cm_var2 <- renderUI({
 
     selectizeInput(
       inputId = "cm_var2", label = "Numeric variable(s):",
-      selected = state_multiple("cm_var2", vars),
+      selected = state_multiple("cm_var2", vars, isolate(input$cm_var2)),
       choices = vars, multiple = TRUE,
       options = list(placeholder = "None", plugins = list("remove_button", "drag_drop"))
     )
@@ -92,22 +92,10 @@ output$ui_cm_comb <- renderUI({
 output$ui_compare_means <- renderUI({
   req(input$dataset)
   tagList(
-    conditionalPanel(
-      condition = "input.tabs_compare_means == 'Plot'",
-      wellPanel(
-        selectizeInput(
-          inputId = "cm_plots", label = "Select plots:",
-          choices = cm_plots,
-          selected = state_multiple("cm_plots", cm_plots, "scatter"),
-          multiple = TRUE,
-          options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop"))
-        )
-      )
-    ),
     wellPanel(
-      uiOutput("ui_cm_var1"),
-      uiOutput("ui_cm_var2"),
       conditionalPanel(
+        uiOutput("ui_cm_var1"),
+        uiOutput("ui_cm_var2"),
         condition = "input.tabs_compare_means == 'Summary'",
         uiOutput("ui_cm_comb"),
         selectInput(
@@ -137,6 +125,16 @@ output$ui_compare_means <- renderUI({
           selected = state_init("cm_test", cm_args$test),
           inline = TRUE
         )
+      ),
+      conditionalPanel(
+        condition = "input.tabs_compare_means == 'Plot'",
+        selectizeInput(
+          inputId = "cm_plots", label = "Select plots:",
+          choices = cm_plots,
+          selected = state_multiple("cm_plots", cm_plots, "scatter"),
+          multiple = TRUE,
+          options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop"))
+        )
       )
     ),
     help_and_report(
@@ -152,14 +150,10 @@ cm_plot <- reactive({
 })
 
 cm_plot_width <- function()
-  cm_plot() %>% {
-    if (is.list(.)) .$plot_width else 650
-  }
+  cm_plot() %>% {if (is.list(.)) .$plot_width else 650}
 
 cm_plot_height <- function()
-  cm_plot() %>% {
-    if (is.list(.)) .$plot_height else 400
-  }
+  cm_plot() %>% {if (is.list(.)) .$plot_height else 400}
 
 # output is called from the main radiant ui.R
 output$compare_means <- renderUI({
@@ -175,7 +169,7 @@ output$compare_means <- renderUI({
     tabPanel("Summary", verbatimTextOutput("summary_compare_means")),
     tabPanel(
       "Plot",
-      plot_downloader("compare_means", height = cm_plot_height),
+      download_link("dlp_compare_means"),
       plotOutput("plot_compare_means", height = "100%")
     )
   )
@@ -213,7 +207,9 @@ cm_available <- reactive({
 
 .plot_compare_means <- reactive({
   if (cm_available() != "available") return(cm_available())
-  plot(.compare_means(), plots = input$cm_plots, shiny = TRUE)
+  withProgress(message = "Generating plots", value = 1, {
+    plot(.compare_means(), plots = input$cm_plots, shiny = TRUE)
+  })
 })
 
 observeEvent(input$compare_means_report, {
@@ -236,3 +232,13 @@ observeEvent(input$compare_means_report, {
     fig.height = cm_plot_height()
   )
 })
+
+download_handler(
+  id = "dlp_compare_means", 
+  fun = download_handler_plot, 
+  fn = paste0(input$dataset, "_compare_means.png"),
+  caption = "Download compare means plot",
+  plot = .plot_compare_means,
+  width = cm_plot_width,
+  height = cm_plot_height
+)

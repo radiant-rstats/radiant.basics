@@ -1,6 +1,8 @@
-# CHANGES IN radiant.basics 0.9.1
+# CHANGES IN radiant.basics 0.9.2
 
+* Upload and download data using the Rstudio file browser. Allows using relative paths to files (e.g., data or images inside an Rstudio project)
 * Fix for [#43](https://github.com/radiant-rstats/radiant/issues/43) where scatter plot was not shown for a dataset with less than 1,000 rows
+* Variable selection in Summary tabs only to simplify Plot interface
 
 # CHANGES IN radiant.basics 0.9.0.4
 

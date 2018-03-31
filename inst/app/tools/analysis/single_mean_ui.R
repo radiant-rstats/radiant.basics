@@ -31,9 +31,27 @@ output$ui_sm_var <- renderUI({
 output$ui_single_mean <- renderUI({
   req(input$dataset)
   tagList(
-    conditionalPanel(
-      condition = "input.tabs_single_mean == 'Plot'",
-      wellPanel(
+    wellPanel(
+      conditionalPanel(
+        condition = "input.tabs_single_mean == 'Summary'",
+        uiOutput("ui_sm_var"),
+        selectInput(
+          inputId = "sm_alternative", label = "Alternative hypothesis:",
+          choices = sm_alt,
+          selected = state_single("sm_alternative", sm_alt, sm_args$alternative),
+          multiple = FALSE
+        ),
+        sliderInput(
+          "sm_conf_lev", "Confidence level:", min = 0.85, max = 0.99,
+          value = state_init("sm_conf_lev", sm_args$conf_lev), step = 0.01
+        ),
+        numericInput(
+          "sm_comp_value", "Comparison value:",
+          state_init("sm_comp_value", sm_args$comp_value)
+        )
+      ),
+      conditionalPanel(
+        condition = "input.tabs_single_mean == 'Plot'",
         selectizeInput(
           inputId = "sm_plots", label = "Select plots:",
           choices = sm_plots,
@@ -41,23 +59,6 @@ output$ui_single_mean <- renderUI({
           multiple = TRUE,
           options = list(placeholder = "Select plots", plugins = list("remove_button", "drag_drop"))
         )
-      )
-    ),
-    wellPanel(
-      uiOutput("ui_sm_var"),
-      selectInput(
-        inputId = "sm_alternative", label = "Alternative hypothesis:",
-        choices = sm_alt,
-        selected = state_single("sm_alternative", sm_alt, sm_args$alternative),
-        multiple = FALSE
-      ),
-      sliderInput(
-        "sm_conf_lev", "Confidence level:", min = 0.85, max = 0.99,
-        value = state_init("sm_conf_lev", sm_args$conf_lev), step = 0.01
-      ),
-      numericInput(
-        "sm_comp_value", "Comparison value:",
-        state_init("sm_comp_value", sm_args$comp_value)
       )
     ),
     help_and_report(
@@ -73,14 +74,10 @@ sm_plot <- reactive({
 })
 
 sm_plot_width <- function()
-  sm_plot() %>% {
-    if (is.list(.)) .$plot_width else 650
-  }
+  sm_plot() %>% {if (is.list(.)) .$plot_width else 650}
 
 sm_plot_height <- function()
-  sm_plot() %>% {
-    if (is.list(.)) .$plot_height else 400
-  }
+  sm_plot() %>% {if (is.list(.)) .$plot_height else 400}
 
 ## output is called from the main radiant ui.R
 output$single_mean <- renderUI({
@@ -96,7 +93,7 @@ output$single_mean <- renderUI({
     tabPanel("Summary", verbatimTextOutput("summary_single_mean")),
     tabPanel(
       "Plot",
-      plot_downloader("single_mean", height = sm_plot_height),
+      download_link("dlp_single_mean"),
       plotOutput("plot_single_mean", height = "100%")
     )
   )
@@ -132,7 +129,9 @@ sm_available <- reactive({
 
 .plot_single_mean <- reactive({
   if (sm_available() != "available") return(sm_available())
-  plot(.single_mean(), plots = input$sm_plots, shiny = TRUE)
+  withProgress(message = "Generating plots", value = 1, {
+    plot(.single_mean(), plots = input$sm_plots, shiny = TRUE)
+  })
 })
 
 observeEvent(input$single_mean_report, {
@@ -154,3 +153,13 @@ observeEvent(input$single_mean_report, {
     fig.height = sm_plot_height()
   )
 })
+
+download_handler(
+  id = "dlp_single_mean", 
+  fun = download_handler_plot, 
+  fn = paste0(input$dataset, "_single_mean.png"),
+  caption = "Download single mean plot",
+  plot = .plot_single_mean,
+  width = sm_plot_width,
+  height = sm_plot_height
+)

@@ -783,7 +783,7 @@ output$prob_calc <- renderUI({
     tabPanel("Summary", verbatimTextOutput("summary_prob_calc")),
     tabPanel(
       "Plot",
-      plot_downloader("prob_calc", width = pc_plot_width, height = pc_plot_height),
+      download_link("dlp_prob_calc"),
       plotOutput("plot_prob_calc", width = "100%", height = "100%")
     )
   )
@@ -888,3 +888,13 @@ observeEvent(input$prob_calc_report, {
     fig.height = pc_plot_height()
   )
 })
+
+download_handler(
+  id = "dlp_prob_calc", 
+  fun = download_handler_plot, 
+  fn = "prob_calc.png",
+  caption = "Download probability calculator plot",
+  plot = .plot_prob_calc,
+  width = pc_plot_width,
+  height = pc_plot_height
+)

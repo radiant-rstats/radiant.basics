@@ -43,8 +43,11 @@ output$ui_goodness <- renderUI({
   req(input$dataset)
   tagList(
     wellPanel(
-      uiOutput("ui_gd_var"),
-      uiOutput("ui_gd_p"),
+      conditionalPanel(
+        condition = "input.tabs_goodness == 'Summary'",
+        uiOutput("ui_gd_var"),
+        uiOutput("ui_gd_p")
+      ),
       checkboxGroupInput(
         "gd_check", NULL,
         choices = gd_check,
@@ -65,14 +68,10 @@ gd_plot <- reactive({
 })
 
 gd_plot_width <- function()
-  gd_plot() %>% {
-    if (is.list(.)) .$plot_width else 650
-  }
+  gd_plot() %>% {if (is.list(.)) .$plot_width else 650}
 
 gd_plot_height <- function()
-  gd_plot() %>% {
-    if (is.list(.)) .$plot_height else 400
-  }
+  gd_plot() %>% {if (is.list(.)) .$plot_height else 400}
 
 ## output is called from the main radiant ui.R
 output$goodness <- renderUI({
@@ -89,7 +88,7 @@ output$goodness <- renderUI({
     tabPanel("Summary", verbatimTextOutput("summary_goodness")),
     tabPanel(
       "Plot",
-      plot_downloader("goodness", height = gd_plot_height),
+      download_link("dlp_goodness"),
       plotOutput("plot_goodness", width = "100%", height = "100%")
     )
   )
@@ -120,7 +119,9 @@ gd_available <- reactive({
 
 .plot_goodness <- reactive({
   if (gd_available() != "available") return(gd_available())
-  plot(.goodness(), check = input$gd_check, shiny = TRUE)
+  withProgress(message = "Generating plots", value = 1, {
+    plot(.goodness(), check = input$gd_check, shiny = TRUE)
+  })
 })
 
 observeEvent(input$goodness_report, {
@@ -147,3 +148,13 @@ observeEvent(input$goodness_report, {
     fig.height = gd_plot_height()
   )
 })
+
+download_handler(
+  id = "dlp_goodness", 
+  fun = download_handler_plot, 
+  fn = paste0(input$dataset, "_goodness.png"),
+  caption = "Download goodness of fit plot",
+  plot = .plot_goodness,
+  width = gd_plot_width,
+  height = gd_plot_height
+)

@@ -43,7 +43,7 @@ output$ui_cor_vars <- renderUI({
   selectInput(
     inputId = "cor_vars", label = "Select variables:",
     choices = vars,
-    selected = state_multiple("cor_vars", vars),
+    selected = state_multiple("cor_vars", vars, isolate(input$cor_vars)),
     multiple = TRUE,
     size = min(10, length(vars)),
     selectize = FALSE
@@ -52,7 +52,6 @@ output$ui_cor_vars <- renderUI({
 
 output$ui_cor_nrobs <- renderUI({
   nrobs <- nrow(.getdata())
-  # req(nrobs > 1000)
   choices <- c("1,000" = 1000, "5,000" = 5000, "10,000" = 10000, "All" = -1) %>%
     .[. < nrobs]
   selectInput(
@@ -128,10 +127,7 @@ output$correlation <- renderUI({
     id = "tabs_correlation",
     tabPanel("Summary", verbatimTextOutput("summary_correlation")),
     tabPanel("Plot",
-      plot_downloader("correlation",
-        width = cor_plot_width,
-        height = cor_plot_height
-      ),
+      download_link("dlp_correlation"),
       plotOutput(
         "plot_correlation",
         width = "100%",
@@ -190,3 +186,13 @@ observeEvent(input$correlation_report, {
     fig.height = cor_plot_height()
   )
 })
+
+download_handler(
+  id = "dlp_correlation", 
+  fun = download_handler_plot, 
+  fn = paste0(input$dataset, "_correlation.png"),
+  caption = "Download correlation plot",
+  plot = .plot_correlation,
+  width = cor_plot_width,
+  height = cor_plot_height
+)
