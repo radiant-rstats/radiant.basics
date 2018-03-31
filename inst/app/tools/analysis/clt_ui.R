@@ -1,13 +1,36 @@
 ###############################
 # Central Limit Theorem
 ###############################
-clt_dist <- c("Normal" = "rnorm", "Binomial" = "binom", "Uniform" = "runif", "Exponential" = "expo")
-clt_stat <- c("Sum" = "Sum", "Mean" = "Mean")
+clt_dist <- c(
+  "Normal" = "Normal", 
+  "Binomial" = "Binomial", 
+  "Uniform" = "Uniform", 
+  "Exponential" = "Exponential"
+)
+clt_stat <- c("Sum" = "sum", "Mean" = "mean")
+clt_args <- as.list(formals(clt))
+
+clt_inputs <- reactive({
+  for (i in names(clt_args))
+    clt_args[[i]] <- input[[paste0("clt_", i)]]
+  clt_args
+})
+
+observe({
+  sapply(names(clt_args), function(x) input[[paste0("clt_", x)]])
+  if (pressed(input$clt_run) && !is.character(.plot_clt())) {
+    if (isTRUE(attr(clt_inputs, "observable")$.invalidated)) {
+      updateActionButton(session, "clt_run", "Re-run simulation", icon = icon("refresh", class = "fa-spin"))
+    } else {
+      updateActionButton(session, "clt_run", "Run simulation", icon = icon("play"))
+    }
+  }
+})
 
 output$ui_clt <- renderUI({
   tagList(
     wellPanel(
-      actionButton("clt_run", "Sample", width = "100%", icon = icon("play"), class = "btn-success")
+      actionButton("clt_run", "Run simulation", width = "100%", icon = icon("play"), class = "btn-success")
     ),
     wellPanel(
       selectInput(
@@ -17,7 +40,7 @@ output$ui_clt <- renderUI({
         multiple = FALSE
       ),
       conditionalPanel(
-        condition = "input.clt_dist == 'runif'",
+        condition = "input.clt_dist == 'Uniform'",
         div(
           class = "row",
           div(
@@ -37,7 +60,7 @@ output$ui_clt <- renderUI({
         )
       ),
       conditionalPanel(
-        condition = "input.clt_dist == 'rnorm'",
+        condition = "input.clt_dist == 'Normal'",
         div(
           class = "row",
           div(
@@ -52,13 +75,13 @@ output$ui_clt <- renderUI({
             numericInput(
               "clt_norm_sd", "SD:",
               value = state_init("clt_norm_sd", 1),
-              min = 0.001
+              min = 0.1, step = 0.1
             )
           )
         )
       ),
       conditionalPanel(
-        condition = "input.clt_dist == 'expo'",
+        condition = "input.clt_dist == 'Exponential'",
         numericInput(
           "clt_expo_rate", "Rate:",
           value = state_init("clt_expo_rate", 1),
@@ -66,28 +89,27 @@ output$ui_clt <- renderUI({
         )
       ),
       conditionalPanel(
-        condition = "input.clt_dist == 'binom'",
+        condition = "input.clt_dist == 'Binomial'",
         div(
           class = "row",
           div(
             class = "col-xs-6",
             numericInput(
               "clt_binom_size", "Size:",
-              value = state_init("clt_binom_size", 5),
-              min = 1, max = 100, step = 1
+              value = state_init("clt_binom_size", 10),
+              min = 1, step = 1
             )
           ),
           div(
             class = "col-xs-6",
             numericInput(
               "clt_binom_prob", "Prob:",
-              value = state_init("clt_binom_prob", 0.9),
-              min = 0.01, max = 1, step = .05
+              value = state_init("clt_binom_prob", 0.2),
+              min = 0, max = 1, step = .1
             )
           )
         )
       ),
-
       div(
         class = "row",
         div(
@@ -115,19 +137,22 @@ output$ui_clt <- renderUI({
       radioButtons(
         "clt_stat", NULL,
         choices = clt_stat,
-        selected = state_init("clt_stat", "Sum"),
+        selected = state_init("clt_stat", "sum"),
         inline = TRUE
       )
     ),
-    help_modal(
-      "Central Limit Theorem", "clt_help",
-      help_file = inclMD(file.path(getOption("radiant.path.basics"), "app/tools/help/clt.md"))
+    # help_modal(
+    #   "Central Limit Theorem", "clt_help",
+    #   help_file = inclMD(file.path(getOption("radiant.path.basics"), "app/tools/help/clt.md"))
+    # )
+    help_and_report(
+      modal_title = "Central Limit Theorem", fun_name = "clt",
+      help_file = inclRmd(file.path(getOption("radiant.path.basics"), "app/tools/help/clt.md"))
     )
   )
 })
 
 clt_plot_width <- function() 700
-
 clt_plot_height <- function() 700
 
 ## output is called from the main radiant ui.R
@@ -142,16 +167,8 @@ output$clt <- renderUI({
   clt_output_panels <- tagList(
     tabPanel(
       "Plot",
-      plot_downloader(
-        "clt",
-        width = clt_plot_width,
-        height = clt_plot_height
-      ),
-      plotOutput(
-        "plot_clt",
-        width = "100%",
-        height = "100%"
-      )
+      download_link("dlp_clt"),
+      plotOutput("plot_clt", width = "100%", height = "100%")
     )
   )
 
@@ -165,16 +182,14 @@ output$clt <- renderUI({
 })
 
 .clt <- eventReactive(input$clt_run, {
-  if (is.null(input$clt_dist)) return("Please choose a distribution")
-
   ## avoiding input errors
   if (is.na(input$clt_n) || input$clt_n < 2) {
     return("Please choose a sample size larger than 2.")
-  }
-  if (is.na(input$clt_m) || input$clt_m < 2) {
+  } else if (is.na(input$clt_m) || input$clt_m < 2) {
     return("Please choose 2 or more samples.")
   }
-  if (input$clt_dist == "runif") {
+
+  if (input$clt_dist == "Uniform") {
     if (is.na(input$clt_unif_min)) {
       return("Please choose a minimum value for the uniform distribution.")
     }
@@ -184,18 +199,18 @@ output$clt <- renderUI({
     if (input$clt_unif_max <= input$clt_unif_min) {
       return("The maximum value for the uniform distribution\nmust be larger than the minimum value.")
     }
-  } else if (input$clt_dist == "rnorm") {
+  } else if (input$clt_dist == "Normal") {
     if (is.na(input$clt_norm_mean)) {
       return("Please choose a mean value for the normal distribution.")
     }
     if (is.na(input$clt_norm_sd) || input$clt_norm_sd < .001) {
       return("Please choose a non-zero standard deviation for the normal distribution.")
     }
-  } else if (input$clt_dist == "expo") {
+  } else if (input$clt_dist == "Exponential") {
     if (is.na(input$clt_expo_rate) || input$clt_expo_rate < 1) {
       return("Please choose a rate larger than 1 for the exponential distribution.")
     }
-  } else if (input$clt_dist == "binom") {
+  } else if (input$clt_dist == "Binomial") {
     if (is.na(input$clt_binom_size) || input$clt_binom_size < 1) {
       return("Please choose a size parameter larger than 1 for the binomial distribution.")
     }
@@ -204,58 +219,48 @@ output$clt <- renderUI({
     }
   }
 
-  clt(input$clt_dist, input$clt_n, input$clt_m, input$clt_stat)
+  do.call(clt, clt_inputs())
 })
 
-clt <- function(clt_dist, clt_n, clt_m, clt_stat) {
-  n <- clt_n
-  m <- clt_m
-  dist <- clt_dist
-  if (clt_dist == "runif") {
-    matrix(runif(n * m, min = input$clt_unif_min, max = input$clt_unif_max), n, m)
-  } else if (clt_dist == "rnorm") {
-    matrix(rnorm(n * m, mean = input$clt_norm_mean, sd = input$clt_norm_sd), n, m)
-  } else if (clt_dist == "expo") {
-    matrix(rexp(n * m, rate = input$clt_expo_rate), n, m)
-  } else if (clt_dist == "binom") {
-    matrix(rbinom(n * m, size = input$clt_binom_size, prob = input$clt_binom_prob), n, m)
-  }
-}
-
-.plot_clt <- function(result = .clt()) {
-  if (not_pressed(input$clt_run)) return("** Press the Sample button to simulate data **")
-  if (is.character(result)) return(result)
-  req(input$clt_bins)
-
-  clt_stat <- input$clt_stat
-  if (is.null(clt_stat)) return()
-  if (clt_stat == "Sum") {
-    sstat <- data.frame(Sum = colSums(result), stringsAsFactors = FALSE)
-  } else {
-    sstat <- data.frame(Mean = colMeans(result), stringsAsFactors = FALSE)
-  }
-
-  m <- dim(result)[2]
-  data1 <- data.frame(sample_1 = result[, 1], stringsAsFactors = FALSE)
-  datam <- data.frame(sample_m = result[, m], stringsAsFactors = FALSE)
-
-  plots <- list()
-
-  plots[[1]] <- visualize(data1, xvar = "sample_1", bins = input$clt_bins, custom = TRUE) +
-    labs(x = "Sample #1")
-
-  plots[[2]] <- visualize(datam, xvar = "sample_m", bins = input$clt_bins, custom = TRUE) +
-    labs(x = paste0("Sample #", m))
-
-  plots[[3]] <- visualize(sstat, xvar = clt_stat, bins = input$clt_bins, custom = TRUE)
-
-  plots[[4]] <- visualize(sstat, xvar = clt_stat, type = "density", custom = TRUE) +
-    stat_function(fun = dnorm, args = list(
-      mean = mean(sstat[[1]]),
-      sd = sd(sstat[[1]])
-    ), color = "black", size = 1)
-
-  withProgress(message = "Making plots", value = 1, {
-    gridExtra::grid.arrange(grobs = plots, ncol = min(2, length(plots)))
+.plot_clt <- reactive({
+  if (not_pressed(input$clt_run)) return("** Press the Run simulation button to simulate data **")
+  withProgress(message = "Generating plots", value = 1, {
+    plot(.clt(), stat = input$clt_stat, bins = input$clt_bins)
   })
-}
+})
+
+observeEvent(input$clt_report, {
+  outputs <- c("plot")
+  inp_out <- list(list(stat = input$clt_stat, bins = input$clt_bins))
+  inp <- clt_inputs() 
+  inp3 <- inp[!grepl("_", names(inp))]
+  if (input$clt_dist == "Normal") {
+    inp <- c(inp3, inp[grepl("norm_", names(inp))])
+  } else if (input$clt_dist == "Uniform") {
+    inp <- c(inp3, inp[grepl("unif", names(inp))])
+  } else if (input$clt_dist == "Binomial") {
+    inp <- c(inp3, inp[grepl("binom_", names(inp))])
+  } else if (input$clt_dist == "Exponential") {
+    inp <- c(inp3, inp[grepl("expo_", names(inp))])
+  }
+
+  update_report(
+    inp_main = clean_args(inp, clt_args),
+    fun_name = "clt", 
+    inp_out = inp_out,
+    outputs = outputs, 
+    figs = TRUE,
+    fig.width = clt_plot_width(),
+    fig.height = clt_plot_height()
+  )
+})
+
+download_handler(
+  id = "dlp_clt", 
+  fun = download_handler_plot, 
+  fn = "clt.png",
+  caption = "Download central limit theorem plot",
+  plot = .plot_clt,
+  width = clt_plot_width,
+  height = clt_plot_height
+)
