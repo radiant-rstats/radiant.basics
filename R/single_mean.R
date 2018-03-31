@@ -136,14 +136,12 @@ summary.single_mean <- function(object, dec = 3, ...) {
 #' @seealso \code{\link{summary.single_mean}} to summarize results
 #'
 #' @export
-plot.single_mean <- function(x,
-                             plots = "hist",
-                             shiny = FALSE,
-                             custom = FALSE,
-                             ...) {
-  object <- x
-  rm(x)
+plot.single_mean <- function(
+  x, plots = "hist", shiny = FALSE,
+  custom = FALSE, ...
+) {
 
+  object <- x; rm(x)
   plot_list <- list()
 
   if ("hist" %in% plots) {
@@ -151,7 +149,7 @@ plot.single_mean <- function(x,
 
     plot_list[[which("hist" == plots)]] <-
       ggplot(object$dat, aes_string(x = object$var)) +
-      geom_histogram(fill = "blue", binwidth = bw, alpha = 0.3) +
+      geom_histogram(fill = "blue", binwidth = bw, alpha = 0.5) +
       geom_vline(
         xintercept = object$comp_value,
         color = "red",
@@ -189,7 +187,7 @@ plot.single_mean <- function(x,
       geom_histogram(
         fill = "blue",
         binwidth = bw,
-        alpha = 0.3
+        alpha = 0.5
       ) +
       geom_vline(
         xintercept = object$comp_value,

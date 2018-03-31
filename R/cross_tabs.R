@@ -224,7 +224,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
 
     plot_list[["observed"]] <-
       ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
-      geom_bar(stat = "identity", position = "fill", alpha = .7) +
+      geom_bar(stat = "identity", position = "fill", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(
         title = paste("Observed frequencies for ", object$var2, " versus ", object$var1, sep = ""),
@@ -243,7 +243,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
     tab$variable %<>% factor(levels = fact_names[[2]])
     plot_list[["expected"]] <-
       ggplot(tab, aes_string(x = "variable", y = "values", fill = "rnames")) +
-      geom_bar(stat = "identity", position = "fill", alpha = .7) +
+      geom_bar(stat = "identity", position = "fill", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(
         title = paste("Expected frequencies for ", object$var2, " versus ", object$var1, sep = ""),
@@ -258,7 +258,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
     colnames(tab)[1:2] <- c(object$var1, object$var2)
     plot_list[["chi_sq"]] <-
       ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
-      geom_bar(stat = "identity", position = "dodge", alpha = .7) +
+      geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       labs(
         title = paste("Contribution to chi-squared for ", object$var2, " versus ", object$var1, sep = ""),
         x = object$var2,
@@ -271,7 +271,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
     colnames(tab)[1:2] <- c(object$var1, object$var2)
     plot_list[["dev_std"]] <-
       ggplot(tab, aes_string(x = object$var2, y = "Freq", fill = object$var1)) +
-      geom_bar(stat = "identity", position = "dodge", alpha = .7) +
+      geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       geom_hline(yintercept = c(-1.96, 1.96, -1.64, 1.64), color = "black", linetype = "longdash", size = .5) +
       geom_text(data = NULL, x = 1, y = 2.11, label = "95%") +
       geom_text(data = NULL, x = 1, y = 1.49, label = "90%") +
@@ -287,7 +287,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
       group_by_at(.vars = "Var1") %>%
       mutate(perc = Freq / sum(Freq)) %>%
       ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
-      geom_bar(stat = "identity", position = "dodge", alpha = .7) +
+      geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(
         title = "Row percentages",
@@ -302,7 +302,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
       group_by_at(.vars = "Var2") %>%
       mutate(perc = Freq / sum(Freq)) %>%
       ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
-      geom_bar(stat = "identity", position = "dodge", alpha = .7) +
+      geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(
         title = "Column percentages",
@@ -316,7 +316,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
     plot_list[["perc"]] <- as.data.frame(object$cst$observed, check.names = FALSE, stringsAsFactors = FALSE) %>%
       mutate(perc = Freq / sum(Freq)) %>%
       ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
-      geom_bar(stat = "identity", position = "dodge", alpha = .7) +
+      geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(
         title = "Table percentages",

@@ -168,7 +168,7 @@ plot.single_prop <- function(x,
   if ("bar" %in% plots) {
     plot_list[[which("bar" == plots)]] <-
       ggplot(object$dat, aes_string(x = object$var, fill = object$var)) +
-      geom_bar(aes(y = (..count..) / sum(..count..)), alpha = .7) +
+      geom_bar(aes(y = (..count..) / sum(..count..)), alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       theme(legend.position = "none") +
       labs(
@@ -195,7 +195,7 @@ plot.single_prop <- function(x,
 
     plot_list[[which("simulate" == plots)]] <-
       ggplot(simdat, aes(x = col1)) +
-      geom_histogram(fill = "blue", binwidth = bw, alpha = .3) +
+      geom_histogram(fill = "blue", binwidth = bw, alpha = 0.5) +
       geom_vline(
         xintercept = object$comp_value, color = "red",
         linetype = "solid", size = 1

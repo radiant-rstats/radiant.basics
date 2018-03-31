@@ -215,14 +215,13 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #'
 #' @export
-plot.compare_props <- function(x,
-                               plots = "bar",
-                               shiny = FALSE,
-                               custom = FALSE,
-                               ...) {
+plot.compare_props <- function(
+  x, plots = "bar", shiny = FALSE,
+  custom = FALSE, ...
+) {
+
   if (is.character(x)) return(x)
-  object <- x
-  rm(x)
+  object <- x; rm(x)
 
   dat <- object$dat
   v1 <- colnames(dat)[1]
@@ -235,7 +234,7 @@ plot.compare_props <- function(x,
     ## use of `which` allows the user to change the order of the plots shown
     plot_list[[which("bar" == plots)]] <-
       ggplot(object$dat_summary, aes_string(x = v1, y = "p", fill = v1)) +
-      geom_bar(stat = "identity") +
+      geom_bar(stat = "identity", alpha = 0.5) +
       geom_errorbar(width = .1, aes(ymin = p - ci, ymax = p + ci)) +
       geom_errorbar(width = .05, aes(ymin = p - se, ymax = p + se), colour = "blue") +
       theme(legend.position = "none") +
@@ -244,14 +243,12 @@ plot.compare_props <- function(x,
   }
 
   if ("dodge" %in% plots) {
-    plot_list[[which("dodge" == plots)]] <-
-      dat %>%
-      group_by_at(.vars = c(v1, v2)) %>%
+    plot_list[[which("dodge" == plots)]] <- group_by_at(dat, .vars = c(v1, v2)) %>%
       summarise(count = n()) %>%
       group_by_at(.vars = v1) %>%
       mutate(perc = count / sum(count)) %>%
       ggplot(aes_string(x = v1, y = "perc", fill = v2)) +
-      geom_bar(stat = "identity", position = "dodge") +
+      geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(y = paste0("Proportions per level of ", v1))
   }

@@ -292,7 +292,7 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
 
   if ("scatter" %in% plots) {
     plot_list[[which("scatter" == plots)]] <-
-      visualize(dat, xvar = v1, yvar = v2, type = "scatter", check = "jitter", alpha = .3, custom = TRUE) +
+      visualize(dat, xvar = v1, yvar = v2, type = "scatter", check = "jitter", alpha = 0.3, custom = TRUE) +
       labs(x = var1, y = paste0(var2, " (mean)"))
   }
 

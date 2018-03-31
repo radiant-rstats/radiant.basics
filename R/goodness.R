@@ -186,7 +186,7 @@ plot.goodness <- function(
     }
     plot_list[["observed"]] <-
       ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-      geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
+      geom_bar(stat = "identity", alpha = 0.5, fill = fillcol) +
       scale_y_continuous(labels = scales::percent) +
       labs(
         title = paste("Observed frequencies for", object$var),
@@ -203,7 +203,7 @@ plot.goodness <- function(
     tab[["Freq"]] %<>% {. / sum(.)}
     plot_list[["expected"]] <-
       ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-      geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
+      geom_bar(stat = "identity", alpha = 0.5, fill = fillcol) +
       scale_y_continuous(labels = scales::percent) +
       labs(
         title = paste("Expected frequencies for", object$var),
@@ -217,7 +217,7 @@ plot.goodness <- function(
     colnames(tab)[1] <- object$var
     plot_list[["chi_sq"]] <-
       ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-      geom_bar(stat = "identity", alpha = .5, fill = fillcol) +
+      geom_bar(stat = "identity", alpha = 0.5, fill = fillcol) +
       labs(
         title = paste("Contribtion to chi-squared for", object$var),
         x = object$var,
@@ -230,7 +230,7 @@ plot.goodness <- function(
     colnames(tab)[1] <- object$var
     plot_list[["dev_std"]] <-
       ggplot(tab, aes_string(x = object$var, y = "Freq")) +
-      geom_bar(stat = "identity", position = "dodge", alpha = .5, fill = fillcol) +
+      geom_bar(stat = "identity", position = "dodge", alpha = 0.5, fill = fillcol) +
       geom_hline(yintercept = c(-1.96, 1.96, -1.64, 1.64), color = "black", linetype = "longdash", size = .5) +
       geom_text(x = 1, y = 2.11, label = "95%") +
       geom_text(x = 1, y = 1.49, label = "90%") +

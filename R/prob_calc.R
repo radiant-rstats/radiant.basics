@@ -109,9 +109,9 @@ plot.prob_norm <- function(x, type = "values", ...) {
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
     stat_function(fun = dnorm, args = list(mean = mean, sd = stdev)) +
-    stat_function(fun = dnorm_limit, geom = "area", fill = "blue", alpha = 0.2, n = 501) +
-    stat_function(fun = dnorm_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
-    stat_function(fun = dnorm_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +
+    stat_function(fun = dnorm_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
+    stat_function(fun = dnorm_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
+    stat_function(fun = dnorm_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     geom_vline(xintercept = dnorm_lines, color = "black", linetype = "dashed", size = .5) +
     labs(x = "", y = "")
 
@@ -316,9 +316,9 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
     stat_function(fun = dlnorm, args = list(meanlog = meanlog, sdlog = sdlog)) +
-    stat_function(fun = dlnorm_limit, geom = "area", fill = "blue", alpha = 0.2, n = 501) +
-    stat_function(fun = dlnorm_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
-    stat_function(fun = dlnorm_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +
+    stat_function(fun = dlnorm_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
+    stat_function(fun = dlnorm_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
+    stat_function(fun = dlnorm_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     geom_vline(xintercept = dlnorm_lines, color = "black", linetype = "dashed", size = .5) +
     labs(x = "", y = "")
 
@@ -523,9 +523,9 @@ plot.prob_tdist <- function(x, type = "values", ...) {
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
     stat_function(fun = dt, args = list(df = df)) +
-    stat_function(fun = dt_limit, geom = "area", fill = "blue", alpha = 0.2, n = 501) +
-    stat_function(fun = dt_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
-    stat_function(fun = dt_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +
+    stat_function(fun = dt_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
+    stat_function(fun = dt_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
+    stat_function(fun = dt_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     geom_vline(xintercept = dt_lines, color = "black", linetype = "dashed", size = .5) +
     labs(x = "", y = "")
 
@@ -748,9 +748,9 @@ plot.prob_fdist <- function(x, type = "values", ...) {
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x")) +
     stat_function(fun = df_line, geom = "line") +
-    stat_function(fun = df_limit, geom = "area", fill = "blue", alpha = 0.2, n = 501) +
-    stat_function(fun = df_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
-    stat_function(fun = df_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +
+    stat_function(fun = df_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
+    stat_function(fun = df_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
+    stat_function(fun = df_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     geom_vline(xintercept = vlines, color = "black", linetype = "dashed", size = 0.5) +
     labs(x = "", y = "")
 
@@ -976,9 +976,9 @@ plot.prob_chisq <- function(x, type = "values", ...) {
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x")) +
     stat_function(fun = dchisq, args = list(df = df)) +
-    stat_function(fun = dchisq_limit, geom = "area", fill = "blue", alpha = 0.2, n = 501) +
-    stat_function(fun = dchisq_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
-    stat_function(fun = dchisq_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +
+    stat_function(fun = dchisq_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
+    stat_function(fun = dchisq_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
+    stat_function(fun = dchisq_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     geom_vline(xintercept = vlines, color = "black", linetype = "dashed", size = 0.5) +
     labs(x = "", y = "")
 
@@ -1188,9 +1188,9 @@ plot.prob_unif <- function(x, type = "values", ...) {
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub), aes_string(x = "x")) +
-    stat_function(fun = dunif_limit, geom = "area", fill = "blue", alpha = 0.2, n = 501) +
-    stat_function(fun = dunif_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
-    stat_function(fun = dunif_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +
+    stat_function(fun = dunif_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
+    stat_function(fun = dunif_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
+    stat_function(fun = dunif_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     geom_vline(xintercept = dunif_lines, color = "black", linetype = "dashed", size = 0.5) +
     geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = y[1])) +
     geom_segment(aes(x = x[2], y = 0, xend = x[2], yend = y[2])) +
@@ -1468,7 +1468,7 @@ plot.prob_binom <- function(x, type = "values", ...) {
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
-    geom_bar(stat = "identity", alpha = 0.3) +
+    geom_bar(stat = "identity", alpha = 0.5) +
     labs(x = "") +
     scale_fill_manual(values = cols) +
     theme(legend.position = "none") +
@@ -1810,7 +1810,7 @@ plot.prob_disc <- function(x, type = "values", ...) {
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
-    geom_bar(stat = "identity", alpha = 0.3) +
+    geom_bar(stat = "identity", alpha = 0.5) +
     labs(x = "") +
     scale_fill_manual(values = cols) +
     theme(legend.position = "none") +
@@ -2074,9 +2074,9 @@ plot.prob_expo <- function(x, type = "values", ...) {
   # plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
   plt <- ggplot(dat, aes_string(x = "x")) +
     stat_function(fun = dexp, args = list(rate = rate)) +
-    stat_function(fun = dexp_limit, geom = "area", fill = "blue", alpha = 0.2, n = 501) +
-    stat_function(fun = dexp_lb, geom = "area", fill = "red", alpha = 0.2, n = 501) +
-    stat_function(fun = dexp_ub, geom = "area", fill = "red", alpha = 0.2, n = 501) +
+    stat_function(fun = dexp_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
+    stat_function(fun = dexp_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
+    stat_function(fun = dexp_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     geom_vline(xintercept = vlines, color = "black", linetype = "dashed", size = 0.5) +
     labs(x = "", y = "")
 
@@ -2344,7 +2344,7 @@ plot.prob_pois <- function(x, type = "values", ...) {
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
-    geom_bar(stat = "identity", alpha = .3) +
+    geom_bar(stat = "identity", alpha = 0.5) +
     labs(x = "") +
     scale_fill_manual(values = cols) +
     theme(legend.position = "none") +
