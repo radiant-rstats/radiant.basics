@@ -9,7 +9,7 @@ compare_means(dataset, var1, var2, samples = "independent",
   adjust = "none", test = "t", data_filter = "")
 }
 \arguments{
-\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{dataset}{Dataset}
 
 \item{var1}{A numeric variable or factor selected for comparison}
 
@@ -39,7 +39,7 @@ Compare means for two or more variables
 See \url{https://radiant-rstats.github.io/docs/basics/compare_means.html} for an example in Radiant
 }
 \examples{
-result <- compare_means("diamonds","cut","price")
+result <- compare_means(diamonds,"cut","price")
 result <- diamonds \%>\% compare_means("cut","price", comb = c("Fair:Good", "Premium:Ideal"))
 
 }

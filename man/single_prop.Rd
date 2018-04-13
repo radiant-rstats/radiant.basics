@@ -8,7 +8,7 @@ single_prop(dataset, var, lev = "", comp_value = 0.5,
   alternative = "two.sided", conf_lev = 0.95, data_filter = "")
 }
 \arguments{
-\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{dataset}{Dataset}
 
 \item{var}{The variable selected for the proportion comparison}
 
@@ -32,8 +32,8 @@ Compare a sample proportion to a population proportion
 See \url{https://radiant-rstats.github.io/docs/basics/single_prop.html} for an example in Radiant
 }
 \examples{
-result <- single_prop("diamonds","cut")
-result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
+result <- single_prop(diamonds, "cut")
+result <- single_prop(diamonds, "clarity", lev = "IF", comp_value = 0.05)
 
 }
 \seealso{

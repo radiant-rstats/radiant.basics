@@ -25,7 +25,7 @@ Summary method for the correlation function
 See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 }
 \examples{
-result <- correlation("diamonds",c("price","carat","table"))
+result <- correlation(diamonds, c("price", "carat", "table"))
 summary(result, cutoff = .3)
 diamonds \%>\% correlation("price:carat") \%>\% summary
 

@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/single_mean.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param dataset Dataset 
 #' @param var The variable selected for the mean comparison
 #' @param comp_value Population value to compare to the sample mean
 #' @param alternative The alternative hypothesis ("two.sided", "greater", or "less")
@@ -12,7 +12,7 @@
 #' @return A list of variables defined in single_mean as an object of class single_mean
 #'
 #' @examples
-#' single_mean("diamonds","price")
+#' single_mean(diamonds, "price")
 #'
 #' @seealso \code{\link{summary.single_mean}} to summarize results
 #' @seealso \code{\link{plot.single_mean}} to plot results
@@ -24,17 +24,17 @@ single_mean <- function(
   data_filter = ""
 ) {
 
-  dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE)
-  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
+  dataset <- getdata(dataset, var, filt = data_filter, na.rm = FALSE)
 
   ## removing any missing values
-  miss <- n_missing(dat)
-  dat <- na.omit(dat)
+  miss <- n_missing(dataset)
+  dataset <- na.omit(dataset)
 
-  res <- t.test(dat[[var]], mu = comp_value, alternative = alternative, conf.level = conf_lev) %>% 
+  res <- t.test(dataset[[var]], mu = comp_value, alternative = alternative, conf.level = conf_lev) %>% 
     tidy()
 
-  dat_summary <- summarise_all(dat, 
+  dat_summary <- summarise_all(dataset, 
     funs(
       diff = mean_rm(.) - comp_value, 
       se = se(.), 
@@ -57,7 +57,7 @@ single_mean <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- single_mean("diamonds","price")
+#' result <- single_mean(diamonds, "price")
 #' summary(result)
 #' diamonds %>% single_mean("price") %>% summary
 #'
@@ -67,7 +67,7 @@ single_mean <- function(
 #' @export
 summary.single_mean <- function(object, dec = 3, ...) {
   cat("Single mean test\n")
-  cat("Data      :", object$dataset, "\n")
+  cat("Data      :", object$df_name, "\n")
   if (object$data_filter %>% gsub("\\s", "", .) != "") {
     cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
   }
@@ -129,7 +129,7 @@ summary.single_mean <- function(object, dec = 3, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- single_mean("diamonds","price", comp_value = 3500)
+#' result <- single_mean(diamonds, "price", comp_value = 3500)
 #' plot(result, plots = c("hist", "simulate"))
 #'
 #' @seealso \code{\link{single_mean}} to generate the result
@@ -137,66 +137,64 @@ summary.single_mean <- function(object, dec = 3, ...) {
 #'
 #' @export
 plot.single_mean <- function(
-  x, plots = "hist", shiny = FALSE,
-  custom = FALSE, ...
+  x, plots = "hist", 
+  shiny = FALSE, custom = FALSE, ...
 ) {
 
-  object <- x; rm(x)
   plot_list <- list()
-
   if ("hist" %in% plots) {
-    bw <- object$dat %>% range(na.rm = TRUE) %>% diff() %>% divide_by(10)
+    bw <- x$dataset %>% range(na.rm = TRUE) %>% diff() %>% divide_by(10)
 
     plot_list[[which("hist" == plots)]] <-
-      ggplot(object$dat, aes_string(x = object$var)) +
+      ggplot(x$dataset, aes_string(x = x$var)) +
       geom_histogram(fill = "blue", binwidth = bw, alpha = 0.5) +
       geom_vline(
-        xintercept = object$comp_value,
+        xintercept = x$comp_value,
         color = "red",
         linetype = "solid",
         size = 1
       ) +
       geom_vline(
-        xintercept = object$res$estimate,
+        xintercept = x$res$estimate,
         color = "black",
         linetype = "solid",
         size = 1
       ) +
       geom_vline(
-        xintercept = c(object$res$conf.low, object$res$conf.high),
+        xintercept = c(x$res$conf.low, x$res$conf.high),
         color = "black",
         linetype = "longdash",
         size = 0.5
       )
   }
   if ("simulate" %in% plots) {
-    var <- object$dat[[object$var]]
+    var <- x$dataset[[x$var]]
     nr <- length(var)
 
     simdat <- replicate(1000, mean(sample(var, nr, replace = TRUE))) %>%
-      {(. - mean(.)) + object$comp_value} %>%
+      {(. - mean(.)) + x$comp_value} %>%
       as.data.frame(stringsAsFactors = FALSE) %>%
-      set_colnames(object$var)
+      set_colnames(x$var)
 
-    cip <- ci_perc(simdat[[object$var]], object$alternative, object$conf_lev)
+    cip <- ci_perc(simdat[[x$var]], x$alternative, x$conf_lev)
 
     bw <- simdat %>% range() %>% diff() %>% divide_by(20)
 
     plot_list[[which("simulate" == plots)]] <-
-      ggplot(simdat, aes_string(x = object$var)) +
+      ggplot(simdat, aes_string(x = x$var)) +
       geom_histogram(
         fill = "blue",
         binwidth = bw,
         alpha = 0.5
       ) +
       geom_vline(
-        xintercept = object$comp_value,
+        xintercept = x$comp_value,
         color = "red",
         linetype = "solid",
         size = 1
       ) +
       geom_vline(
-        xintercept = object$res$estimate,
+        xintercept = x$res$estimate,
         color = "black",
         linetype = "solid",
         size = 1
@@ -207,7 +205,7 @@ plot.single_mean <- function(
         linetype = "longdash",
         size = 0.5
       ) +
-      labs(title = paste0("Simulated means if null hyp. is true (", object$var, ")"))
+      labs(title = paste0("Simulated means if null hyp. is true (", x$var, ")"))
   }
 
   if (custom) {

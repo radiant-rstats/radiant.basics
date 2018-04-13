@@ -25,7 +25,7 @@ Plot method for the cross_tabs function
 See \url{https://radiant-rstats.github.io/docs/basics/cross_tabs.html} for an example in Radiant
 }
 \examples{
-result <- cross_tabs("newspaper", "Income", "Newspaper")
+result <- cross_tabs(newspaper, "Income", "Newspaper")
 plot(result, check = c("observed","expected","chi_sq"))
 newspaper \%>\% cross_tabs("Income", "Newspaper") \%>\% plot(c("observed","expected"))
 

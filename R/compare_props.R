@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/compare_props.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param dataset Dataset 
 #' @param var1 A grouping variable to split the data for comparisons
 #' @param var2 The variable to calculate proportions for
 #' @param levs The factor level selected for the proportion comparison
@@ -15,7 +15,7 @@
 #' @return A list of all variables defined in the function as an object of class compare_props
 #'
 #' @examples
-#' result <- compare_props("titanic", "pclass", "survived")
+#' result <- compare_props(titanic, "pclass", "survived")
 #' result <- titanic %>% compare_props("pclass", "survived")
 #'
 #' @seealso \code{\link{summary.compare_props}} to summarize results
@@ -28,26 +28,26 @@ compare_props <- function(
   comb = "", adjust = "none", data_filter = ""
 ) {
 
+  df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   vars <- c(var1, var2)
-  dat <- getdata(dataset, vars, filt = data_filter) %>% mutate_all(funs(as.factor))
-  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  dataset <- getdata(dataset, vars, filt = data_filter) %>% mutate_all(funs(as.factor))
 
-  lv <- levels(dat[[var2]])
+  lv <- levels(dataset[[var2]])
   if (levs != "") {
     if (levs %in% lv && lv[1] != levs) {
-      dat[[var2]] %<>% as.character %>% as.factor() %>% relevel(levs)
-      lv <- levels(dat[[var2]])
+      dataset[[var2]] %<>% as.character %>% as.factor() %>% relevel(levs)
+      lv <- levels(dataset[[var2]])
     }
   }
 
   ## check if there is variation in the data
-  if (any(summarise_all(dat, funs(does_vary)) == FALSE)) {
+  if (any(summarise_all(dataset, funs(does_vary)) == FALSE)) {
     return("One or more selected variables show no variation. Please select other variables." %>%
       add_class("compare_props"))
   }
 
   rn <- ""
-  prop_input <- group_by_at(dat, .vars = c(var1, var2)) %>%
+  prop_input <- group_by_at(dataset, .vars = c(var1, var2)) %>%
     summarise(n = n()) %>%
     spread(!! var2, "n") %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
@@ -100,6 +100,9 @@ compare_props <- function(
     res$p.value %<>% p.adjust(method = adjust)
   }
 
+  ## adding significance stars
+  res$sig_star <- sig_stars(res$p.value)
+
   ## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
   ci_calc <- function(se, conf.lev = .95)
     se * qnorm(conf.lev / 2 + .5, lower.tail = TRUE)
@@ -131,7 +134,7 @@ compare_props <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- compare_props("titanic", "pclass", "survived")
+#' result <- compare_props(titanic, "pclass", "survived")
 #' summary(result)
 #' titanic %>% compare_props("pclass", "survived") %>% summary
 #'
@@ -143,7 +146,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
   if (is.character(object)) return(object)
 
   cat("Pairwise proportion comparisons\n")
-  cat("Data      :", object$dataset, "\n")
+  cat("Data      :", object$df_name, "\n")
   if (object$data_filter %>% gsub("\\s", "", .) != "") {
     cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
   }
@@ -152,7 +155,6 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
   cat("Confidence:", object$conf_lev, "\n")
   cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
-  # object$dat_summary[, -1] %<>% round(dec)
   object$dat_summary %>% 
     as.data.frame(stringsAsFactors = FALSE) %>% 
     formatdf(dec = dec, mark = ",") %>%
@@ -178,18 +180,18 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 
   res_sim <- is.na(res$df)
   if (show) {
-    res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "chisq.value", "df", "ci_low", "ci_high")]
+    res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "chisq.value", "df", "ci_low", "ci_high", "sig_star")]
     res[, c("chisq.value", "ci_low", "ci_high")] %<>% formatdf(dec, mark = ",")
 
     ## apparantely you can get negative number here
     # res$ci_low[res$ci_low < 0] <- 0
     res$df[res_sim] <- "*1*"
-    res <- rename(res, !!! setNames(c("ci_low", "ci_high"), ci_perc))
+    res <- rename(res, !!! setNames(c("ci_low", "ci_high"), ci_perc)) %>%
+      rename(` ` = "sig_star")
   } else {
     res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
   }
 
-  res$` ` <- sig_stars(res$p.value)
   res$p.value[res$p.value >= .001] %<>% round(dec)
   res$p.value[res$p.value < .001] <- "< .001"
   res$p.value[res_sim] %<>% paste0(" (2000 replicates)")
@@ -208,7 +210,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- compare_props("titanic", "pclass", "survived")
+#' result <- compare_props(titanic, "pclass", "survived")
 #' plot(result, plots = c("bar","dodge"))
 #'
 #' @seealso \code{\link{compare_props}} to calculate results
@@ -221,19 +223,18 @@ plot.compare_props <- function(
 ) {
 
   if (is.character(x)) return(x)
-  object <- x; rm(x)
+  # object <- x; rm(x)
 
-  dat <- object$dat
-  v1 <- colnames(dat)[1]
-  v2 <- colnames(dat)[-1]
-  lev_name <- object$levs
+  v1 <- colnames(x$dataset)[1]
+  v2 <- colnames(x$dataset)[-1]
+  lev_name <- x$levs
 
   ## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
   plot_list <- list()
   if ("bar" %in% plots) {
     ## use of `which` allows the user to change the order of the plots shown
     plot_list[[which("bar" == plots)]] <-
-      ggplot(object$dat_summary, aes_string(x = v1, y = "p", fill = v1)) +
+      ggplot(x$dat_summary, aes_string(x = v1, y = "p", fill = v1)) +
       geom_bar(stat = "identity", alpha = 0.5) +
       geom_errorbar(width = .1, aes(ymin = p - ci, ymax = p + ci)) +
       geom_errorbar(width = .05, aes(ymin = p - se, ymax = p + se), colour = "blue") +
@@ -243,7 +244,7 @@ plot.compare_props <- function(
   }
 
   if ("dodge" %in% plots) {
-    plot_list[[which("dodge" == plots)]] <- group_by_at(dat, .vars = c(v1, v2)) %>%
+    plot_list[[which("dodge" == plots)]] <- group_by_at(x$dataset, .vars = c(v1, v2)) %>%
       summarise(count = n()) %>%
       group_by_at(.vars = v1) %>%
       mutate(perc = count / sum(count)) %>%
@@ -261,7 +262,6 @@ plot.compare_props <- function(
     }
   }
 
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>% {
-    if (shiny) . else print(.)
-  }
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>% 
+    {if (shiny) . else print(.)}
 }

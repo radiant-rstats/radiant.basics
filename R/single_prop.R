@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/single_prop.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param dataset Dataset
 #' @param var The variable selected for the proportion comparison
 #' @param lev The factor level selected for the proportion comparison
 #' @param comp_value Population value to compare to the sample proportion
@@ -13,8 +13,8 @@
 #' @return A list of variables used in single_prop as an object of class single_prop
 #'
 #' @examples
-#' result <- single_prop("diamonds","cut")
-#' result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
+#' result <- single_prop(diamonds, "cut")
+#' result <- single_prop(diamonds, "clarity", lev = "IF", comp_value = 0.05)
 #'
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
 #' @seealso \code{\link{plot.single_prop}} to plot the results
@@ -26,25 +26,27 @@ single_prop <- function(
   data_filter = ""
 ) {
 
-  dat <- getdata(dataset, var, filt = data_filter, na.rm = FALSE) %>% mutate_all(funs(as.factor))
-  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
+  # dataset <- getdata(dataset, var, filt = data_filter, na.rm = FALSE)
+  dataset <- getdata(dataset, var, filt = data_filter, na.rm = FALSE) %>% 
+    mutate_all(funs(as.factor))
 
   ## removing any missing values
-  miss <- n_missing(dat)
-  dat <- na.omit(dat)
+  miss <- n_missing(dataset)
+  dataset <- na.omit(dataset)
 
-  levs <- levels(dat[[var]])
+  levs <- levels(dataset[[var]])
   if (lev != "") {
     if (lev %in% levs && levs[1] != lev) {
-      dat[[var]] %<>% as.character %>% as.factor() %>% relevel(lev)
-      levs <- levels(dat[[var]])
+      dataset[[var]] %<>% as.character %>% as.factor() %>% relevel(lev)
+      levs <- levels(dataset[[var]])
     }
   } else {
     lev <- levs[1]
   }
 
-  n <- nrow(dat)
-  ns <- sum(dat == lev)
+  n <- nrow(dataset)
+  ns <- sum(dataset == lev)
   p <- ns / n
 
   dat_summary <- data.frame(
@@ -76,7 +78,7 @@ single_prop <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
+#' result <- single_prop(diamonds,"clarity", lev = "IF", comp_value = 0.05)
 #' summary(result)
 #' diamonds %>% single_prop("clarity", lev = "IF", comp_value = 0.05) %>% summary
 #'
@@ -87,7 +89,7 @@ single_prop <- function(
 summary.single_prop <- function(object, dec = 3, ...) {
 
   cat("Single proportion test (binomial exact)\n")
-  cat("Data      :", object$dataset, "\n")
+  cat("Data      :", object$df_name, "\n")
   if (object$data_filter %>% gsub("\\s", "", .) != "") {
     cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
   }
@@ -141,48 +143,44 @@ summary.single_prop <- function(object, dec = 3, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
-#' plot(result, plots = c("hist", "simulate"))
-#' result <- single_prop("titanic","pclass", lev = "1st")
-#' plot(result, plots = c("hist","simulate"))
+#' result <- single_prop(diamonds,"clarity", lev = "IF", comp_value = 0.05)
+#' plot(result, plots = c("bar", "simulate"))
+#' result <- single_prop(titanic,"pclass", lev = "1st")
+#' plot(result, plots = c("bar","simulate"))
 #'
 #' @seealso \code{\link{single_prop}} to generate the result
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
 #'
 #' @export
-plot.single_prop <- function(x,
-                             plots = "bar",
-                             shiny = FALSE,
-                             custom = FALSE,
-                             ...) {
+plot.single_prop <- function(
+  x, plots = "bar", 
+  shiny = FALSE, custom = FALSE, ...
+) {
 
-  ## bar used to called hist - changed for consistency with compare_props
-  plots %<>% gsub("hist", "bar", .)
+  if (any(!plots %in% c("bar", "simulate"))) {
+    stop("Available plot types for 'single_prop' are \"bar\" and \"simulate\"")
+  }
 
-  object <- x
-  rm(x)
-
-  lev_name <- object$levs[1]
-
+  lev_name <- x$levs[1]
   plot_list <- list()
   if ("bar" %in% plots) {
     plot_list[[which("bar" == plots)]] <-
-      ggplot(object$dat, aes_string(x = object$var, fill = object$var)) +
+      ggplot(x$dataset, aes_string(x = x$var, fill = x$var)) +
       geom_bar(aes(y = (..count..) / sum(..count..)), alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       theme(legend.position = "none") +
       labs(
-        title = paste0("Single proportion: ", lev_name, " in ", object$var),
+        title = paste0("Single proportion: ", lev_name, " in ", x$var),
         y = ""
       )
   }
   if ("simulate" %in% plots) {
-    simdat <- rbinom(1000, prob = object$comp_value, object$n) %>%
-      divide_by(object$n) %>%
+    simdat <- rbinom(1000, prob = x$comp_value, x$n) %>%
+      divide_by(x$n) %>%
       data.frame(stringsAsFactors = FALSE) %>%
       set_colnames(lev_name)
 
-    cip <- ci_perc(simdat[[lev_name]], object$alternative, object$conf_lev) %>% set_names(NULL)
+    cip <- ci_perc(simdat[[lev_name]], x$alternative, x$conf_lev) %>% set_names(NULL)
 
     bw <- simdat %>%
       range() %>%
@@ -197,17 +195,17 @@ plot.single_prop <- function(x,
       ggplot(simdat, aes(x = col1)) +
       geom_histogram(fill = "blue", binwidth = bw, alpha = 0.5) +
       geom_vline(
-        xintercept = object$comp_value, color = "red",
+        xintercept = x$comp_value, color = "red",
         linetype = "solid", size = 1
       ) +
       geom_vline(
-        xintercept = object$res$estimate, color = "black",
+        xintercept = x$res$estimate, color = "black",
         linetype = "solid", size = 1
       ) +
       geom_vline(xintercept = cip, color = "red", linetype = "longdash", size = .5) +
       labs(
-        title = paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", object$var, ")"),
-        x = paste0("Level ", lev_name, " in variable ", object$var)
+        title = paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", x$var, ")"),
+        x = paste0("Level ", lev_name, " in variable ", x$var)
       )
   }
 

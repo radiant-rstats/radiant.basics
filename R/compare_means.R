@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/compare_means.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param dataset Dataset 
 #' @param var1 A numeric variable or factor selected for comparison
 #' @param var2 One or more numeric variables for comparison. If var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of va1r
 #' @param samples Are samples independent ("independent") or not ("paired")
@@ -16,7 +16,7 @@
 #' @return A list of all variables defined in the function as an object of class compare_means
 #'
 #' @examples
-#' result <- compare_means("diamonds","cut","price")
+#' result <- compare_means(diamonds,"cut","price")
 #' result <- diamonds %>% compare_means("cut","price", comb = c("Fair:Good", "Premium:Ideal"))
 #'
 #' @seealso \code{\link{summary.compare_means}} to summarize results
@@ -30,28 +30,29 @@ compare_means <- function(
   data_filter = ""
 ) {
 
+  df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
+
   vars <- c(var1, var2)
-  dat <- getdata(dataset, vars, filt = data_filter)
-  if (!is_string(dataset)) dataset <- deparse(substitute(dataset)) %>% set_attr("df", TRUE)
+  dataset <- getdata(dataset, vars, filt = data_filter)
 
   ## in case : was used for var2
-  vars <- colnames(dat)
+  vars <- colnames(dataset)
 
-  if (is.numeric(dat[[var1]])) {
-    dat %<>% gather("variable", "values", !! vars)
-    dat[["variable"]] %<>% factor(levels = vars)
+  if (is.numeric(dataset[[var1]])) {
+    dataset %<>% gather("variable", "values", !! vars)
+    dataset[["variable"]] %<>% factor(levels = vars)
     cname <- " "
   } else {
-    if (is.character(dat[[var1]])) dat[[var1]] <- as.factor(dat[[var1]])
-    colnames(dat) <- c("variable", "values")
+    if (is.character(dataset[[var1]])) dataset[[var1]] <- as.factor(dataset[[var1]])
+    colnames(dataset) <- c("variable", "values")
     cname <- var1
   }
 
   ## needed with new tidyr
-  dat$variable %<>% as.factor
+  dataset$variable %<>% as.factor()
 
   ## check there is variation in the data
-  if (any(summarise_all(dat, funs(does_vary)) == FALSE)) {
+  if (any(summarise_all(dataset, funs(does_vary)) == FALSE)) {
     return("Test could not be calculated (no variation). Please select another variable." %>%
       add_class("compare_means"))
   }
@@ -59,14 +60,12 @@ compare_means <- function(
   ## resetting option to independent if the number of observations is unequal
   ## summary on factor gives counts
   if (samples == "paired") {
-    if (summary(dat[["variable"]]) %>% {
-      max(.) != min(.)
-    }) {
+    if (summary(dataset[["variable"]]) %>% {max(.) != min(.)}) {
       samples <- "independent (obs. per level unequal)"
     }
   }
 
-  levs <- levels(dat[["variable"]])
+  levs <- levels(dataset[["variable"]])
 
   cmb <- combn(levs, 2) %>% 
     t() %>% 
@@ -88,9 +87,8 @@ compare_means <- function(
 
   for (i in 1:nrow(cmb)) {
     sel <- sapply(cmb[i, ], as.character)
-
-    x <- filter(dat, variable == sel[1]) %>% .[["values"]]
-    y <- filter(dat, variable == sel[2]) %>% .[["values"]]
+    x <- filter(dataset, variable == sel[1]) %>% .[["values"]]
+    y <- filter(dataset, variable == sel[2]) %>% .[["values"]]
 
     res[i, c("t.value", "p.value", "df", "ci_low", "ci_high")] <-
       t.test(x, y, paired = samples == "paired", alternative = alternative, conf.level = conf_lev) %>%
@@ -125,11 +123,14 @@ compare_means <- function(
     res$p.value %<>% p.adjust(method = adjust)
   }
 
+  ## adding significance stars
+  res$sig_star <- sig_stars(res$p.value)
+
   ## from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
   ci_calc <- function(se, n, conf.lev = .95)
     se * qt(conf.lev / 2 + .5, n - 1)
 
-  dat_summary <- group_by_at(dat, .vars = "variable") %>%
+  dat_summary <- group_by_at(dataset, .vars = "variable") %>%
     summarise_all(
       funs(
         mean = mean,
@@ -155,12 +156,9 @@ compare_means <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- compare_means("diamonds","cut","price")
+#' result <- compare_means(diamonds, "cut", "price")
 #' summary(result)
-#' result <- diamonds %>% tbl_df %>% compare_means("x","y")
-#' summary(result)
-#' result <- diamonds %>% tbl_df %>% group_by(cut) %>% compare_means("x",c("x","y"))
-#' summary(result)
+#' compare_means(diamonds, "price", "carat") %>% summary()
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
 #' @seealso \code{\link{plot.compare_means}} to plot results
@@ -170,7 +168,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
   if (is.character(object)) return(object)
 
   cat(paste0("Pairwise mean comparisons (", object$test, "-test)\n"))
-  cat("Data      :", object$dataset, "\n")
+  cat("Data      :", object$df_name, "\n")
   if (object$data_filter %>% gsub("\\s", "", .) != "") {
     cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
   }
@@ -201,23 +199,22 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
   mod <- object$res
   mod$`Alt. hyp.` <- paste(mod$group1, hyp_symbol, mod$group2, " ")
   mod$`Null hyp.` <- paste(mod$group1, "=", mod$group2, " ")
-  mod$diff <- {
-    means[mod$group1 %>% as.character()] - means[mod$group2 %>% as.character()]
-  } %>% round(dec)
+  mod$diff <- {means[mod$group1 %>% as.character()] - means[mod$group2 %>% as.character()]} %>% 
+    round(dec)
 
   if (show) {
     mod$se <- (mod$diff / mod$t.value) %>% round(dec)
-    mod <- mod[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "se", "t.value", "df", "ci_low", "ci_high")]
+    mod <- mod[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "se", "t.value", "df", "ci_low", "ci_high", "sig_star")]
     if (!is.integer(mod[["df"]])) mod[["df"]] %<>% round(dec)
     mod[, c("t.value", "ci_low", "ci_high")] %<>% round(dec)
-    mod <- rename(mod, !!! setNames(c("ci_low", "ci_high"), ci_perc))
+    mod <- rename(mod, !!! setNames(c("ci_low", "ci_high"), ci_perc)) %>%
+      rename(` ` = "sig_star")
   } else {
     mod <- mod[, c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
   }
 
-  mod$` ` <- sig_stars(mod$p.value)
   mod$p.value <- round(mod$p.value, dec)
-  mod$p.value[ mod$p.value < .001 ] <- "< .001"
+  mod$p.value[mod$p.value < .001] <- "< .001"
   print(mod, row.names = FALSE, right = FALSE)
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 }
@@ -233,7 +230,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- compare_means("diamonds","cut","price")
+#' result <- compare_means(diamonds,"cut","price")
 #' plot(result, plots = c("bar","density"))
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
@@ -242,12 +239,10 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
 #' @export
 plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FALSE, ...) {
   if (is.character(x)) return(x)
-  object <- x
-  rm(x)
+  object <- x; rm(x)
 
-  dat <- object$dat
-  v1 <- colnames(dat)[1]
-  v2 <- colnames(dat)[-1]
+  v1 <- colnames(object$dataset)[1]
+  v2 <- colnames(object$dataset)[-1]
 
   ## cname is equal to " " when the xvar is numeric
   if (object$cname == " ") {
@@ -278,21 +273,21 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
   ## graphs on full data
   if ("box" %in% plots) {
     plot_list[[which("box" == plots)]] <-
-      visualize(dat, xvar = v1, yvar = v2, type = "box", custom = TRUE) +
+      visualize(object$dataset, xvar = v1, yvar = v2, type = "box", custom = TRUE) +
       theme(legend.position = "none") + 
       labs(x = var1, y = var2)
   }
 
   if ("density" %in% plots) {
     plot_list[[which("density" == plots)]] <-
-      visualize(dat, xvar = v2, type = "density", fill = v1, custom = TRUE) +
+      visualize(object$dataset, xvar = v2, type = "density", fill = v1, custom = TRUE) +
       labs(x = var2) + 
       guides(fill = guide_legend(title = var1))
   }
 
   if ("scatter" %in% plots) {
     plot_list[[which("scatter" == plots)]] <-
-      visualize(dat, xvar = v1, yvar = v2, type = "scatter", check = "jitter", alpha = 0.3, custom = TRUE) +
+      visualize(object$dataset, xvar = v1, yvar = v2, type = "scatter", check = "jitter", alpha = 0.3, custom = TRUE) +
       labs(x = var1, y = paste0(var2, " (mean)"))
   }
 
@@ -304,7 +299,6 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
     }
   }
 
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>% {
-    if (shiny) . else print(.)
-  }
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>% 
+    {if (shiny) . else print(.)}
 }

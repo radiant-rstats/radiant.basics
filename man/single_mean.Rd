@@ -8,7 +8,7 @@ single_mean(dataset, var, comp_value = 0, alternative = "two.sided",
   conf_lev = 0.95, data_filter = "")
 }
 \arguments{
-\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{dataset}{Dataset}
 
 \item{var}{The variable selected for the mean comparison}
 
@@ -30,7 +30,7 @@ Compare a sample mean to a population mean
 See \url{https://radiant-rstats.github.io/docs/basics/single_mean.html} for an example in Radiant
 }
 \examples{
-single_mean("diamonds","price")
+single_mean(diamonds, "price")
 
 }
 \seealso{

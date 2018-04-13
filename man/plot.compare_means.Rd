@@ -25,7 +25,7 @@ Plot method for the compare_means function
 See \url{https://radiant-rstats.github.io/docs/basics/compare_means.html} for an example in Radiant
 }
 \examples{
-result <- compare_means("diamonds","cut","price")
+result <- compare_means(diamonds,"cut","price")
 plot(result, plots = c("bar","density"))
 
 }

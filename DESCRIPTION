@@ -29,4 +29,5 @@ URL: https://github.com/radiant-rstats/radiant.basics, https://radiant-rstats.gi
 BugReports: https://github.com/radiant-rstats/radiant.basics/issues
 License: AGPL-3 | file LICENSE
 LazyData: true
+Encoding: UTF-8
 RoxygenNote: 6.0.1

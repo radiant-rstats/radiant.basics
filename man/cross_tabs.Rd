@@ -7,11 +7,11 @@
 cross_tabs(dataset, var1, var2, tab = NULL, data_filter = "")
 }
 \arguments{
-\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{dataset}{Dataset (i.e., a data.frame or table)}
 
 \item{var1}{A categorical variable}
 
-\item{var2}{Another categorical variable}
+\item{var2}{A categorical variable}
 
 \item{tab}{Table with frequencies as alternative to dataset}
 
@@ -27,8 +27,9 @@ Evaluate associations between categorical variables
 See \url{https://radiant-rstats.github.io/docs/basics/cross_tabs.html} for an example in Radiant
 }
 \examples{
-result <- cross_tabs("newspaper", "Income", "Newspaper")
+result <- cross_tabs(newspaper, "Income", "Newspaper")
 result <- newspaper \%>\% cross_tabs("Income", "Newspaper")
+result <- table(select(newspaper, Income, Newspaper)) \%>\% cross_tabs(tab = .)
 
 }
 \seealso{

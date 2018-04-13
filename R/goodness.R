@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/goodness.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param dataset Dataset
 #' @param var A categorical variable
 #' @param p Hypothesized distribution as a number, fraction, or numeric vector. If unspecified, defaults to an even distribution
 #' @param tab Table with frequencies as alternative to dataset
@@ -11,7 +11,8 @@
 #' @return A list of all variables used in goodness as an object of class goodness
 #'
 #' @examples
-#' result <- goodness("newspaper", "Income")
+#' result <- goodness(newspaper, "Income")
+#' result <- table(select(newspaper, Income)) %>% goodness(tab = .)
 #'
 #' @seealso \code{\link{summary.goodness}} to summarize results
 #' @seealso \code{\link{plot.goodness}} to plot results
@@ -19,21 +20,21 @@
 #' @export
 goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") { 
 
-  if (!missing(dataset) && !is.table(tab)) {
-    dat <- getdata(dataset, var, filt = data_filter)
-    if (!is_string(dataset)) {
-      dataset <- deparse(substitute(dataset)) %>%
-        set_attr("df", TRUE)
-    }
+  if (is.table(tab)) {
+    df_name <- deparse(substitute(tab))
+    if (missing(var)) var <- "variable"
+  } else {
+    df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
+    dataset <- getdata(dataset, var, filt = data_filter)
 
     ## creating and cleaning up the table
-    tab <- table(dat[[var]])
+    tab <- table(dataset[[var]])
     tab[is.na(tab)] <- 0
     tab <- as.table(tab)
 
-    ## dat not needed in summary or plot
-    rm(dat)
-  }
+  } 
+  ## dataset not needed in summary or plot
+  rm(dataset)
 
   if (is_not(p) || p == "") {
     p <- rep(1 / length(tab), length(tab))
@@ -85,7 +86,7 @@ goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") {
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
-#' result <- goodness("newspaper", "Income", c(.3, .7))
+#' result <- goodness(newspaper, "Income", c(.3, .7))
 #' summary(result, check = c("observed","expected","chi_sq"))
 #' newspaper %>% goodness("Income", "1/3 2/3") %>% summary("observed")
 #'
@@ -97,18 +98,19 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
   if (is.character(object)) return(object)
 
   cat("Goodness of fit test\n")
-  cat("Data     :", object$dataset, "\n")
+  cat("Data     :", object$df_name, "\n")
   if (object$data_filter %>% gsub("\\s", "", .) != "") {
     cat("Filter   :", gsub("\\n", "", object$data_filter), "\n")
   }
-  cat("Variable :", object$var, "\n")
+  if (length(object$var) > 0) {
+    cat("Variable :", object$var, "\n")
+  }
   cat("Specified:", object$p, "\n")
   cat("Null hyp.: the distribution of", object$var, "is consistent with the specified distribution\n")
   cat("Alt. hyp.: the distribution of", object$var, "is not consistent with the specified distribution\n")
 
   if ("observed" %in% check) {
     cat("\nObserved:\n")
-    # print(class(object$cst$observed))
     object$cst$observed %>%
       {.["Total"] <- sum(.); .} %>%
       format(big.mark = ",", scientific = FALSE) %>%
@@ -158,7 +160,7 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- goodness("newspaper", "Income")
+#' result <- goodness(newspaper, "Income")
 #' plot(result, check = c("observed","expected","chi_sq"))
 #' newspaper %>% goodness("Income") %>% plot(c("observed","expected"))
 #'
@@ -171,72 +173,72 @@ plot.goodness <- function(
   shiny = FALSE, custom = FALSE, ...
 ) {
 
-  object <- x; rm(x)
-  if (is.character(object)) return(object)
+  if (is.character(x)) return(x)
   plot_list <- list()
   if (is_empty(check)) check <- "observed"
 
   if ("observed" %in% check) {
-    fact_names <- names(object$cst$observed)
-    tab <- as.data.frame(object$cst$observed, check.names = FALSE, stringsAsFactors = FALSE)
-    colnames(tab)[1] <- object$var
+    fact_names <- names(x$cst$observed)
+    tab <- as.data.frame(x$cst$observed, check.names = FALSE, stringsAsFactors = FALSE)
+    colnames(tab)[1] <- x$var
     tab[[1]] %<>% factor(levels = fact_names)
     tab[["Freq"]] %<>% {
       . / sum(.)
     }
     plot_list[["observed"]] <-
-      ggplot(tab, aes_string(x = object$var, y = "Freq")) +
+      ggplot(tab, aes_string(x = x$var, y = "Freq")) +
       geom_bar(stat = "identity", alpha = 0.5, fill = fillcol) +
       scale_y_continuous(labels = scales::percent) +
       labs(
-        title = paste("Observed frequencies for", object$var),
-        x = object$var,
+        title = paste("Observed frequencies for", x$var),
+        x = x$var,
         y = ""
       )
   }
 
   if ("expected" %in% check) {
-    fact_names <- names(object$cst$expected)
-    tab <- as.data.frame(object$cst$expected, check.names = FALSE, stringsAsFactors = FALSE)
+    fact_names <- names(x$cst$expected)
+    tab <- as.data.frame(x$cst$expected, check.names = FALSE, stringsAsFactors = FALSE)
     colnames(tab)[1] <- "Freq"
-    tab[[object$var]] <- factor(rownames(tab), levels = rownames(tab))
+    tab[[x$var]] <- factor(rownames(tab), levels = rownames(tab))
     tab[["Freq"]] %<>% {. / sum(.)}
     plot_list[["expected"]] <-
-      ggplot(tab, aes_string(x = object$var, y = "Freq")) +
+      ggplot(tab, aes_string(x = x$var, y = "Freq")) +
       geom_bar(stat = "identity", alpha = 0.5, fill = fillcol) +
       scale_y_continuous(labels = scales::percent) +
       labs(
-        title = paste("Expected frequencies for", object$var),
-        x = object$var,
+        title = paste("Expected frequencies for", x$var),
+        x = x$var,
         y = ""
       )
   }
 
   if ("chi_sq" %in% check) {
-    tab <- as.data.frame(object$cst$chi_sq, check.names = FALSE, stringsAsFactors = FALSE)
-    colnames(tab)[1] <- object$var
+    tab <- as.data.frame(x$cst$chi_sq, check.names = FALSE, stringsAsFactors = FALSE)
+    colnames(tab)[1] <- x$var
     plot_list[["chi_sq"]] <-
-      ggplot(tab, aes_string(x = object$var, y = "Freq")) +
+      ggplot(tab, aes_string(x = x$var, y = "Freq")) +
       geom_bar(stat = "identity", alpha = 0.5, fill = fillcol) +
       labs(
-        title = paste("Contribtion to chi-squared for", object$var),
-        x = object$var,
+        title = paste("Contribtion to chi-squared for", x$var),
+        x = x$var,
         y = ""
       )
   }
 
   if ("dev_std" %in% check) {
-    tab <- as.data.frame(object$cst$residuals, check.names = FALSE, stringsAsFactors = FALSE)
-    colnames(tab)[1] <- object$var
+    tab <- as.data.frame(x$cst$residuals, check.names = FALSE, stringsAsFactors = FALSE)
+    mult <- max(abs(tab$Freq)) / 5
+    colnames(tab)[1] <- x$var
     plot_list[["dev_std"]] <-
-      ggplot(tab, aes_string(x = object$var, y = "Freq")) +
+      ggplot(tab, aes_string(x = x$var, y = "Freq")) +
       geom_bar(stat = "identity", position = "dodge", alpha = 0.5, fill = fillcol) +
       geom_hline(yintercept = c(-1.96, 1.96, -1.64, 1.64), color = "black", linetype = "longdash", size = .5) +
-      geom_text(x = 1, y = 2.11, label = "95%") +
-      geom_text(x = 1, y = 1.49, label = "90%") +
+      geom_text(x = 1, y = 2.11, label = "95%", vjust = 0) +
+      geom_text(x = 1, y = 1.49, label = "90%", vjust = 1) +
       labs(
-        title = paste("Deviation standardized for", object$var),
-        x = object$var,
+        title = paste("Deviation standardized for", x$var),
+        x = x$var,
         y = ""
       )
   }

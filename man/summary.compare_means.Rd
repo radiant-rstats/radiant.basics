@@ -22,12 +22,9 @@ Summary method for the compare_means function
 See \url{https://radiant-rstats.github.io/docs/basics/compare_means.html} for an example in Radiant
 }
 \examples{
-result <- compare_means("diamonds","cut","price")
+result <- compare_means(diamonds, "cut", "price")
 summary(result)
-result <- diamonds \%>\% tbl_df \%>\% compare_means("x","y")
-summary(result)
-result <- diamonds \%>\% tbl_df \%>\% group_by(cut) \%>\% compare_means("x",c("x","y"))
-summary(result)
+compare_means(diamonds, "price", "carat") \%>\% summary()
 
 }
 \seealso{

@@ -27,7 +27,7 @@ Plot method for the goodness function
 See \url{https://radiant-rstats.github.io/docs/basics/goodness} for an example in Radiant
 }
 \examples{
-result <- goodness("newspaper", "Income")
+result <- goodness(newspaper, "Income")
 plot(result, check = c("observed","expected","chi_sq"))
 newspaper \%>\% goodness("Income") \%>\% plot(c("observed","expected"))
 

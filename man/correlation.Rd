@@ -7,7 +7,7 @@
 correlation(dataset, vars = "", method = "pearson", data_filter = "")
 }
 \arguments{
-\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{dataset}{Dataset}
 
 \item{vars}{Variables to include in the analysis. Default is all but character and factor variables with more than two unique values are removed}
 
@@ -25,9 +25,9 @@ Calculate correlations for two or more variables
 See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 }
 \examples{
-result <- correlation("diamonds", c("price","carat"))
-result <- correlation("diamonds", c("price","carat","table"))
-result <- correlation("diamonds", "price:carat")
+result <- correlation(diamonds, c("price","carat"))
+result <- correlation(diamonds, c("price","carat","table"))
+result <- correlation(diamonds, "price:carat")
 result <- diamonds \%>\% correlation("price:carat")
 
 }

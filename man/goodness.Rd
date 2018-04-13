@@ -7,7 +7,7 @@
 goodness(dataset, var, p = NULL, tab = NULL, data_filter = "")
 }
 \arguments{
-\item{dataset}{Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant}
+\item{dataset}{Dataset}
 
 \item{var}{A categorical variable}
 
@@ -27,7 +27,8 @@ Evaluate if sample data for a categorical variable is consistent wtih a hypothes
 See \url{https://radiant-rstats.github.io/docs/basics/goodness.html} for an example in Radiant
 }
 \examples{
-result <- goodness("newspaper", "Income")
+result <- goodness(newspaper, "Income")
+result <- table(select(newspaper, Income)) \%>\% goodness(tab = .)
 
 }
 \seealso{

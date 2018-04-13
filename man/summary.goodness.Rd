@@ -22,7 +22,7 @@ Summary method for the goodness function
 See \url{https://radiant-rstats.github.io/docs/basics/goodness} for an example in Radiant
 }
 \examples{
-result <- goodness("newspaper", "Income", c(.3, .7))
+result <- goodness(newspaper, "Income", c(.3, .7))
 summary(result, check = c("observed","expected","chi_sq"))
 newspaper \%>\% goodness("Income", "1/3 2/3") \%>\% summary("observed")
 

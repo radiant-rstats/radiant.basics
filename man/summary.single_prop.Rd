@@ -20,7 +20,7 @@ Summary method for the single_prop function
 See \url{https://radiant-rstats.github.io/docs/basics/single_prop.html} for an example in Radiant
 }
 \examples{
-result <- single_prop("diamonds","clarity", lev = "IF", comp_value = 0.05)
+result <- single_prop(diamonds,"clarity", lev = "IF", comp_value = 0.05)
 summary(result)
 diamonds \%>\% single_prop("clarity", lev = "IF", comp_value = 0.05) \%>\% summary
 

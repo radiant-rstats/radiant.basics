@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 #'
-#' @param dataset Dataset name (string). This can be a dataframe in the global environment or an element in an r_data list from Radiant
+#' @param dataset Dataset
 #' @param vars Variables to include in the analysis. Default is all but character and factor variables with more than two unique values are removed
 #' @param method Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
@@ -10,26 +10,32 @@
 #' @return A list with all variables defined in the function as an object of class compare_means
 #'
 #' @examples
-#' result <- correlation("diamonds", c("price","carat"))
-#' result <- correlation("diamonds", c("price","carat","table"))
-#' result <- correlation("diamonds", "price:carat")
+#' result <- correlation(diamonds, c("price","carat"))
+#' result <- correlation(diamonds, c("price","carat","table"))
+#' result <- correlation(diamonds, "price:carat")
 #' result <- diamonds %>% correlation("price:carat")
 #'
 #' @seealso \code{\link{summary.correlation}} to summarize results
 #' @seealso \code{\link{plot.correlation}} to plot results
 #'
+#' @importFrom psych corr.test
+#'
 #' @export
 correlation <- function(dataset, vars = "", method = "pearson", data_filter = "") {
 
+  df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
+
   ## data.matrix as the last step in the chain is about 25% slower using
   ## system.time but results (using diamonds and mtcars) are identical
-  dat <- getdata(dataset, vars, filt = data_filter) %>%
+  dataset <- getdata(dataset, vars, filt = data_filter) %>%
     mutate_all(funs(as_numeric))
 
-  if (!is_string(dataset)) {
-    dataset <- deparse(substitute(dataset)) %>% 
-      set_attr("df", TRUE)
-  }
+  ## calculate the correlation matrix with p.values using the psych package
+  cmat <- sshhr(psych::corr.test(dataset, method = method))
+
+  ## calculate covariance matrix
+  cvmat <- sshhr(cov(dataset, method = method))
+
   as.list(environment()) %>% add_class("correlation")
 }
 
@@ -44,38 +50,32 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
-#' result <- correlation("diamonds",c("price","carat","table"))
+#' result <- correlation(diamonds, c("price", "carat", "table"))
 #' summary(result, cutoff = .3)
 #' diamonds %>% correlation("price:carat") %>% summary
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{plot.correlation}} to plot results
 #'
-#' @importFrom psych corr.test
-#'
 #' @export
 summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...) {
 
   ## calculate the correlation matrix with p.values using the psych package
-  cmat <- sshhr(psych::corr.test(object$dat, method = object$method))
-
-  cr <- apply(cmat$r, 2, formatnr, dec = dec) %>%
-    format(justify = "right") %>%
-    set_rownames(rownames(cmat$r))
-  cr[is.na(cmat$r)] <- "-"
-  cr[abs(cmat$r) < cutoff] <- ""
+  cr <- apply(object$cmat$r, 2, formatnr, dec = dec) %>%
+    set_rownames(rownames(object$cmat$r))
+  cr[is.na(object$cmat$r)] <- "-"
+  cr[abs(object$cmat$r) < cutoff] <- ""
   ltmat <- lower.tri(cr)
   cr[!ltmat] <- ""
 
-  cp <- apply(cmat$p, 2, formatnr, dec = dec) %>%
-    format(justify = "right") %>%
-    set_rownames(rownames(cmat$p))
-  cp[is.na(cmat$p)] <- "-"
-  cp[abs(cmat$r) < cutoff] <- ""
+  cp <- apply(object$cmat$p, 2, formatnr, dec = dec) %>%
+    set_rownames(rownames(object$cmat$p))
+  cp[is.na(object$cmat$p)] <- "-"
+  cp[abs(object$cmat$r) < cutoff] <- ""
   cp[!ltmat] <- ""
 
   cat("Correlation\n")
-  cat("Data     :", object$dataset, "\n")
+  cat("Data     :", object$df_name, "\n")
   cat("Method   :", object$method, "\n")
   if (cutoff > 0) {
     cat("Cutoff   :", cutoff, "\n")
@@ -88,24 +88,28 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   cat("Alt. hyp.: variables x and y are correlated\n\n")
 
   cat("Correlation matrix:\n")
-  print(cr[-1, -ncol(cr), drop = FALSE], quote = FALSE)
+  cr[-1, -ncol(cr), drop = FALSE] %>%
+   format(justify = "right") %>%
+   print(quote = FALSE)
 
   cat("\np.values:\n")
-  print(cp[-1, -ncol(cp), drop = FALSE], quote = FALSE)
+  cp[-1, -ncol(cp), drop = FALSE] %>%
+   format(justify = "right") %>%
+   print(quote = FALSE)
 
   if (covar) {
-    cvmat <- sshhr(cov(object$dat, method = object$method))
-    cvr <- apply(cvmat, 2, formatnr, dec = dec) %>%
-      format(justify = "right") %>%
-      set_rownames(rownames(cvmat))
-    cvr[abs(cmat$r) < cutoff] <- ""
+    cvr <- apply(object$cvmat, 2, formatnr, dec = dec) %>%
+      set_rownames(rownames(object$cvmat))
+    cvr[abs(object$cmat$r) < cutoff] <- ""
     ltmat <- lower.tri(cvr)
     cvr[!ltmat] <- ""
 
     cat("\nCovariance matrix:\n")
-    print(cvr[-1, -ncol(cvr), drop = FALSE], quote = FALSE)
+    cvr[-1, -ncol(cvr), drop = FALSE] %>%
+     format(justify = "right") %>%
+     print(quote = FALSE)
   }
-  rm(object)
+  return(invisible())
 }
 
 #' Print method for radiant.basics::correlation
@@ -128,7 +132,7 @@ print.correlation <- function(x, ...) {
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
-#' result <- correlation("diamonds",c("price","carat","table"))
+#' result <- correlation(diamonds, c("price", "carat", "table"))
 #' plot(result)
 #' diamonds %>% correlation("price:carat") %>% plot()
 #'
@@ -139,14 +143,15 @@ print.correlation <- function(x, ...) {
 #'
 #' @export
 plot.correlation <- function(x, nrobs = -1, jit = .3, ...) {
-  object <- x; rm(x)
 
+  ## defined method to be use in panel.plot
+  method <- x$method
   ## based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
   panel.plot <- function(x, y) {
     usr <- par("usr")
     on.exit(par(usr))
     par(usr = c(0, 1, 0, 1))
-    ct <- sshhr(cor.test(x, y, method = object$method))
+    ct <- sshhr(cor.test(x, y, method = method))
     sig <- symnum(
       ct$p.value, corr = FALSE, na = FALSE,
       cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
@@ -175,6 +180,6 @@ plot.correlation <- function(x, nrobs = -1, jit = .3, ...) {
     # lines(stats::lowess(y~x), col="blue")
   }
 
-    {if (is.null(object$dat)) object else object$dat} %>%
+  {if (is.null(x$dataset)) x else x$dataset} %>%
     pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
 }
