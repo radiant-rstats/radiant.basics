@@ -223,8 +223,6 @@ plot.compare_props <- function(
 ) {
 
   if (is.character(x)) return(x)
-  # object <- x; rm(x)
-
   v1 <- colnames(x$dataset)[1]
   v2 <- colnames(x$dataset)[-1]
   lev_name <- x$levs

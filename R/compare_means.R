@@ -30,9 +30,8 @@ compare_means <- function(
   data_filter = ""
 ) {
 
-  df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-
   vars <- c(var1, var2)
+  df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- getdata(dataset, vars, filt = data_filter)
 
   ## in case : was used for var2
@@ -239,28 +238,27 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
 #' @export
 plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FALSE, ...) {
   if (is.character(x)) return(x)
-  object <- x; rm(x)
-
-  v1 <- colnames(object$dataset)[1]
-  v2 <- colnames(object$dataset)[-1]
+  cn <- colnames(x$dataset)
+  v1 <- cn[1]
+  v2 <- cn[-1]
 
   ## cname is equal to " " when the xvar is numeric
-  if (object$cname == " ") {
+  if (x$cname == " ") {
     var1 <- v1
     var2 <- v2
   } else {
-    var1 <- object$var1
-    var2 <- object$var2
+    var1 <- x$var1
+    var2 <- x$var2
   }
 
   ## from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
   plot_list <- list()
   if ("bar" %in% plots) {
-    colnames(object$dat_summary)[1] <- "variable"
+    colnames(x$dat_summary)[1] <- "variable"
     ## use of `which` allows the user to change the order of the plots shown
     plot_list[[which("bar" == plots)]] <-
       ggplot(
-        object$dat_summary,
+        x$dat_summary,
         aes_string(x = "variable", y = "mean", fill = "variable")
       ) +
       geom_bar(stat = "identity") +
@@ -273,21 +271,21 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
   ## graphs on full data
   if ("box" %in% plots) {
     plot_list[[which("box" == plots)]] <-
-      visualize(object$dataset, xvar = v1, yvar = v2, type = "box", custom = TRUE) +
+      visualize(x$dataset, xvar = v1, yvar = v2, type = "box", custom = TRUE) +
       theme(legend.position = "none") + 
       labs(x = var1, y = var2)
   }
 
   if ("density" %in% plots) {
     plot_list[[which("density" == plots)]] <-
-      visualize(object$dataset, xvar = v2, type = "density", fill = v1, custom = TRUE) +
+      visualize(x$dataset, xvar = v2, type = "density", fill = v1, custom = TRUE) +
       labs(x = var2) + 
       guides(fill = guide_legend(title = var1))
   }
 
   if ("scatter" %in% plots) {
     plot_list[[which("scatter" == plots)]] <-
-      visualize(object$dataset, xvar = v1, yvar = v2, type = "scatter", check = "jitter", alpha = 0.3, custom = TRUE) +
+      visualize(x$dataset, xvar = v1, yvar = v2, type = "scatter", check = "jitter", alpha = 0.3, custom = TRUE) +
       labs(x = var1, y = paste0(var2, " (mean)"))
   }
 
