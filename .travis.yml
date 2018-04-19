@@ -9,4 +9,4 @@ repos:
   CRAN: https://cloud.r-project.org
 
 r_github_packages:
-  - radiant-rstats/radiant.data
+  - radiant-rstats/radiant.data@MRB
