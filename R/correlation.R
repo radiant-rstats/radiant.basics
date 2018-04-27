@@ -52,7 +52,7 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
 #' @examples
 #' result <- correlation(diamonds, c("price", "carat", "table"))
 #' summary(result, cutoff = .3)
-#' diamonds %>% correlation("price:carat") %>% summary
+#' diamonds %>% correlation("price:carat") %>% summary()
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{plot.correlation}} to plot results

@@ -80,7 +80,7 @@ single_prop <- function(
 #' @examples
 #' result <- single_prop(diamonds,"clarity", lev = "IF", comp_value = 0.05)
 #' summary(result)
-#' diamonds %>% single_prop("clarity", lev = "IF", comp_value = 0.05) %>% summary
+#' diamonds %>% single_prop("clarity", lev = "IF", comp_value = 0.05) %>% summary()
 #'
 #' @seealso \code{\link{single_prop}} to generate the results
 #' @seealso \code{\link{plot.single_prop}} to plot the results

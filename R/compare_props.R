@@ -136,7 +136,7 @@ compare_props <- function(
 #' @examples
 #' result <- compare_props(titanic, "pclass", "survived")
 #' summary(result)
-#' titanic %>% compare_props("pclass", "survived") %>% summary
+#' titanic %>% compare_props("pclass", "survived") %>% summary()
 #'
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{plot.compare_props}} to plot results

@@ -59,7 +59,7 @@ single_mean <- function(
 #' @examples
 #' result <- single_mean(diamonds, "price")
 #' summary(result)
-#' diamonds %>% single_mean("price") %>% summary
+#' diamonds %>% single_mean("price") %>% summary()
 #'
 #' @seealso \code{\link{single_mean}} to generate the results
 #' @seealso \code{\link{plot.single_mean}} to plot results
