@@ -22,7 +22,7 @@ See \url{https://radiant-rstats.github.io/docs/basics/single_prop.html} for an e
 \examples{
 result <- single_prop(diamonds,"clarity", lev = "IF", comp_value = 0.05)
 summary(result)
-diamonds \%>\% single_prop("clarity", lev = "IF", comp_value = 0.05) \%>\% summary
+diamonds \%>\% single_prop("clarity", lev = "IF", comp_value = 0.05) \%>\% summary()
 
 }
 \seealso{

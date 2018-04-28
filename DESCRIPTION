@@ -1,8 +1,8 @@
 Package: radiant.basics
 Type: Package
 Title: Basics Menu for Radiant: Business Analytics using R and Shiny
-Version: 0.9.3.0
-Date: 2018-4-18
+Version: 0.9.3.1
+Date: 2018-4-27
 Authors@R: person("Vincent", "Nijs", , "radiant@rady.ucsd.edu", c("aut", "cre"))
 Description: The Radiant Basics menu includes interfaces for probability 
     calculation, central limit theorem simulation, comparing means and proportions, 
@@ -10,7 +10,7 @@ Description: The Radiant Basics menu includes interfaces for probability
     the functionality in radiant.data.
 Depends:
     R (>= 3.4.0),
-    radiant.data (>= 0.9.3.0)
+    radiant.data (>= 0.9.3.1)
 Imports:
     ggplot2 (>= 2.2.1),
     gridExtra (>= 2.0.0),

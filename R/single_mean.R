@@ -27,8 +27,9 @@ single_mean <- function(
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- getdata(dataset, var, filt = data_filter, na.rm = FALSE)
 
-  ## removing any missing values
+  ## counting missing values
   miss <- n_missing(dataset)
+  ## removing any missing values
   dataset <- na.omit(dataset)
 
   res <- t.test(dataset[[var]], mu = comp_value, alternative = alternative, conf.level = conf_lev) %>% 
@@ -36,11 +37,11 @@ single_mean <- function(
 
   dat_summary <- summarise_all(dataset, 
     funs(
-      diff = mean_rm(.) - comp_value, 
-      se = se(.), 
-      mean = mean_rm(.),
-      sd = sd_rm(.), 
-      n = length(na.omit(.))
+      diff = mean(.) - comp_value, 
+      se = se, 
+      mean = mean,
+      sd = sd, 
+      n_obs = length
     )
   )
   dat_summary$n_missing <- miss
