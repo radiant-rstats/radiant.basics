@@ -25,7 +25,9 @@ Imports:
     methods
 Suggests:
     testthat (>= 2.0.0)
-URL: https://github.com/radiant-rstats/radiant.basics, https://radiant-rstats.github.io/docs
+URL: https://github.com/radiant-rstats/radiant.basics, 
+  https://radiant-rstats.github.io/radiant.basics,
+  https://radiant-rstats.github.io/docs
 BugReports: https://github.com/radiant-rstats/radiant.basics/issues
 License: AGPL-3 | file LICENSE
 LazyData: true

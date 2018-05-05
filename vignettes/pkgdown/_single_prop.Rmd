@@ -16,7 +16,7 @@ Our null-hypothesis is that the proportion of consumers that would consider the 
 
 Choose the `Less than` option from the `Alternative hypothesis` drop-down to determine if the available data provides sufficient evidence to reject the null-hypothesis in favor of the alternative that the proportion of consumers that will consider the brand is **less than 10%**.
 
-<p align="center"><img src="https://radiant-rstats.github.io/docs/basics/figures_basics/single_prop_summary.png"></p>
+<p align="center"><img src="https://radiant-rstats.github.io/docs/basics/figures_basics//single_prop_summary.png"></p>
 
 The first two blocks of output show basic information about the test (e.g.,. the null and alternative hypothesis) and summary statistics (e.g., the proportion of "yes" responses). The final row of output shows the following:
 
@@ -35,7 +35,7 @@ Because the p.value is **larger** than the conventional significance level ($0.2
 
 We can also obtain the p.value by using the probability calculator in the _Basics_ menu. Enter the number of successes in the data (93) as the lower bound (value) for a binomial-distribution with $n = 1000$ and $p = 0.1$. The p.value is the probability of observing a number of successes as or more extreme than the 93 we got in our sample. We see that $P(X <= 93) = 0.249$ which is the same value we got from _Basics > Proportions > Single proportion_.
 
-<p align="center"><img src="https://radiant-rstats.github.io/docs/basics/figures_basics/single_prop_prob_calc_v.png"></p>
+<p align="center"><img src="https://radiant-rstats.github.io/docs/basics/figures_basics//single_prop_prob_calc_v.png"></p>
 
 #### confidence interval
 
@@ -45,7 +45,7 @@ Because the `comparison value` **is** contained in the confidence interval (i.e.
 
 We can obtain the critical value by using the probability calculator in the _Basics_ menu. For a binomial-distribution with $n = 1000$ and $p = 0.1$ the critical value is 85. We have to enter 0.05 as the lower probability bound because the alternative hypothesis is `Less than`.<sup>2</sup>
 
-<p align="center"><img src="https://radiant-rstats.github.io/docs/basics/figures_basics/single_prop_prob_calc_p.png"></p>
+<p align="center"><img src="https://radiant-rstats.github.io/docs/basics/figures_basics//single_prop_prob_calc_p.png"></p>
 
 Because the number of successes (i.e., the number of "yes" responses) **is** larger than the critical value (93 vs 85) we **cannot** reject the null hypothesis and **do not suggest** that management should commit resources to increase brand awareness.
 
