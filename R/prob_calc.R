@@ -10,12 +10,18 @@
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @examples
+#' prob_norm(mean = 0, stdev = 1, ub = 0)
+#'
+#' @seealso \code{\link{summary.prob_norm}} to summarize results
+#' @seealso \code{\link{plot.prob_norm}} to plot results
+#'
 #' @export
 prob_norm <- function(
-  mean, stdev, lb = NA, ub = NA, 
+  mean, stdev, lb = NA, ub = NA,
   plb = NA, pub = NA, dec = 3
 ) {
-  
+
   p_ub <- pnorm(ub, mean, stdev)
   p_lb <- pnorm(lb, mean, stdev)
   p_int <- max(p_ub - p_lb, 0) %>% round(dec)
@@ -60,6 +66,13 @@ prob_norm <- function(
 #' @param x Return value from \code{\link{prob_norm}}
 #' @param type Probabilities or values
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_norm(mean = 0, stdev = 1, ub = 0)
+#' plot(result)
+#'
+#' @seealso \code{\link{prob_norm}} to calculate results
+#' @seealso \code{\link{summary.prob_norm}} to summarize results
 #'
 #' @export
 plot.prob_norm <- function(x, type = "values", ...) {
@@ -125,6 +138,13 @@ plot.prob_norm <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_norm}}
 #' @param type Probabilities or values
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_norm(mean = 0, stdev = 1, ub = 0)
+#' summary(result)
+#'
+#' @seealso \code{\link{prob_norm}} to calculate results
+#' @seealso \code{\link{plot.prob_norm}} to plot results
 #'
 #' @export
 summary.prob_norm <- function(object, type = "values", ...) {
@@ -221,7 +241,7 @@ prob_lnorm <- function(
   meanlog, sdlog, lb = NA, ub = NA,
   plb = NA, pub = NA, dec = 3
 ) {
-  
+
   p_ub <- plnorm(ub, meanlog, sdlog)
   p_lb <- plnorm(lb, meanlog, sdlog)
   p_int <- max(p_ub - p_lb, 0) %>% round(dec)
@@ -427,7 +447,7 @@ prob_tdist <- function(
   df, mean = 0, stdev = 1, lb = NA,
   ub = NA, plb = NA, pub = NA, dec = 3
 ) {
-  
+
   p_ub <- pt(ub, df)
   p_lb <- pt(lb, df)
   p_int <- max(p_ub - p_lb, 0)
@@ -479,7 +499,7 @@ prob_tdist <- function(
 #'
 #' @export
 plot.prob_tdist <- function(x, type = "values", ...) {
-  
+
   mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
@@ -866,7 +886,7 @@ prob_chisq <- function(
   df, lb = NA, ub = NA, plb = NA,
   pub = NA, dec = 3
 ) {
-  
+
   if (!is_not(lb) && lb < 0) lb <- 0
   if (!is_not(ub) && ub < 0) ub <- 0
 
@@ -921,7 +941,7 @@ prob_chisq <- function(
 #'
 #' @export
 plot.prob_chisq <- function(x, type = "values", ...) {
-  
+
   mess <- paste0("mess_", type)
   if (!is.null(x[[mess]])) return(invisible())
 
@@ -1308,7 +1328,7 @@ summary.prob_unif <- function(object, type = "values", ...) {
 #'
 #' @export
 prob_binom <- function(
-  n, p, lb = NA, ub = NA, 
+  n, p, lb = NA, ub = NA,
   plb = NA, pub = NA, dec = 3
 ) {
 
@@ -2184,7 +2204,7 @@ prob_pois <- function(
   lambda, lb = NA, ub = NA,
   plb = NA, pub = NA, dec = 3
 ) {
-  
+
   if (lambda <= 0) mess_values <- "\nLambda must be positive"
 
   if (!is_not(lb) && lb < 0) lb <- 0

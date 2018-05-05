@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/compare_means.html} for an example in Radiant
 #'
-#' @param dataset Dataset 
+#' @param dataset Dataset
 #' @param var1 A numeric variable or factor selected for comparison
 #' @param var2 One or more numeric variables for comparison. If var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of va1r
 #' @param samples Are samples independent ("independent") or not ("paired")
@@ -16,8 +16,7 @@
 #' @return A list of all variables defined in the function as an object of class compare_means
 #'
 #' @examples
-#' result <- compare_means(diamonds,"cut","price")
-#' result <- diamonds %>% compare_means("cut","price", comb = c("Fair:Good", "Premium:Ideal"))
+#' compare_means(diamonds, "cut", "price") %>% str()
 #'
 #' @seealso \code{\link{summary.compare_means}} to summarize results
 #' @seealso \code{\link{plot.compare_means}} to plot results
@@ -66,10 +65,10 @@ compare_means <- function(
 
   levs <- levels(dataset[["variable"]])
 
-  cmb <- combn(levs, 2) %>% 
-    t() %>% 
+  cmb <- combn(levs, 2) %>%
+    t() %>%
     as.data.frame(stringsAsFactors = FALSE)
-  rownames(cmb) <- cmb %>% 
+  rownames(cmb) <- cmb %>%
     apply(1, paste, collapse = ":")
   colnames(cmb) <- c("group1", "group2")
 
@@ -116,7 +115,6 @@ compare_means <- function(
 
     # res[i, c("cis_low", "cis_high")] <- sim_ci
   }
-  rm(x, y, sel)
 
   if (adjust != "none") {
     res$p.value %<>% p.adjust(method = adjust)
@@ -142,6 +140,7 @@ compare_means <- function(
     rename(!!! setNames("variable", cname))
 
   vars <- paste0(vars, collapse = ", ")
+  rm(x, y, sel, i, ci_calc)
   as.list(environment()) %>% add_class("compare_means")
 }
 
@@ -157,7 +156,6 @@ compare_means <- function(
 #' @examples
 #' result <- compare_means(diamonds, "cut", "price")
 #' summary(result)
-#' compare_means(diamonds, "price", "carat") %>% summary()
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
 #' @seealso \code{\link{plot.compare_means}} to plot results
@@ -177,8 +175,8 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
   cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
   # object$dat_summary[, -1] %<>% round(dec)
-  object$dat_summary %>% 
-    as.data.frame(stringsAsFactors = FALSE) %>% 
+  object$dat_summary %>%
+    as.data.frame(stringsAsFactors = FALSE) %>%
     formatdf(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
   cat("\n")
@@ -198,7 +196,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
   mod <- object$res
   mod$`Alt. hyp.` <- paste(mod$group1, hyp_symbol, mod$group2, " ")
   mod$`Null hyp.` <- paste(mod$group1, "=", mod$group2, " ")
-  mod$diff <- {means[mod$group1 %>% as.character()] - means[mod$group2 %>% as.character()]} %>% 
+  mod$diff <- {means[mod$group1 %>% as.character()] - means[mod$group2 %>% as.character()]} %>%
     round(dec)
 
   if (show) {
@@ -229,8 +227,8 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- compare_means(diamonds,"cut","price")
-#' plot(result, plots = c("bar","density"))
+#' result <- compare_means(diamonds, "cut", "price")
+#' plot(result, plots = c("bar", "density"))
 #'
 #' @seealso \code{\link{compare_means}} to calculate results
 #' @seealso \code{\link{summary.compare_means}} to summarize results
@@ -272,14 +270,14 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
   if ("box" %in% plots) {
     plot_list[[which("box" == plots)]] <-
       visualize(x$dataset, xvar = v1, yvar = v2, type = "box", custom = TRUE) +
-      theme(legend.position = "none") + 
+      theme(legend.position = "none") +
       labs(x = var1, y = var2)
   }
 
   if ("density" %in% plots) {
     plot_list[[which("density" == plots)]] <-
       visualize(x$dataset, xvar = v2, type = "density", fill = v1, custom = TRUE) +
-      labs(x = var2) + 
+      labs(x = var2) +
       guides(fill = guide_legend(title = var1))
   }
 
@@ -297,6 +295,6 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
     }
   }
 
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>% 
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
     {if (shiny) . else print(.)}
 }

@@ -11,9 +11,8 @@
 #' @return A list of all variables used in cross_tabs as an object of class cross_tabs
 #'
 #' @examples
-#' result <- cross_tabs(newspaper, "Income", "Newspaper")
-#' result <- newspaper %>% cross_tabs("Income", "Newspaper")
-#' result <- table(select(newspaper, Income, Newspaper)) %>% cross_tabs(tab = .)
+#' cross_tabs(newspaper, "Income", "Newspaper") %>% str()
+#' table(select(newspaper, Income, Newspaper)) %>% cross_tabs(tab = .)
 #'
 #' @seealso \code{\link{summary.cross_tabs}} to summarize results
 #' @seealso \code{\link{plot.cross_tabs}} to plot results
@@ -50,8 +49,8 @@ cross_tabs <- function(dataset, var1, var2, tab = NULL, data_filter = "") {
 
     tab <- table(dataset[[var1]], dataset[[var2]])
     tab[is.na(tab)] <- 0
-    tab <- tab[, colSums(tab) > 0] %>% 
-      {.[rowSums(.) > 0, ]} %>% 
+    tab <- tab[, colSums(tab) > 0] %>%
+      {.[rowSums(.) > 0, ]} %>%
       as.table()
     ## dataset not needed in summary or plot
     rm(dataset)
@@ -86,14 +85,13 @@ cross_tabs <- function(dataset, var1, var2, tab = NULL, data_filter = "") {
 #' @examples
 #' result <- cross_tabs(newspaper, "Income", "Newspaper")
 #' summary(result, check = c("observed", "expected", "chi_sq"))
-#' newspaper %>% cross_tabs("Income", "Newspaper") %>% summary("observed")
 #'
 #' @seealso \code{\link{cross_tabs}} to calculate results
 #' @seealso \code{\link{plot.cross_tabs}} to plot results
 #'
 #' @export
 summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
-  
+
   if (is.character(object)) return(object)
   cat("Cross-tabs\n")
   cat("Data     :", object$df_name, "\n")
@@ -205,7 +203,6 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
 #' @examples
 #' result <- cross_tabs(newspaper, "Income", "Newspaper")
 #' plot(result, check = c("observed","expected","chi_sq"))
-#' newspaper %>% cross_tabs("Income", "Newspaper") %>% plot(c("observed","expected"))
 #'
 #' @seealso \code{\link{cross_tabs}} to calculate results
 #' @seealso \code{\link{summary.cross_tabs}} to summarize results
@@ -342,6 +339,6 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
     }
   }
 
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>% 
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
     {if (shiny) . else print(.)}
 }

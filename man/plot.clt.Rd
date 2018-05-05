@@ -21,3 +21,7 @@ Plot method for the Central Limit Theorem function
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/clt.html} for an example in Radiant
 }
+\examples{
+clt("Uniform", 100, 100, unif_min = 10, unif_max = 20) \%>\% plot()
+
+}

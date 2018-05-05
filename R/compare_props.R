@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/compare_props.html} for an example in Radiant
 #'
-#' @param dataset Dataset 
+#' @param dataset Dataset
 #' @param var1 A grouping variable to split the data for comparisons
 #' @param var2 The variable to calculate proportions for
 #' @param levs The factor level selected for the proportion comparison
@@ -15,8 +15,7 @@
 #' @return A list of all variables defined in the function as an object of class compare_props
 #'
 #' @examples
-#' result <- compare_props(titanic, "pclass", "survived")
-#' result <- titanic %>% compare_props("pclass", "survived")
+#' compare_props(titanic, "pclass", "survived")
 #'
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #' @seealso \code{\link{plot.compare_props}} to plot results
@@ -61,8 +60,8 @@ compare_props <- function(
   prop_input[is.na(prop_input)] <- 0
 
   lv <- rownames(prop_input)
-  cmb <- combn(lv, 2) %>% 
-    t() %>% 
+  cmb <- combn(lv, 2) %>%
+    t() %>%
     as.data.frame(stringsAsFactors = FALSE)
 
   rownames(cmb) <- cmb %>% apply(1, paste, collapse = ":")
@@ -136,7 +135,6 @@ compare_props <- function(
 #' @examples
 #' result <- compare_props(titanic, "pclass", "survived")
 #' summary(result)
-#' titanic %>% compare_props("pclass", "survived") %>% summary()
 #'
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{plot.compare_props}} to plot results
@@ -155,8 +153,8 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
   cat("Confidence:", object$conf_lev, "\n")
   cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
-  object$dat_summary %>% 
-    as.data.frame(stringsAsFactors = FALSE) %>% 
+  object$dat_summary %>%
+    as.data.frame(stringsAsFactors = FALSE) %>%
     formatdf(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
   cat("\n")
@@ -211,7 +209,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 #'
 #' @examples
 #' result <- compare_props(titanic, "pclass", "survived")
-#' plot(result, plots = c("bar","dodge"))
+#' plot(result, plots = c("bar", "dodge"))
 #'
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{summary.compare_props}} to summarize results
@@ -260,6 +258,6 @@ plot.compare_props <- function(
     }
   }
 
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>% 
+  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
     {if (shiny) . else print(.)}
 }

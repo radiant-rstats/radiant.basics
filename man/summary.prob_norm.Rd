@@ -19,3 +19,13 @@ Summary method for the probability calculator function (normal)
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
+\examples{
+result <- prob_norm(mean = 0, stdev = 1, ub = 0)
+summary(result)
+
+}
+\seealso{
+\code{\link{prob_norm}} to calculate results
+
+\code{\link{plot.prob_norm}} to plot results
+}

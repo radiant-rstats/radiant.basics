@@ -10,10 +10,8 @@
 #' @return A list with all variables defined in the function as an object of class compare_means
 #'
 #' @examples
-#' result <- correlation(diamonds, c("price","carat"))
-#' result <- correlation(diamonds, c("price","carat","table"))
-#' result <- correlation(diamonds, "price:carat")
-#' result <- diamonds %>% correlation("price:carat")
+#' correlation(diamonds, c("price", "carat")) %>% str()
+#' correlation(diamonds, "x:z") %>% str()
 #'
 #' @seealso \code{\link{summary.correlation}} to summarize results
 #' @seealso \code{\link{plot.correlation}} to plot results
@@ -52,7 +50,6 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
 #' @examples
 #' result <- correlation(diamonds, c("price", "carat", "table"))
 #' summary(result, cutoff = .3)
-#' diamonds %>% correlation("price:carat") %>% summary()
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{plot.correlation}} to plot results
@@ -134,7 +131,6 @@ print.correlation <- function(x, ...) {
 #' @examples
 #' result <- correlation(diamonds, c("price", "carat", "table"))
 #' plot(result)
-#' diamonds %>% correlation("price:carat") %>% plot()
 #'
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{summary.correlation}} to summarize results

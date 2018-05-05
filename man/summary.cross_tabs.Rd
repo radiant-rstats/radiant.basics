@@ -24,7 +24,6 @@ See \url{https://radiant-rstats.github.io/docs/basics/cross_tabs.html} for an ex
 \examples{
 result <- cross_tabs(newspaper, "Income", "Newspaper")
 summary(result, check = c("observed", "expected", "chi_sq"))
-newspaper \%>\% cross_tabs("Income", "Newspaper") \%>\% summary("observed")
 
 }
 \seealso{

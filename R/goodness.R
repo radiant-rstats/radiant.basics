@@ -11,14 +11,14 @@
 #' @return A list of all variables used in goodness as an object of class goodness
 #'
 #' @examples
-#' result <- goodness(newspaper, "Income")
-#' result <- table(select(newspaper, Income)) %>% goodness(tab = .)
+#' goodness(newspaper, "Income") %>% str()
+#' table(select(newspaper, Income)) %>% goodness(tab = .)
 #'
 #' @seealso \code{\link{summary.goodness}} to summarize results
 #' @seealso \code{\link{plot.goodness}} to plot results
 #'
 #' @export
-goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") { 
+goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") {
 
   if (is.table(tab)) {
     df_name <- deparse(substitute(tab))
@@ -32,7 +32,7 @@ goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") {
     tab[is.na(tab)] <- 0
     tab <- as.table(tab)
 
-  } 
+  }
   ## dataset not needed in summary or plot
   rm(dataset)
 
@@ -87,8 +87,8 @@ goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") {
 #'
 #' @examples
 #' result <- goodness(newspaper, "Income", c(.3, .7))
-#' summary(result, check = c("observed","expected","chi_sq"))
-#' newspaper %>% goodness("Income", "1/3 2/3") %>% summary("observed")
+#' summary(result, check = c("observed", "expected", "chi_sq"))
+#' goodness(newspaper, "Income", "1/3 2/3") %>% summary("observed")
 #'
 #' @seealso \code{\link{goodness}} to calculate results
 #' @seealso \code{\link{plot.goodness}} to plot results
@@ -161,8 +161,8 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 #'
 #' @examples
 #' result <- goodness(newspaper, "Income")
-#' plot(result, check = c("observed","expected","chi_sq"))
-#' newspaper %>% goodness("Income") %>% plot(c("observed","expected"))
+#' plot(result, check = c("observed", "expected", "chi_sq"))
+#' goodness(newspaper, "Income") %>% plot(c("observed","expected"))
 #'
 #' @seealso \code{\link{goodness}} to calculate results
 #' @seealso \code{\link{summary.goodness}} to summarize results

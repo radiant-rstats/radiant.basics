@@ -27,3 +27,12 @@ Probability calculator for the normal distribution
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
+\examples{
+prob_norm(mean = 0, stdev = 1, ub = 0)
+
+}
+\seealso{
+\code{\link{summary.prob_norm}} to summarize results
+
+\code{\link{plot.prob_norm}} to plot results
+}

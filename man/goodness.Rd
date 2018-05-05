@@ -27,8 +27,8 @@ Evaluate if sample data for a categorical variable is consistent wtih a hypothes
 See \url{https://radiant-rstats.github.io/docs/basics/goodness.html} for an example in Radiant
 }
 \examples{
-result <- goodness(newspaper, "Income")
-result <- table(select(newspaper, Income)) \%>\% goodness(tab = .)
+goodness(newspaper, "Income") \%>\% str()
+table(select(newspaper, Income)) \%>\% goodness(tab = .)
 
 }
 \seealso{

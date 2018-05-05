@@ -36,8 +36,7 @@ Compare proportions across groups
 See \url{https://radiant-rstats.github.io/docs/basics/compare_props.html} for an example in Radiant
 }
 \examples{
-result <- compare_props(titanic, "pclass", "survived")
-result <- titanic \%>\% compare_props("pclass", "survived")
+compare_props(titanic, "pclass", "survived")
 
 }
 \seealso{

@@ -27,7 +27,6 @@ See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an e
 \examples{
 result <- correlation(diamonds, c("price", "carat", "table"))
 summary(result, cutoff = .3)
-diamonds \%>\% correlation("price:carat") \%>\% summary()
 
 }
 \seealso{

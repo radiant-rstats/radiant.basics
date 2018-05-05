@@ -27,9 +27,8 @@ Evaluate associations between categorical variables
 See \url{https://radiant-rstats.github.io/docs/basics/cross_tabs.html} for an example in Radiant
 }
 \examples{
-result <- cross_tabs(newspaper, "Income", "Newspaper")
-result <- newspaper \%>\% cross_tabs("Income", "Newspaper")
-result <- table(select(newspaper, Income, Newspaper)) \%>\% cross_tabs(tab = .)
+cross_tabs(newspaper, "Income", "Newspaper") \%>\% str()
+table(select(newspaper, Income, Newspaper)) \%>\% cross_tabs(tab = .)
 
 }
 \seealso{

@@ -24,7 +24,6 @@ See \url{https://radiant-rstats.github.io/docs/basics/compare_means.html} for an
 \examples{
 result <- compare_means(diamonds, "cut", "price")
 summary(result)
-compare_means(diamonds, "price", "carat") \%>\% summary()
 
 }
 \seealso{

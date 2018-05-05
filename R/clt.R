@@ -15,6 +15,11 @@
 #'
 #' @importFrom stats rexp rnorm runif
 #'
+#' @return A list with the name of the Distribution and a matrix of simulated data
+#'
+#' @examples
+#' clt("Uniform", 10, 10, unif_min = 10, unif_max = 20)
+#'
 #' @export
 clt <- function(
   dist, n = 100, m = 100,
@@ -44,6 +49,9 @@ clt <- function(
 #' @param stat Statistic to use (sum or mean)
 #' @param bins Number of bins to use
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' clt("Uniform", 100, 100, unif_min = 10, unif_max = 20) %>% plot()
 #'
 #' @export
 plot.clt <- function(x, stat = "sum", bins = 15, ...) {
@@ -79,6 +87,6 @@ plot.clt <- function(x, stat = "sum", bins = 15, ...) {
   gridExtra::grid.arrange(
     grobs = plots,
     top = paste0("CLT: ", x$dist, " distribution"),
-    ncol = min(2, length(plots))
+    ncol = 2
   )
 }

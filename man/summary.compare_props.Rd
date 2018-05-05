@@ -24,7 +24,6 @@ See \url{https://radiant-rstats.github.io/docs/basics/compare_props.html} for an
 \examples{
 result <- compare_props(titanic, "pclass", "survived")
 summary(result)
-titanic \%>\% compare_props("pclass", "survived") \%>\% summary()
 
 }
 \seealso{

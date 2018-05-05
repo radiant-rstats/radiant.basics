@@ -29,9 +29,16 @@ clt(dist, n = 100, m = 100, norm_mean = 0, norm_sd = 1,
 
 \item{expo_rate}{Rate for the exponential distribution}
 }
+\value{
+A list with the name of the Distribution and a matrix of simulated data
+}
 \description{
 Central Limit Theorem simulation
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/clt.html} for an example in Radiant
+}
+\examples{
+clt("Uniform", 10, 10, unif_min = 10, unif_max = 20)
+
 }
