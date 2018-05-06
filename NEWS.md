@@ -4,7 +4,7 @@
 
 * Various changes to the code to accomodate the use of `shiny::makeReactiveBinding`. The advantage is that the code generated for _Report > Rmd_ and _Report > R_ will no longer have to use `r_data` to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well.
 
-# radiant.basics 0.9.2
+# radiant.basics 0.9.2.0
 
 ## Major changes
 
@@ -31,7 +31,7 @@
 * Added log.normal as an option in the probability calculator
 * The correlation plot now has an option to select a sample of data for scatter plots (e.g., 1K, 5K, 10K, or All)
 
-# radiant.basics 0.8.9
+# radiant.basics 0.8.9.0
 
 ## Minor changes
 
@@ -42,7 +42,7 @@
 * Applied `styler` to code
 * Long lines of code generated for _Report > Rmd_ and _Report > R_ will be wrapped to enhance readability 
 
-# radiant.basics 0.8.3
+# radiant.basics 0.8.3.0
 
 ## Minor changes
 
@@ -57,7 +57,7 @@
 * Fix for level ordering in goodness-of-fit expected-values plot
 * Code clean-up and various minor fixes and improvements
 
-# radiant.basics 0.8.0
+# radiant.basics 0.8.0.0
 
 ## Major changes
 
