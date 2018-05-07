@@ -111,7 +111,7 @@ compare_props <- function(
     mutate(
       n = as.integer(rowSums(.[, 1:2])),
       p = .[[1]] / n,
-      se = (p * (1 - p) / n) %>% sqrt(),
+      se = sqrt((p * (1 - p) / n)),
       ci = ci_calc(se, conf_lev)
     ) %>%
       set_rownames(rownames(prop_input)) %>%

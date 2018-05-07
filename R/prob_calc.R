@@ -727,8 +727,8 @@ plot.prob_fdist <- function(x, type = "values", ...) {
   df2 <- object$df2
 
   limits <- c(
-    qf(0.01, df1 = df1, df2 = df2) %>% floor(),
-    qf(1 - 0.01, df1 = df1, df2 = df2) %>% ceiling()
+    floor(qf(0.01, df1 = df1, df2 = df2)),
+    ceiling(qf(1 - 0.01, df1 = df1, df2 = df2))
   )
 
   dat <- data.frame(
@@ -958,8 +958,8 @@ plot.prob_chisq <- function(x, type = "values", ...) {
   df <- object$df
 
   limits <- c(
-    qchisq(0.001, df = df) %>% floor(),
-    qchisq(1 - 0.001, df = df) %>% ceiling()
+    floor(qchisq(0.001, df = df)),
+    ceiling(qchisq(1 - 0.001, df = df))
   )
 
   dat <- data.frame(
@@ -1888,7 +1888,7 @@ summary.prob_disc <- function(object, type = "values", ...) {
   cat("Values       :", paste0(v, collapse = " "), "\n")
   cat("Probabilities:", paste0(p %>% round(dec), collapse = " "), "\n")
   m <- sum(v * p)
-  std <- sum(p * (v - m) ^ 2) %>% sqrt()
+  std <- sqrt(sum(p * (v - m) ^ 2))
   cat("Mean         :", round(m, dec), "\n")
   cat("St. dev      :", round(std, dec), "\n")
 
@@ -2055,8 +2055,8 @@ plot.prob_expo <- function(x, type = "values", ...) {
   rate <- object$rate
 
   limits <- c(
-    qexp(0.001, rate = rate) %>% floor(),
-    qexp(1 - 0.001, rate = rate) %>% ceiling()
+    floor(qexp(0.001, rate = rate)),
+    ceiling(qexp(1 - 0.001, rate = rate))
   )
 
   dat <- data.frame(
@@ -2320,7 +2320,7 @@ plot.prob_pois <- function(x, type = "values", ...) {
   }
 
   lambda <- object$lambda
-  limits <- 0:(qpois(1 - 0.00001, lambda) %>% ceiling())
+  limits <- 0:(ceiling(qpois(1 - 0.00001, lambda)))
   n <- max(limits)
 
   if (!is.na(lb) && lb > n) {
