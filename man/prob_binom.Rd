@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_calc.R
 \name{prob_binom}
 \alias{prob_binom}
-\title{Probability calculator for the binomial distribution (binomial)}
+\title{Probability calculator for the binomial distribution}
 \usage{
 prob_binom(n, p, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 }
@@ -22,7 +22,7 @@ prob_binom(n, p, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 \item{dec}{Number of decimals to show}
 }
 \description{
-Probability calculator for the binomial distribution (binomial)
+Probability calculator for the binomial distribution
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant

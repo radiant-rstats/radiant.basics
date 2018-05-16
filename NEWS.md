@@ -1,4 +1,4 @@
-# radiant.design 0.9.3.1
+# radiant.design 0.9.3.2
 
 ## Major changes
 

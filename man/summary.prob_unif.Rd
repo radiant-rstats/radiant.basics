@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_calc.R
 \name{summary.prob_unif}
 \alias{summary.prob_unif}
-\title{Summary method for the probability calculator function (uniform)}
+\title{Summary method for the probability calculator (uniform)}
 \usage{
 \method{summary}{prob_unif}(object, type = "values", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for the probability calculator function (uniform)
+Summary method for the probability calculator (uniform)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant

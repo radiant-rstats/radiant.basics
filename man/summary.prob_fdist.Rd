@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_calc.R
 \name{summary.prob_fdist}
 \alias{summary.prob_fdist}
-\title{Summary method for the probability calculator function (F-distribution)}
+\title{Summary method for the probability calculator (F-distribution)}
 \usage{
 \method{summary}{prob_fdist}(object, type = "values", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for the probability calculator function (F-distribution)
+Summary method for the probability calculator (F-distribution)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant

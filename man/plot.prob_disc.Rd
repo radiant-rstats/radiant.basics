@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_calc.R
 \name{plot.prob_disc}
 \alias{plot.prob_disc}
-\title{Plot method for the probability calculator function (discrete)}
+\title{Plot method for the probability calculator (discrete)}
 \usage{
 \method{plot}{prob_disc}(x, type = "values", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot method for the probability calculator function (discrete)
+Plot method for the probability calculator (discrete)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant

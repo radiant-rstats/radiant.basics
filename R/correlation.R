@@ -109,9 +109,9 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   return(invisible())
 }
 
-#' Print method for radiant.basics::correlation
+#' Print method for the correlation function
 #'
-#' @param x Return value from correlation
+#' @param x Return value from \code{\link{correlation}}
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export

@@ -1,4 +1,4 @@
-#' Compare means for two or more variables
+#' Compare sample means
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/compare_means.html} for an example in Radiant
 #'

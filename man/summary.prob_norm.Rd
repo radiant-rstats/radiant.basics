@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_calc.R
 \name{summary.prob_norm}
 \alias{summary.prob_norm}
-\title{Summary method for the probability calculator function (normal)}
+\title{Summary method for the probability calculator (normal)}
 \usage{
 \method{summary}{prob_norm}(object, type = "values", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for the probability calculator function (normal)
+Summary method for the probability calculator (normal)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant

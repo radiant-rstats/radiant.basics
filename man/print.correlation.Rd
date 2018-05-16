@@ -2,15 +2,15 @@
 % Please edit documentation in R/correlation.R
 \name{print.correlation}
 \alias{print.correlation}
-\title{Print method for radiant.basics::correlation}
+\title{Print method for the correlation function}
 \usage{
 \method{print}{correlation}(x, ...)
 }
 \arguments{
-\item{x}{Return value from correlation}
+\item{x}{Return value from \code{\link{correlation}}}
 
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Print method for radiant.basics::correlation
+Print method for the correlation function
 }

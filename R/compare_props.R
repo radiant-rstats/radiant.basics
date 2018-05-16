@@ -1,4 +1,4 @@
-#' Compare proportions across groups
+#' Compare sample proportions across groups
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/compare_props.html} for an example in Radiant
 #'

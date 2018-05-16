@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare_means.R
 \name{compare_means}
 \alias{compare_means}
-\title{Compare means for two or more variables}
+\title{Compare sample means}
 \usage{
 compare_means(dataset, var1, var2, samples = "independent",
   alternative = "two.sided", conf_lev = 0.95, comb = "",
@@ -33,7 +33,7 @@ compare_means(dataset, var1, var2, samples = "independent",
 A list of all variables defined in the function as an object of class compare_means
 }
 \description{
-Compare means for two or more variables
+Compare sample means
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/compare_means.html} for an example in Radiant

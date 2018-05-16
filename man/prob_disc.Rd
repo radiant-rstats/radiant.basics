@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_calc.R
 \name{prob_disc}
 \alias{prob_disc}
-\title{Probability calculator for the discrete distribution (discrete)}
+\title{Probability calculator for a discrete distribution}
 \usage{
 prob_disc(v, p, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 }
@@ -22,7 +22,7 @@ prob_disc(v, p, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 \item{dec}{Number of decimals to show}
 }
 \description{
-Probability calculator for the discrete distribution (discrete)
+Probability calculator for a discrete distribution
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant

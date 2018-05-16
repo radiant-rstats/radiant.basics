@@ -13,7 +13,7 @@
 #' @param unif_max Maximum for the uniform distribution
 #' @param expo_rate Rate for the exponential distribution
 #'
-#' @importFrom stats rexp rnorm runif
+#' @importFrom stats rexp rnorm runif rbinom
 #'
 #' @return A list with the name of the Distribution and a matrix of simulated data
 #'
@@ -41,7 +41,7 @@ clt <- function(
   add_class(list(dist = dist, sim = sim), "clt")
 }
 
-#' Plot method for the Central Limit Theorem function
+#' Plot method for the Central Limit Theorem simulation
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/clt.html} for an example in Radiant
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/clt.R
 \name{plot.clt}
 \alias{plot.clt}
-\title{Plot method for the Central Limit Theorem function}
+\title{Plot method for the Central Limit Theorem simulation}
 \usage{
 \method{plot}{clt}(x, stat = "sum", bins = 15, ...)
 }
@@ -16,7 +16,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot method for the Central Limit Theorem function
+Plot method for the Central Limit Theorem simulation
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/clt.html} for an example in Radiant

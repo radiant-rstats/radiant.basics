@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_calc.R
 \name{plot.prob_binom}
 \alias{plot.prob_binom}
-\title{Plot method for the probability calculator function (binomial)}
+\title{Plot method for the probability calculator (binomial)}
 \usage{
 \method{plot}{prob_binom}(x, type = "values", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Plot method for the probability calculator function (binomial)
+Plot method for the probability calculator (binomial)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant

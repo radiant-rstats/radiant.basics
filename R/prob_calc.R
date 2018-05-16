@@ -131,7 +131,7 @@ plot.prob_norm <- function(x, type = "values", ...) {
   sshhr(plt)
 }
 
-#' Summary method for the probability calculator function (normal)
+#' Summary method for the probability calculator (normal)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -345,7 +345,7 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
   sshhr(plt)
 }
 
-#' Summary method for the probability calculator function (log normal)
+#' Summary method for the probability calculator (log normal)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -429,7 +429,7 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
   }
 }
 
-#' Probability calculator for the t distribution
+#' Probability calculator for the t-distribution
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -553,7 +553,7 @@ plot.prob_tdist <- function(x, type = "values", ...) {
 }
 
 
-#' Summary method for the probability calculator function (t-distribution)
+#' Summary method for the probability calculator (t-distribution)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -778,7 +778,7 @@ plot.prob_fdist <- function(x, type = "values", ...) {
 }
 
 
-#' Summary method for the probability calculator function (F-distribution)
+#' Summary method for the probability calculator (F-distribution)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -1006,7 +1006,7 @@ plot.prob_chisq <- function(x, type = "values", ...) {
 }
 
 
-#' Summary method for the probability calculator function (Chi-squared distribution)
+#' Summary method for the probability calculator (Chi-squared distribution)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -1220,7 +1220,7 @@ plot.prob_unif <- function(x, type = "values", ...) {
   sshhr(plt)
 }
 
-#' Summary method for the probability calculator function (uniform)
+#' Summary method for the probability calculator (uniform)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -1314,7 +1314,7 @@ summary.prob_unif <- function(object, type = "values", ...) {
   }
 }
 
-#' Probability calculator for the binomial distribution (binomial)
+#' Probability calculator for the binomial distribution
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -1427,7 +1427,7 @@ prob_binom <- function(
   as.list(environment()) %>% add_class("prob_binom")
 }
 
-#' Plot method for the probability calculator function (binomial)
+#' Plot method for the probability calculator (binomial)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -1497,7 +1497,7 @@ plot.prob_binom <- function(x, type = "values", ...) {
   sshhr(plt)
 }
 
-#' Summary method for the probability calculator function
+#' Summary method for the probability calculator (binomial)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -1623,7 +1623,7 @@ summary.prob_binom <- function(object, type = "values", ...) {
   }
 }
 
-#' Probability calculator for the discrete distribution (discrete)
+#' Probability calculator for a discrete distribution
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -1764,7 +1764,7 @@ prob_disc <- function(
   as.list(environment()) %>% add_class("prob_disc")
 }
 
-#' Plot method for the probability calculator function (discrete)
+#' Plot method for the probability calculator (discrete)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -1839,7 +1839,7 @@ plot.prob_disc <- function(x, type = "values", ...) {
   sshhr(plt)
 }
 
-#' Summary method for the probability calculator function (discrete)
+#' Summary method for the probability calculator (discrete)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -2104,7 +2104,7 @@ plot.prob_expo <- function(x, type = "values", ...) {
 }
 
 
-#' Summary method for the probability calculator function (Exponential distribution)
+#' Summary method for the probability calculator (exponential)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -2296,7 +2296,7 @@ prob_pois <- function(
 }
 
 
-#' Plot method for the probability calculator function (Poisson distribution)
+#' Plot method for the probability calculator (poisson)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
@@ -2373,7 +2373,7 @@ plot.prob_pois <- function(x, type = "values", ...) {
   sshhr(plt)
 }
 
-#' Summary method for the probability calculator function (Poisson distribution)
+#' Summary method for the probability calculator (poisson)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'

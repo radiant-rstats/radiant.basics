@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_calc.R
 \name{summary.prob_pois}
 \alias{summary.prob_pois}
-\title{Summary method for the probability calculator function (Poisson distribution)}
+\title{Summary method for the probability calculator (poisson)}
 \usage{
 \method{summary}{prob_pois}(object, type = "values", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for the probability calculator function (Poisson distribution)
+Summary method for the probability calculator (poisson)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant

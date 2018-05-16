@@ -1,0 +1,92 @@
+reference:
+- title: Starting radiant.basics
+  desc: Functions used to start the radiant.basics shiny apps
+  contents:
+    - radiant.basics
+    - radiant.basics_viewer
+    - radiant.basics_window
+- title: Basics > Probability
+  desc: Functions used with the Probability Calculator and the Central Limit Theorem simulator
+  contents:
+    - clt
+    - plot.clt
+    - prob_binom
+    - summary.prob_binom
+    - plot.prob_binom
+    - prob_chisq
+    - summary.prob_chisq
+    - plot.prob_chisq
+    - prob_disc
+    - summary.prob_disc
+    - plot.prob_disc
+    - prob_expo
+    - summary.prob_expo
+    - plot.prob_expo
+    - prob_fdist
+    - summary.prob_fdist
+    - plot.prob_fdist
+    - prob_lnorm
+    - summary.prob_lnorm
+    - plot.prob_lnorm
+    - prob_norm
+    - summary.prob_norm
+    - plot.prob_norm
+    - prob_pois
+    - summary.prob_pois
+    - plot.prob_pois
+    - prob_tdist
+    - summary.prob_tdist
+    - plot.prob_tdist
+    - prob_unif
+    - summary.prob_unif
+    - plot.prob_unif
+- title: Basics > Means
+  desc: Functions used with Basics > Means
+  contents:
+    - single_mean
+    - summary.single_mean
+    - plot.single_mean
+    - compare_means
+    - summary.compare_means
+    - plot.compare_means
+- title: Basics > Proportions
+  desc: Functions used with Basics > Proportions
+  contents:
+    - single_prop
+    - summary.single_prop
+    - plot.single_prop
+    - compare_props
+    - summary.compare_props
+    - plot.compare_props
+- title: Basics > Tables
+  desc: Functions used with Basics > Tables
+  contents:
+    - goodness
+    - summary.goodness
+    - plot.goodness
+    - cross_tabs
+    - summary.cross_tabs
+    - plot.cross_tabs
+    - correlation
+    - summary.correlation
+    - plot.correlation
+    - print.correlation
+- title: Data sets
+  desc: Data sets bundled with radiant.basics
+  contents:
+    - consider
+    - demand_uk
+    - newspaper
+    - salary
+articles:
+- title: Basics Menu
+  contents:
+    - pkgdown/clt
+    - pkgdown/prob_calc
+    - pkgdown/single_mean
+    - pkgdown/compare_means
+    - pkgdown/single_prop
+    - pkgdown/compare_props
+    - pkgdown/goodness
+    - pkgdown/cross_tabs
+    - pkgdown/correlation

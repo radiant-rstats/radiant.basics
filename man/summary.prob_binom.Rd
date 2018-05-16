@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_calc.R
 \name{summary.prob_binom}
 \alias{summary.prob_binom}
-\title{Summary method for the probability calculator function}
+\title{Summary method for the probability calculator (binomial)}
 \usage{
 \method{summary}{prob_binom}(object, type = "values", ...)
 }
@@ -14,7 +14,7 @@
 \item{...}{further arguments passed to or from other methods}
 }
 \description{
-Summary method for the probability calculator function
+Summary method for the probability calculator (binomial)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
