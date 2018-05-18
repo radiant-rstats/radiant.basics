@@ -29,7 +29,7 @@ compare_props <- function(
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   vars <- c(var1, var2)
-  dataset <- getdata(dataset, vars, filt = data_filter) %>% mutate_all(funs(as.factor))
+  dataset <- get_data(dataset, vars, filt = data_filter) %>% mutate_all(funs(as.factor))
 
   lv <- levels(dataset[[var2]])
   if (levs != "") {
@@ -155,7 +155,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 
   object$dat_summary %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
-    formatdf(dec = dec, mark = ",") %>%
+    format_df(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
   cat("\n")
 
@@ -179,7 +179,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
   res_sim <- is.na(res$df)
   if (show) {
     res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "chisq.value", "df", "ci_low", "ci_high", "sig_star")]
-    res[, c("chisq.value", "ci_low", "ci_high")] %<>% formatdf(dec, mark = ",")
+    res[, c("chisq.value", "ci_low", "ci_high")] %<>% format_df(dec, mark = ",")
 
     ## apparantely you can get negative number here
     # res$ci_low[res$ci_low < 0] <- 0
@@ -204,7 +204,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 #' @param x Return value from \code{\link{compare_props}}
 #' @param plots One or more plots of proportions ("bar" or "dodge")
 #' @param shiny Did the function call originate inside a shiny app
-#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples

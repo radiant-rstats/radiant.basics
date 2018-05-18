@@ -48,7 +48,7 @@ output$ui_cp_levs <- renderUI({
   if (not_available(input$cp_var2)) {
     return()
   } else {
-    levs <- .getdata()[[input$cp_var2]] %>% as.factor() %>% levels()
+    levs <- .get_data()[[input$cp_var2]] %>% as.factor() %>% levels()
   }
 
   selectInput(
@@ -62,8 +62,8 @@ output$ui_cp_levs <- renderUI({
 output$ui_cp_comb <- renderUI({
   if (not_available(input$cp_var1)) return()
 
-  levs <- .getdata()[[input$cp_var1]] %>% as.factor() %>% levels()
-  alevs <- .getdata()[[input$cp_var1]] %>% unique()
+  levs <- .get_data()[[input$cp_var1]] %>% as.factor() %>% levels()
+  alevs <- .get_data()[[input$cp_var1]] %>% unique()
   levs <- levs[levs %in% alevs]
 
   if (length(levs) > 2) {

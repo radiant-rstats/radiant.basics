@@ -1,10 +1,4 @@
 reference:
-- title: Starting radiant.basics
-  desc: Functions used to start the radiant.basics shiny apps
-  contents:
-    - radiant.basics
-    - radiant.basics_viewer
-    - radiant.basics_window
 - title: Basics > Probability
   desc: Functions used with the Probability Calculator and the Central Limit Theorem simulator
   contents:
@@ -78,6 +72,12 @@ reference:
     - demand_uk
     - newspaper
     - salary
+- title: Starting radiant.basics
+  desc: Functions used to start the radiant.basics shiny app
+  contents:
+    - radiant.basics
+    - radiant.basics_viewer
+    - radiant.basics_window
 articles:
 - title: Basics Menu
   contents:

@@ -33,7 +33,7 @@ cor_sum_inputs <- reactive({
 output$ui_cor_vars <- renderUI({
   withProgress(message = "Acquiring variable information", value = 1, {
     vars <- varnames()
-    isChar <- .getclass() %in% c("character", "factor") %>%
+    isChar <- .get_class() %in% c("character", "factor") %>%
       set_names(vars)
     tlv <- two_level_vars()
     if (length(tlv) > 0) isChar[tlv] <- FALSE
@@ -51,7 +51,7 @@ output$ui_cor_vars <- renderUI({
 })
 
 output$ui_cor_nrobs <- renderUI({
-  nrobs <- nrow(.getdata())
+  nrobs <- nrow(.get_data())
   choices <- c("1,000" = 1000, "5,000" = 5000, "10,000" = 10000, "All" = -1) %>%
     .[. < nrobs]
   selectInput(

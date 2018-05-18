@@ -35,7 +35,7 @@ cross_tabs <- function(dataset, var1, var2, tab = NULL, data_filter = "") {
     }
   } else {
     df_name <- if (!is_string(dataset)) deparse(substitute(dataset)) else dataset
-    dataset <- getdata(dataset, c(var1, var2), filt = data_filter)
+    dataset <- get_data(dataset, c(var1, var2), filt = data_filter)
 
     ## Use simulated p-values when
     # http://stats.stackexchange.com/questions/100976/n-1-pearsons-chi-square-in-r
@@ -182,7 +182,7 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
       print()
   }
 
-  object$res <- formatdf(object$res, dec = dec + 1, mark = ",")
+  object$res <- format_df(object$res, dec = dec + 1, mark = ",")
 
   if (object$res$p.value < .001) object$res$p.value <- "< .001"
   cat(paste0("\nChi-squared: ", object$res$statistic, " df(", object$res$parameter, "), p.value ", object$res$p.value), "\n\n")
@@ -197,7 +197,7 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
 #' @param x Return value from \code{\link{cross_tabs}}
 #' @param check Show plots for variables var1 and var2. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e)), and "row_perc", "col_perc", and "perc" for row, column, and table percentages respectively
 #' @param shiny Did the function call originate inside a shiny app
-#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples

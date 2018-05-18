@@ -31,7 +31,7 @@ compare_means <- function(
 
   vars <- c(var1, var2)
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- getdata(dataset, vars, filt = data_filter)
+  dataset <- get_data(dataset, vars, filt = data_filter)
 
   ## in case : was used for var2
   vars <- colnames(dataset)
@@ -177,7 +177,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
   # object$dat_summary[, -1] %<>% round(dec)
   object$dat_summary %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
-    formatdf(dec = dec, mark = ",") %>%
+    format_df(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
   cat("\n")
 
@@ -223,7 +223,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
 #' @param x Return value from \code{\link{compare_means}}
 #' @param plots One or more plots ("bar", "density", "box", or "scatter")
 #' @param shiny Did the function call originate inside a shiny app
-#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples

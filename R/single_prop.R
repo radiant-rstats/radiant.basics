@@ -27,8 +27,8 @@ single_prop <- function(
 ) {
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  # dataset <- getdata(dataset, var, filt = data_filter, na.rm = FALSE)
-  dataset <- getdata(dataset, var, filt = data_filter, na.rm = FALSE) %>% 
+  # dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE)
+  dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE) %>% 
     mutate_all(funs(as.factor))
 
   ## removing any missing values
@@ -113,7 +113,7 @@ summary.single_prop <- function(object, dec = 3, ...) {
   object$dat_summary[-1] %>%
     # round(dec) %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
-    formatdf(dec = dec, mark = ",") %>%
+    format_df(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
   cat("\n")
 
@@ -122,7 +122,7 @@ summary.single_prop <- function(object, dec = 3, ...) {
     select(setdiff(colnames(.), c("parameter", "method", "alternative")))
 
   names(res) <- c("diff", "ns", "p.value", ci_perc[1], ci_perc[2])
-  res <- formatdf(mutate(res, ns = as.integer(res$ns)), dec = dec, mark = ",") # restrict the number of decimals
+  res <- format_df(mutate(res, ns = as.integer(res$ns)), dec = dec, mark = ",") # restrict the number of decimals
 
   res$` ` <- sig_stars(res$p.value)
   if (res$p.value < .001) res$p.value <- "< .001"
@@ -139,7 +139,7 @@ summary.single_prop <- function(object, dec = 3, ...) {
 #' @param x Return value from \code{\link{single_prop}}
 #' @param plots Plots to generate. "bar" shows a bar chart of the data. The "simulate" chart shows the location of the sample proportion and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #' @param shiny Did the function call originate inside a shiny app
-#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples

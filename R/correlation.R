@@ -25,7 +25,7 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
 
   ## data.matrix as the last step in the chain is about 25% slower using
   ## system.time but results (using diamonds and mtcars) are identical
-  dataset <- getdata(dataset, vars, filt = data_filter) %>%
+  dataset <- get_data(dataset, vars, filt = data_filter) %>%
     mutate_all(funs(as_numeric))
 
   ## calculate the correlation matrix with p.values using the psych package
@@ -58,14 +58,14 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
 summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...) {
 
   ## calculate the correlation matrix with p.values using the psych package
-  cr <- apply(object$cmat$r, 2, formatnr, dec = dec) %>%
+  cr <- apply(object$cmat$r, 2, format_nr, dec = dec) %>%
     set_rownames(rownames(object$cmat$r))
   cr[is.na(object$cmat$r)] <- "-"
   cr[abs(object$cmat$r) < cutoff] <- ""
   ltmat <- lower.tri(cr)
   cr[!ltmat] <- ""
 
-  cp <- apply(object$cmat$p, 2, formatnr, dec = dec) %>%
+  cp <- apply(object$cmat$p, 2, format_nr, dec = dec) %>%
     set_rownames(rownames(object$cmat$p))
   cp[is.na(object$cmat$p)] <- "-"
   cp[abs(object$cmat$r) < cutoff] <- ""
@@ -95,7 +95,7 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
    print(quote = FALSE)
 
   if (covar) {
-    cvr <- apply(object$cvmat, 2, formatnr, dec = dec) %>%
+    cvr <- apply(object$cvmat, 2, format_nr, dec = dec) %>%
       set_rownames(rownames(object$cvmat))
     cvr[abs(object$cmat$r) < cutoff] <- ""
     ltmat <- lower.tri(cvr)

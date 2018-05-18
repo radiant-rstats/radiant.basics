@@ -22,7 +22,7 @@ cm_inputs <- reactive({
 ###############################
 output$ui_cm_var1 <- renderUI({
   vars <- c("None" = "", groupable_vars())
-  isNum <- "numeric" == .getclass() | "integer" == .getclass()
+  isNum <- "numeric" == .get_class() | "integer" == .get_class()
 
   ## can't use unique here - removes variable type information
   vars <- c(vars, varnames()[isNum]) %>% .[!duplicated(.)]
@@ -38,7 +38,7 @@ output$ui_cm_var1 <- renderUI({
 
 output$ui_cm_var2 <- renderUI({
   if (not_available(input$cm_var1)) return()
-  isNum <- "numeric" == .getclass() | "integer" == .getclass()
+  isNum <- "numeric" == .get_class() | "integer" == .get_class()
   vars <- varnames()[isNum]
 
   if (input$cm_var1 %in% vars) {
@@ -67,8 +67,8 @@ output$ui_cm_var2 <- renderUI({
 output$ui_cm_comb <- renderUI({
   if (not_available(input$cm_var1)) return()
 
-  if (.getclass()[[input$cm_var1]] == "factor") {
-    levs <- .getdata()[[input$cm_var1]] %>% levels()
+  if (.get_class()[[input$cm_var1]] == "factor") {
+    levs <- .get_data()[[input$cm_var1]] %>% levels()
   } else {
     levs <- c(input$cm_var1, input$cm_var2)
   }
@@ -187,7 +187,7 @@ cm_available <- reactive({
     return("This analysis requires at least two variables. The first can be of type\nfactor, numeric, or interval. The second must be of type numeric or interval.\nIf these variable types are not available please select another dataset.\n\n" %>% suggest_data("salary"))
   }
   ## cm_var2 may still have > elements selected when cm_var1 is changed to a factor
-  if (length(input$cm_var2) > 1 && .getclass()[input$cm_var1] == "factor") {
+  if (length(input$cm_var2) > 1 && .get_class()[input$cm_var1] == "factor") {
     return(" ")
   }
   ## cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric

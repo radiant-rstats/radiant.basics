@@ -25,7 +25,7 @@ single_mean <- function(
 ) {
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- getdata(dataset, var, filt = data_filter, na.rm = FALSE)
+  dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE)
 
   ## counting missing values
   miss <- n_missing(dataset)
@@ -91,7 +91,7 @@ summary.single_mean <- function(object, dec = 3, ...) {
   object$dat_summary[ ,-(1:2)] %>% 
     # round(dec) %>% 
     as.data.frame(stringsAsFactors = FALSE) %>%
-    formatdf(dec = dec, mark = ",") %>%
+    format_df(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
   cat("\n")
 
@@ -126,7 +126,7 @@ summary.single_mean <- function(object, dec = 3, ...) {
 #' @param x Return value from \code{\link{single_mean}}
 #' @param plots Plots to generate. "hist" shows a histogram of the data along with vertical lines that indicate the sample mean and the confidence interval. "simulate" shows the location of the sample mean and the comparison value (comp_value). Simulation is used to demonstrate the sampling variability in the data under the null-hypothesis
 #' @param shiny Did the function call originate inside a shiny app
-#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples

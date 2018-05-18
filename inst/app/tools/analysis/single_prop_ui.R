@@ -31,7 +31,7 @@ output$ui_sp_var <- renderUI({
 
 output$up_sp_lev <- renderUI({
   req(available(input$sp_var))
-  levs <- .getdata()[[input$sp_var]] %>% as.factor() %>% levels()
+  levs <- .get_data()[[input$sp_var]] %>% as.factor() %>% levels()
 
   selectInput(
     "sp_lev", "Choose level:",

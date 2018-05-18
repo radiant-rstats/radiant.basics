@@ -25,7 +25,7 @@ goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") {
     if (missing(var)) var <- "variable"
   } else {
     df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-    dataset <- getdata(dataset, var, filt = data_filter)
+    dataset <- get_data(dataset, var, filt = data_filter)
 
     ## creating and cleaning up the table
     tab <- table(dataset[[var]])
@@ -140,7 +140,7 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
     print(round(object$cst$residuals, dec))
   }
 
-  object$res <- formatdf(object$res, dec = dec + 1, mark = ",")
+  object$res <- format_df(object$res, dec = dec + 1, mark = ",")
 
   if (object$res$p.value < .001) object$res$p.value <- "< .001"
   cat(paste0("\nChi-squared: ", object$res$statistic, " df(", object$res$parameter, "), p.value ", object$res$p.value), "\n\n")
@@ -156,7 +156,7 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 #' @param check Show plots for variable var. "observed" for the observed frequencies table, "expected" for the expected frequencies table (i.e., frequencies that would be expected if the null hypothesis holds), "chi_sq" for the contribution to the overall chi-squared statistic for each cell (i.e., (o - e)^2 / e), and "dev_std" for the standardized differences between the observed and expected frequencies (i.e., (o - e) / sqrt(e))
 #' @param fillcol Color used for bar plots
 #' @param shiny Did the function call originate inside a shiny app
-#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This opion can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
