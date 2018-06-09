@@ -141,10 +141,6 @@ output$ui_clt <- renderUI({
         inline = TRUE
       )
     ),
-    # help_modal(
-    #   "Central Limit Theorem", "clt_help",
-    #   help_file = inclMD(file.path(getOption("radiant.path.basics"), "app/tools/help/clt.md"))
-    # )
     help_and_report(
       modal_title = "Central Limit Theorem", fun_name = "clt",
       help_file = inclRmd(file.path(getOption("radiant.path.basics"), "app/tools/help/clt.md"))
@@ -183,49 +179,50 @@ output$clt <- renderUI({
 
 .clt <- eventReactive(input$clt_run, {
   ## avoiding input errors
+  ret <- ""
+  print(input$clt_norm_mean)
   if (is.na(input$clt_n) || input$clt_n < 2) {
-    return("Please choose a sample size larger than 2.")
+    ret <- "Please choose a sample size larger than 2"
   } else if (is.na(input$clt_m) || input$clt_m < 2) {
-    return("Please choose 2 or more samples.")
-  }
-
-  if (input$clt_dist == "Uniform") {
+    ret <- "Please choose 2 or more samples"
+  } else if (input$clt_dist == "Uniform") {
     if (is.na(input$clt_unif_min)) {
-      return("Please choose a minimum value for the uniform distribution.")
-    }
-    if (is.na(input$clt_unif_max)) {
-      return("Please choose a maximum value for the uniform distribution.")
-    }
-    if (input$clt_unif_max <= input$clt_unif_min) {
-      return("The maximum value for the uniform distribution\nmust be larger than the minimum value.")
+      ret <- "Please choose a minimum value for the uniform distribution"
+    } else if (is.na(input$clt_unif_max)) {
+      ret <- "Please choose a maximum value for the uniform distribution"
+    } else if (input$clt_unif_max <= input$clt_unif_min) {
+      ret <- "The maximum value for the uniform distribution\nmust be larger than the minimum value"
     }
   } else if (input$clt_dist == "Normal") {
     if (is.na(input$clt_norm_mean)) {
-      return("Please choose a mean value for the normal distribution.")
-    }
-    if (is.na(input$clt_norm_sd) || input$clt_norm_sd < .001) {
-      return("Please choose a non-zero standard deviation for the normal distribution.")
+      ret <- "Please choose a mean value for the normal distribution"
+    } else if (is.na(input$clt_norm_sd) || input$clt_norm_sd < .001) {
+      ret <- "Please choose a non-zero standard deviation for the normal distribution"
     }
   } else if (input$clt_dist == "Exponential") {
     if (is.na(input$clt_expo_rate) || input$clt_expo_rate < 1) {
-      return("Please choose a rate larger than 1 for the exponential distribution.")
+      ret <- "Please choose a rate larger than 1 for the exponential distribution"
     }
   } else if (input$clt_dist == "Binomial") {
     if (is.na(input$clt_binom_size) || input$clt_binom_size < 1) {
-      return("Please choose a size parameter larger than 1 for the binomial distribution.")
-    }
-    if (is.na(input$clt_binom_prob) || input$clt_binom_prob < 0.01) {
-      return("Please choose a probability between 0 and 1 for the binomial distribution.")
+      ret <- "Please choose a size parameter larger than 1 for the binomial distribution"
+    } else if (is.na(input$clt_binom_prob) || input$clt_binom_prob < 0.01) {
+      ret <- "Please choose a probability between 0 and 1 for the binomial distribution"
     }
   }
-
-  do.call(clt, clt_inputs())
+  if (is_empty(ret)) {
+    do.call(clt, clt_inputs())
+  } else {
+    ret
+  }
 })
 
 .plot_clt <- reactive({
   if (not_pressed(input$clt_run)) return("** Press the Run simulation button to simulate data **")
+  clt <- .clt()
+  validate(need(!is.character(clt), paste0("\n\n\n         ", clt)))
   withProgress(message = "Generating plots", value = 1, {
-    plot(.clt(), stat = input$clt_stat, bins = input$clt_bins)
+    plot(clt, stat = input$clt_stat, bins = input$clt_bins)
   })
 })
 

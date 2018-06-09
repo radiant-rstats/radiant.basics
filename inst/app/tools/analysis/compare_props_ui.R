@@ -133,18 +133,14 @@ output$ui_compare_props <- renderUI({
 })
 
 cp_plot <- reactive({
-  list(plot_width = 650, plot_height = 400 * length(input$cp_plots))
+  list(plot_width = 650, plot_height = 400 * max(length(input$cp_plots), 1))
 })
 
 cp_plot_width <- function()
-  cp_plot() %>% {
-    if (is.list(.)) .$plot_width else 650
-  }
+  cp_plot() %>% {if (is.list(.)) .$plot_width else 650}
 
 cp_plot_height <- function()
-  cp_plot() %>% {
-    if (is.list(.)) .$plot_height else 400
-  }
+  cp_plot() %>% {if (is.list(.)) .$plot_height else 400}
 
 # output is called from the main radiant ui.R
 output$compare_props <- renderUI({
@@ -175,13 +171,12 @@ output$compare_props <- renderUI({
 
 cp_available <- reactive({
   if (not_available(input$cp_var1) || not_available(input$cp_var2)) {
-    return("This analysis requires two categorical variables. The first must have\ntwo or more levels. The second can have only two levels. If these\nvariable types are not available please select another dataset.\n\n" %>% suggest_data("titanic"))
+    "This analysis requires two categorical variables. The first must have\ntwo or more levels. The second can have only two levels. If these\nvariable types are not available please select another dataset.\n\n" %>% suggest_data("titanic")
+  } else if (input$cp_var1 %in% input$cp_var2) {
+    " "
+  } else {
+    "available"
   }
-
-  ## cp_var2 may be equal to cp_var1 when changing cp_var1 to cp_var2
-  if (input$cp_var1 %in% input$cp_var2) return(" ")
-
-  "available"
 })
 
 .compare_props <- reactive({
@@ -195,6 +190,7 @@ cp_available <- reactive({
 
 .plot_compare_props <- reactive({
   if (cp_available() != "available") return(cp_available())
+  validate(need(input$cp_plots, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.compare_props(), plots = input$cp_plots, shiny = TRUE)
   })

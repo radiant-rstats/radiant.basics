@@ -70,7 +70,7 @@ output$ui_single_mean <- renderUI({
 })
 
 sm_plot <- reactive({
-  list(plot_width = 650, plot_height = 400 * length(input$sm_plots))
+  list(plot_width = 650, plot_height = 400 * max(length(input$sm_plots), 1))
 })
 
 sm_plot_width <- function()
@@ -108,14 +108,12 @@ output$single_mean <- renderUI({
 
 sm_available <- reactive({
   if (not_available(input$sm_var)) {
-    return("This analysis requires a variable of type numeric or interval. If none are\navailable please select another dataset.\n\n" %>% suggest_data("demand_uk"))
-  }
-
-  if (is.na(input$sm_comp_value)) {
-    return("Please choose a comparison value")
-  }
-
-  "available"
+    "This analysis requires a variable of type numeric or interval. If none are\navailable please select another dataset.\n\n" %>% suggest_data("demand_uk")
+  } else if (is.na(input$sm_comp_value)) {
+    "Please choose a comparison value"
+  } else {
+    "available"
+  } 
 })
 
 .single_mean <- reactive({
@@ -129,6 +127,7 @@ sm_available <- reactive({
 
 .plot_single_mean <- reactive({
   if (sm_available() != "available") return(sm_available())
+  validate(need(input$sm_plots, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.single_mean(), plots = input$sm_plots, shiny = TRUE)
   })

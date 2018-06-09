@@ -64,7 +64,7 @@ output$ui_goodness <- renderUI({
 })
 
 gd_plot <- reactive({
-  list(plot_width = 650, plot_height = 400 * length(input$gd_check))
+  list(plot_width = 650, plot_height = 400 * max(length(input$gd_check), 1))
 })
 
 gd_plot_width <- function()
@@ -103,9 +103,10 @@ output$goodness <- renderUI({
 
 gd_available <- reactive({
   if (not_available(input$gd_var)) {
-    return("This analysis requires a categorical variables with two or more levels.\nIf such a variable type is not available please select another dataset.\n\n" %>% suggest_data("newspaper"))
+    "This analysis requires a categorical variables with two or more levels.\nIf such a variable type is not available please select another dataset.\n\n" %>% suggest_data("newspaper")
+  } else {
+    "available"
   }
-  "available"
 })
 
 .goodness <- reactive({
@@ -119,6 +120,7 @@ gd_available <- reactive({
 
 .plot_goodness <- reactive({
   if (gd_available() != "available") return(gd_available())
+  validate(need(input$gd_check, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.goodness(), check = input$gd_check, shiny = TRUE)
   })

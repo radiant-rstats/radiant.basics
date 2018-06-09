@@ -68,7 +68,7 @@ output$ui_cross_tabs <- renderUI({
 })
 
 ct_plot <- reactive({
-  list(plot_width = 650, plot_height = 400 * length(input$ct_check))
+  list(plot_width = 650, plot_height = 400 * max(length(input$ct_check), 1))
 })
 
 ct_plot_width <- function()
@@ -125,6 +125,7 @@ ct_available <- reactive({
 
 .plot_cross_tabs <- reactive({
   if (ct_available() != "available") return(ct_available())
+  validate(need(input$ct_check, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.cross_tabs(), check = input$ct_check, shiny = TRUE)
   })

@@ -89,18 +89,14 @@ output$ui_single_prop <- renderUI({
 })
 
 sp_plot <- reactive({
-  list(plot_width = 650, plot_height = 400 * length(input$sp_plots))
+  list(plot_width = 650, plot_height = 400 * max(length(input$sp_plots), 1))
 })
 
 sp_plot_width <- function()
-  sp_plot() %>% {
-    if (is.list(.)) .$plot_width else 650
-  }
+  sp_plot() %>% {if (is.list(.)) .$plot_width else 650}
 
 sp_plot_height <- function()
-  sp_plot() %>% {
-    if (is.list(.)) .$plot_height else 400
-  }
+  sp_plot() %>% {if (is.list(.)) .$plot_height else 400}
 
 ## output is called from the main radiant ui.R
 output$single_prop <- renderUI({
@@ -131,16 +127,12 @@ output$single_prop <- renderUI({
 
 sp_available <- reactive({
   if (not_available(input$sp_var)) {
-    return("This analysis requires a categorical variable. In none are available\nplease select another dataset.\n\n" %>% suggest_data("consider"))
-  }
-
-  if (input$sp_comp_value %>% {
-    is.na(.) | . > 1 | . <= 0
-  }) {
-    return("Please choose a comparison value between 0 and 1")
-  }
-
-  "available"
+    "This analysis requires a categorical variable. In none are available\nplease select another dataset.\n\n" %>% suggest_data("consider")
+  } else if (input$sp_comp_value %>% {is.na(.) | . > 1 | . <= 0}) {
+    "Please choose a comparison value between 0 and 1"
+  } else {
+    "available"
+  } 
 })
 
 .single_prop <- reactive({
@@ -154,6 +146,7 @@ sp_available <- reactive({
 
 .plot_single_prop <- reactive({
   if (sp_available() != "available") return(sp_available())
+  validate(need(input$sp_plots, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.single_prop(), plots = input$sp_plots, shiny = TRUE)
   })

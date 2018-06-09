@@ -146,7 +146,7 @@ output$ui_compare_means <- renderUI({
 })
 
 cm_plot <- reactive({
-  list(plot_width = 650, plot_height = 400 * length(input$cm_plots))
+  list(plot_width = 650, plot_height = 400 * max(length(input$cm_plots), 1))
 })
 
 cm_plot_width <- function()
@@ -185,15 +185,13 @@ output$compare_means <- renderUI({
 cm_available <- reactive({
   if (not_available(input$cm_var1) || not_available(input$cm_var2)) {
     return("This analysis requires at least two variables. The first can be of type\nfactor, numeric, or interval. The second must be of type numeric or interval.\nIf these variable types are not available please select another dataset.\n\n" %>% suggest_data("salary"))
+  } else if (length(input$cm_var2) > 1 && .get_class()[input$cm_var1] == "factor") {
+    " "
+  } else if (input$cm_var1 %in% input$cm_var2) {
+    " "
+  } else {
+    "available"
   }
-  ## cm_var2 may still have > elements selected when cm_var1 is changed to a factor
-  if (length(input$cm_var2) > 1 && .get_class()[input$cm_var1] == "factor") {
-    return(" ")
-  }
-  ## cm_var2 may be equal to cm_var1 when changing cm_var1 from factor to numeric
-  if (input$cm_var1 %in% input$cm_var2) return(" ")
-
-  "available"
 })
 
 .compare_means <- reactive({
@@ -207,6 +205,7 @@ cm_available <- reactive({
 
 .plot_compare_means <- reactive({
   if (cm_available() != "available") return(cm_available())
+  validate(need(input$cm_plots, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.compare_means(), plots = input$cm_plots, shiny = TRUE)
   })
