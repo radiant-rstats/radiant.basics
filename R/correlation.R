@@ -126,6 +126,7 @@ print.correlation <- function(x, ...) {
 #' @param x Return value from \code{\link{correlation}}
 #' @param nrobs Number of data points to show in scatter plots (-1 for all)
 #' @param jit Level of jittering to apply to scatter plot. Default is .3. Use 0 for no jittering
+#' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods.
 #'
 #' @examples
@@ -138,7 +139,7 @@ print.correlation <- function(x, ...) {
 #' @importFrom ggplot2 alpha
 #'
 #' @export
-plot.correlation <- function(x, nrobs = -1, jit = .3, ...) {
+plot.correlation <- function(x, nrobs = -1, jit = .3, dec = 2, ...) {
 
   ## defined method to be use in panel.plot
   method <- x$method
@@ -154,7 +155,7 @@ plot.correlation <- function(x, nrobs = -1, jit = .3, ...) {
       symbols = c("***", "**", "*", ".", " ")
     )
     r <- ct$estimate
-    rt <- format(r, digits = 2)[1]
+    rt <- format(r, digits = dec)[1]
     cex <- 0.5 / strwidth(rt)
 
     text(.5, .5, rt, cex = cex * abs(r))
