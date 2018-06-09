@@ -77,21 +77,18 @@ prob_norm <- function(
 #' @export
 plot.prob_norm <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(invisible())
-
-  object <- x
-  rm(x)
+  if (!is.null(x[[mess]])) return(" ")
 
   if (type == "values") {
-    lb <- object$lb
-    ub <- object$ub
+    lb <- x$lb
+    ub <- x$ub
   } else {
-    lb <- object$v_lb
-    ub <- object$v_ub
+    lb <- x$v_lb
+    ub <- x$v_ub
   }
 
-  mean <- object$mean
-  stdev <- object$stdev
+  mean <- x$mean
+  stdev <- x$stdev
 
   limits <- c(mean - 3 * stdev, mean + 3 * stdev)
 
@@ -121,7 +118,7 @@ plot.prob_norm <- function(x, type = "values", ...) {
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
-    stat_function(fun = dnorm, args = list(mean = mean, sd = stdev)) +
+    stat_function(fun = stats::dnorm, args = list(mean = mean, sd = stdev)) +
     stat_function(fun = dnorm_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dnorm_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dnorm_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
@@ -148,29 +145,16 @@ plot.prob_norm <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_norm <- function(object, type = "values", ...) {
-  mean <- object$mean
-  stdev <- object$stdev
-  dec <- object$dec
-
-  ub <- object$ub
-  lb <- object$lb
-  p_ub <- object$p_ub
-  p_lb <- object$p_lb
-  p_int <- object$p_int
-
-  pub <- object$pub
-  plb <- object$plb
-
-  v_ub <- object$v_ub
-  v_lb <- object$v_lb
 
   cat("Probability calculator\n")
   cat("Distribution: Normal\n")
-  cat("Mean        :", round(mean, dec), "\n")
-  cat("St. dev     :", round(stdev, dec), "\n")
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
+  attach(object)
+
+  cat("Mean        :", round(mean, dec), "\n")
+  cat("St. dev     :", round(stdev, dec), "\n")
 
   if (type == "values") {
     cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
@@ -220,6 +204,7 @@ summary.prob_norm <- function(object, type = "values", ...) {
       }
     }
   }
+  detach(object)
 }
 
 
@@ -290,21 +275,18 @@ prob_lnorm <- function(
 #' @export
 plot.prob_lnorm <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(invisible())
-
-  object <- x
-  rm(x)
+  if (!is.null(x[[mess]])) return(" ")
 
   if (type == "values") {
-    lb <- object$lb
-    ub <- object$ub
+    lb <- x$lb
+    ub <- x$ub
   } else {
-    lb <- object$v_lb
-    ub <- object$v_ub
+    lb <- x$v_lb
+    ub <- x$v_ub
   }
 
-  meanlog <- object$meanlog
-  sdlog <- object$sdlog
+  meanlog <- x$meanlog
+  sdlog <- x$sdlog
 
   # limits <- c(meanlog - 3 * sdlog, meanlog + 3 * sdlog)
   limits <- c(0, meanlog + 3 * sdlog)
@@ -335,7 +317,7 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
-    stat_function(fun = dlnorm, args = list(meanlog = meanlog, sdlog = sdlog)) +
+    stat_function(fun = stats::dlnorm, args = list(meanlog = meanlog, sdlog = sdlog)) +
     stat_function(fun = dlnorm_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dlnorm_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dlnorm_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
@@ -355,29 +337,15 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_lnorm <- function(object, type = "values", ...) {
-  meanlog <- object$meanlog
-  sdlog <- object$sdlog
-  dec <- object$dec
-
-  ub <- object$ub
-  lb <- object$lb
-  p_ub <- object$p_ub
-  p_lb <- object$p_lb
-  p_int <- object$p_int
-
-  pub <- object$pub
-  plb <- object$plb
-
-  v_ub <- object$v_ub
-  v_lb <- object$v_lb
-
   cat("Probability calculator\n")
   cat("Distribution: Log normal\n")
-  cat("Mean log    :", round(meanlog, dec), "\n")
-  cat("St. dev log :", round(sdlog, dec), "\n")
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
+  attach(object)
+
+  cat("Mean log    :", round(meanlog, dec), "\n")
+  cat("St. dev log :", round(sdlog, dec), "\n")
 
   if (type == "values") {
     cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
@@ -427,6 +395,7 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
       }
     }
   }
+  detach(object)
 }
 
 #' Probability calculator for the t-distribution
@@ -501,19 +470,16 @@ prob_tdist <- function(
 plot.prob_tdist <- function(x, type = "values", ...) {
 
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(invisible())
-
-  object <- x
-  rm(x)
+  if (!is.null(x[[mess]])) return(" ")
   if (type == "values") {
-    lb <- object$lb
-    ub <- object$ub
+    lb <- x$lb
+    ub <- x$ub
   } else {
-    lb <- object$v_lb
-    ub <- object$v_ub
+    lb <- x$v_lb
+    ub <- x$v_ub
   }
 
-  df <- object$df
+  df <- x$df
 
   limits <- c(-3, 3)
   dt_limit <- function(x) {
@@ -542,7 +508,7 @@ plot.prob_tdist <- function(x, type = "values", ...) {
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
-    stat_function(fun = dt, args = list(df = df)) +
+    stat_function(fun = stats::dt, args = list(df = df)) +
     stat_function(fun = dt_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dt_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dt_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
@@ -563,30 +529,18 @@ plot.prob_tdist <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_tdist <- function(object, type = "values", ...) {
-  df <- object$df
-  n <- df + 1
-  dec <- object$dec
-
-  ub <- object$ub
-  lb <- object$lb
-  p_ub <- object$p_ub
-  p_lb <- object$p_lb
-  p_int <- object$p_int
-
-  pub <- object$pub
-  plb <- object$plb
-
-  v_ub <- object$v_ub
-  v_lb <- object$v_lb
-
   cat("Probability calculator\n")
   cat("Distribution: t\n")
-  cat("Df          :", df, "\n")
-  cat("Mean        :", 0, "\n")
-  cat("St. dev     :", {if (n > 2) round(n / (n - 2), dec) else "NA"}, "\n")
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
+
+  attach(object)
+  n <- df + 1
+
+  cat("Df          :", df, "\n")
+  cat("Mean        :", 0, "\n")
+  cat("St. dev     :", {if (n > 2) round(n / (n - 2), dec) else "NA"}, "\n")
 
   if (type == "values") {
     cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
@@ -636,6 +590,7 @@ summary.prob_tdist <- function(object, type = "values", ...) {
       }
     }
   }
+  detach(object)
 }
 
 #' Probability calculator for the F-distribution
@@ -711,20 +666,17 @@ prob_fdist <- function(
 #' @export
 plot.prob_fdist <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(invisible())
-
-  object <- x
-  rm(x)
+  if (!is.null(x[[mess]])) return(" ")
   if (type == "values") {
-    lb <- object$lb
-    ub <- object$ub
+    lb <- x$lb
+    ub <- x$ub
   } else {
-    lb <- object$v_lb
-    ub <- object$v_ub
+    lb <- x$v_lb
+    ub <- x$v_ub
   }
 
-  df1 <- object$df1
-  df2 <- object$df2
+  df1 <- x$df1
+  df2 <- x$df2
 
   limits <- c(
     floor(qf(0.01, df1 = df1, df2 = df2)),
@@ -788,24 +740,13 @@ plot.prob_fdist <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_fdist <- function(object, type = "values", ...) {
-  df1 <- object$df1
-  df2 <- object$df2
-  dec <- object$dec
-
-  ub <- object$ub
-  lb <- object$lb
-  p_ub <- object$p_ub
-  p_lb <- object$p_lb
-  p_int <- object$p_int
-
-  pub <- object$pub
-  plb <- object$plb
-
-  v_ub <- object$v_ub
-  v_lb <- object$v_lb
-
   cat("Probability calculator\n")
   cat("Distribution: F\n")
+
+  mess <- object[[paste0("mess_", type)]]
+  if (!is.null(mess)) return(mess)
+  attach(object)
+
   cat("Df 1        :", df1, "\n")
   cat("Df 2        :", df2, "\n")
   m <- if (df2 > 2) round(df2 / (df2 - 2), dec) else "NA"
@@ -816,9 +757,6 @@ summary.prob_fdist <- function(object, type = "values", ...) {
   }
   cat("Mean        :", m, "\n")
   cat("Variance    :", variance, "\n")
-
-  mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
 
   if (type == "values") {
     cat("Lower bound :", if (is.na(lb)) "0" else lb, "\n")
@@ -868,6 +806,7 @@ summary.prob_fdist <- function(object, type = "values", ...) {
       }
     }
   }
+  detach(object)
 }
 
 #' Probability calculator for the chi-squared distribution
@@ -943,19 +882,17 @@ prob_chisq <- function(
 plot.prob_chisq <- function(x, type = "values", ...) {
 
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(invisible())
+  if (!is.null(x[[mess]])) return(" ")
 
-  object <- x
-  rm(x)
   if (type == "values") {
-    lb <- object$lb
-    ub <- object$ub
+    lb <- x$lb
+    ub <- x$ub
   } else {
-    lb <- object$v_lb
-    ub <- object$v_ub
+    lb <- x$v_lb
+    ub <- x$v_ub
   }
 
-  df <- object$df
+  df <- x$df
 
   limits <- c(
     floor(qchisq(0.001, df = df)),
@@ -995,7 +932,7 @@ plot.prob_chisq <- function(x, type = "values", ...) {
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x")) +
-    stat_function(fun = dchisq, args = list(df = df)) +
+    stat_function(fun = stats::dchisq, args = list(df = df)) +
     stat_function(fun = dchisq_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dchisq_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dchisq_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
@@ -1016,29 +953,16 @@ plot.prob_chisq <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_chisq <- function(object, type = "values", ...) {
-  df <- object$df
-  dec <- object$dec
-
-  ub <- object$ub
-  lb <- object$lb
-  p_ub <- object$p_ub
-  p_lb <- object$p_lb
-  p_int <- object$p_int
-
-  pub <- object$pub
-  plb <- object$plb
-
-  v_ub <- object$v_ub
-  v_lb <- object$v_lb
-
   cat("Probability calculator\n")
   cat("Distribution: Chi-squared\n")
-  cat("Df          :", df, "\n")
-  cat("Mean        :", df, "\n")
-  cat("Variance    :", 2 * df, "\n")
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
+  attach(object)
+
+  cat("Df          :", df, "\n")
+  cat("Mean        :", df, "\n")
+  cat("Variance    :", 2 * df, "\n")
 
   if (type == "values") {
     cat("Lower bound :", if (is.na(lb)) "0" else lb, "\n")
@@ -1088,6 +1012,7 @@ summary.prob_chisq <- function(object, type = "values", ...) {
       }
     }
   }
+  detach(object)
 }
 
 #' Probability calculator for the uniform distribution
@@ -1164,22 +1089,20 @@ prob_unif <- function(
 #' @export
 plot.prob_unif <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(invisible())
+  if (!is.null(x[[mess]])) return(" ")
 
-  object <- x
-  rm(x)
   if (type == "values") {
-    lb <- object$lb
-    ub <- object$ub
+    lb <- x$lb
+    ub <- x$ub
   } else {
-    lb <- object$v_lb
-    ub <- object$v_ub
+    lb <- x$v_lb
+    ub <- x$v_ub
   }
 
-  min <- object$min
-  max <- object$max
+  min <- x$min
+  max <- x$max
 
-  if (min > max) return(invisible())
+  if (min > max) return(" ")
 
   limits <- c(min, max)
   dunif_limit <- function(x) {
@@ -1202,12 +1125,13 @@ plot.prob_unif <- function(x, type = "values", ...) {
     y
   }
 
-  dunif_lines <- c(ub, lb) %>% na.omit() %>% setdiff(c(min, max))
+  dunif_lines <- c(ub, lb) %>% na.omit() %>% base::setdiff(c(min, max))
   if (length(dunif_lines) == 0) dunif_lines <- c(-Inf, Inf)
 
   ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(data.frame(x = limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub), aes_string(x = "x")) +
+  plt <- data.frame(x = limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub) %>%
+    ggplot(aes_string(x = "x")) +
     stat_function(fun = dunif_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dunif_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dunif_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
@@ -1230,35 +1154,19 @@ plot.prob_unif <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_unif <- function(object, type = "values", ...) {
-  min <- object$min
-  max <- object$max
-  mean <- object$mean
-  stdev <- object$stdev
-  dec <- object$dec
-
-  ub <- object$ub
-  lb <- object$lb
-  p_ub <- object$p_ub
-  p_lb <- object$p_lb
-  p_int <- object$p_int
-
-  pub <- object$pub
-  plb <- object$plb
-
-  v_ub <- object$v_ub
-  v_lb <- object$v_lb
-
   cat("Probability calculator\n")
   cat("Distribution: Uniform\n")
+
+  mess <- object[[paste0("mess_", type)]]
+  if (!is.null(mess)) return(mess)
+  attach(object)
+
   cat("Min         :", min, "\n")
   cat("Max         :", max, "\n")
   if (max > min) {
     cat("Mean        :", round(mean, dec), "\n")
     cat("St. dev     :", round(stdev, dec), "\n")
   }
-
-  mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
 
   if (type == "values") {
     cat("Lower bound :", {
@@ -1312,6 +1220,7 @@ summary.prob_unif <- function(object, type = "values", ...) {
       }
     }
   }
+  detach(object)
 }
 
 #' Probability calculator for the binomial distribution
@@ -1439,20 +1348,18 @@ prob_binom <- function(
 plot.prob_binom <- function(x, type = "values", ...) {
 
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(invisible())
+  if (!is.null(x[[mess]])) return(" ")
 
-  object <- x
-  rm(x)
   if (type == "values") {
-    lb <- object$lb
-    ub <- object$ub
+    lb <- x$lb
+    ub <- x$ub
   } else {
-    lb <- object$vlb
-    ub <- object$vub
+    lb <- x$vlb
+    ub <- x$vub
   }
 
-  n <- object$n
-  p <- object$p
+  n <- x$n
+  p <- x$p
 
   limits <- 0:n
 
@@ -1465,11 +1372,11 @@ plot.prob_binom <- function(x, type = "values", ...) {
     k[lb + 1] <- "equal"
     k[0:n > lb] <- "above"
   } else {
-    return(invisible())
+    return(" ")
   }
 
   dat <- data.frame(
-    x = limits %>% as_factor(),
+    x = as_factor(limits),
     Probability = dbinom(limits, size = n, prob = p),
     k = k,
     stringsAsFactors = FALSE
@@ -1479,8 +1386,8 @@ plot.prob_binom <- function(x, type = "values", ...) {
   if (nrow(dat) < 40) {
     breaks <- dat$x
   } else {
-    x <- as_integer(dat$x)
-    breaks <- seq(min(x), max(x), length.out = 10) %>% round(0)
+    dx <- as_integer(dat$x)
+    breaks <- seq(min(dx), max(dx), length.out = 10) %>% round(0)
   }
 
   cols <- c(below = "red", equal = "blue", above = "black")
@@ -1507,42 +1414,17 @@ plot.prob_binom <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_binom <- function(object, type = "values", ...) {
-  n <- object$n
-  p <- object$p
-  dec <- object$dec
-
-  ub <- object$ub
-  lb <- object$lb
-  p_ub <- object$p_ub
-  p_lb <- object$p_lb
-  p_eub <- object$p_eub
-  p_elb <- object$p_elb
-  p_leub <- object$p_leub
-  p_lelb <- object$p_lelb
-  p_int <- object$p_int
-
-  pub <- object$pub
-  plb <- object$plb
-  vub <- object$vub
-  vlb <- object$vlb
-
-  vp_ub <- object$vp_ub
-  vp_lb <- object$vp_lb
-  vp_eub <- object$vp_eub
-  vp_elb <- object$vp_elb
-  vp_leub <- object$vp_leub
-  vp_lelb <- object$vp_lelb
-  vp_int <- object$vp_int
-
   cat("Probability calculator\n")
   cat("Distribution: Binomial\n")
+
+  mess <- object[[paste0("mess_", type)]]
+  if (!is.null(mess)) return(mess)
+  attach(object)
+
   cat("n           :", n, "\n")
   cat("p           :", p, "\n")
   cat("Mean        :", round(n * p, dec), "\n")
   cat("St. dev     :", sqrt(n * p * (1 - p)) %>% round(dec), "\n")
-
-  mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
 
   if (type == "values") {
     cat("Lower bound :", {
@@ -1621,6 +1503,7 @@ summary.prob_binom <- function(object, type = "values", ...) {
       }
     }
   }
+  detach(object)
 }
 
 #' Probability calculator for a discrete distribution
@@ -1634,7 +1517,6 @@ summary.prob_binom <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
-
 #'
 #' @export
 prob_disc <- function(
@@ -1644,9 +1526,9 @@ prob_disc <- function(
 
   # Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
   # expand.grid(height = 1:6, weight = 1:6)
-
-  v <- gsub(",", " ", v) %>% strsplit("\\s+") %>% unlist()
-  p <- gsub(",", " ", p) %>% strsplit("\\s+") %>% unlist()
+  rex <- "(\\s*,\\s*|\\s*;\\s*|\\s+)"
+  v <- strsplit(v, rex) %>% unlist()
+  p <- strsplit(p, rex) %>% unlist()
 
   lp <- length(p)
   lv <- length(v)
@@ -1658,8 +1540,9 @@ prob_disc <- function(
   }
 
   asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1]) / as.numeric(x[2]), as.numeric(x[1]))
-  p <- sshhr(strsplit(p, "/") %>% sapply(asNum))
-  v <- sshhr(strsplit(v, "/") %>% sapply(asNum))
+  rex <- "/"
+  p <- sshhr(strsplit(p, rex) %>% sapply(asNum))
+  v <- sshhr(strsplit(v, rex) %>% sapply(asNum))
 
   if (anyNA(p) | anyNA(v)) {
     mess <- "The number of probabilities entered must be a multiple of the number of values"
@@ -1755,7 +1638,7 @@ prob_disc <- function(
   }
 
   if (!is.na(vlb) && !is.na(vub)) {
-    if (vlb > vub) {
+    if (vlb > vub || plb > pub) {
       plb <- pub <- vlb <- vub <- NA
       mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
     }
@@ -1779,20 +1662,18 @@ prob_disc <- function(
 #' @export
 plot.prob_disc <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(invisible())
+  if (!is.null(x[[mess]])) return(" ")
 
-  object <- x
-  rm(x)
   if (type == "values") {
-    lb <- object$lb
-    ub <- object$ub
+    lb <- x$lb
+    ub <- x$ub
   } else {
-    lb <- object$vlb
-    ub <- object$vub
+    lb <- x$vlb
+    ub <- x$vub
   }
 
-  v <- object$v
-  p <- object$p
+  v <- x$v
+  p <- x$p
 
   limits <- v
 
@@ -1808,7 +1689,7 @@ plot.prob_disc <- function(x, type = "values", ...) {
     if (lb %in% v) k[v == lb] <- "equal"
     k[v > lb] <- "above"
   } else {
-    return(invisible())
+    return(" ")
   }
 
   dat <- data.frame(
@@ -1821,8 +1702,8 @@ plot.prob_disc <- function(x, type = "values", ...) {
   if (nrow(dat) < 30) {
     breaks <- dat$x
   } else {
-    x <- as_integer(dat$x)
-    breaks <- seq(min(x), max(x), length.out = 10) %>% round(0)
+    dx <- as_integer(dat$x)
+    breaks <- seq(min(dx), max(dx), length.out = 10) %>% round(0)
   }
 
   cols <- c(below = "red", equal = "blue", above = "black")
@@ -1853,38 +1734,13 @@ plot.prob_disc <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_disc <- function(object, type = "values", ...) {
-  mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
-
-  v <- object$v
-  p <- object$p
-  dec <- object$dec
-
-  ub <- object$ub
-  lb <- object$lb
-  p_ub <- object$p_ub
-  p_lb <- object$p_lb
-  p_eub <- object$p_eub
-  p_elb <- object$p_elb
-  p_leub <- object$p_leub
-  p_lelb <- object$p_lelb
-  p_int <- object$p_int
-
-  pub <- object$pub
-  plb <- object$plb
-  vub <- object$vub
-  vlb <- object$vlb
-
-  vp_ub <- object$vp_ub
-  vp_lb <- object$vp_lb
-  vp_eub <- object$vp_eub
-  vp_elb <- object$vp_elb
-  vp_leub <- object$vp_leub
-  vp_lelb <- object$vp_lelb
-  vp_int <- object$vp_int
-
   cat("Probability calculator\n")
   cat("Distribution : Discrete\n")
+
+  mess <- object[[paste0("mess_", type)]]
+  if (!is.null(mess)) return(mess)
+  attach(object)
+
   cat("Values       :", paste0(v, collapse = " "), "\n")
   cat("Probabilities:", paste0(p %>% round(dec), collapse = " "), "\n")
   m <- sum(v * p)
@@ -1969,6 +1825,7 @@ summary.prob_disc <- function(object, type = "values", ...) {
       }
     }
   }
+  detach(object)
 }
 
 #' Probability calculator for the exponential distribution
@@ -2040,19 +1897,17 @@ prob_expo <- function(
 #' @export
 plot.prob_expo <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(invisible())
+  if (!is.null(x[[mess]])) return(" ")
 
-  object <- x
-  rm(x)
   if (type == "values") {
-    lb <- object$lb
-    ub <- object$ub
+    lb <- x$lb
+    ub <- x$ub
   } else {
-    lb <- object$v_lb
-    ub <- object$v_ub
+    lb <- x$v_lb
+    ub <- x$v_ub
   }
 
-  rate <- object$rate
+  rate <- x$rate
 
   limits <- c(
     floor(qexp(0.001, rate = rate)),
@@ -2093,7 +1948,7 @@ plot.prob_expo <- function(x, type = "values", ...) {
   ## and R Graphics Cookbook
   # plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
   plt <- ggplot(dat, aes_string(x = "x")) +
-    stat_function(fun = dexp, args = list(rate = rate)) +
+    stat_function(fun = stats::dexp, args = list(rate = rate)) +
     stat_function(fun = dexp_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dexp_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dexp_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
@@ -2114,29 +1969,16 @@ plot.prob_expo <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_expo <- function(object, type = "values", ...) {
-  rate <- object$rate
-  dec <- object$dec
-
-  ub <- object$ub
-  lb <- object$lb
-  p_ub <- object$p_ub
-  p_lb <- object$p_lb
-  p_int <- object$p_int
-
-  pub <- object$pub
-  plb <- object$plb
-
-  v_ub <- object$v_ub
-  v_lb <- object$v_lb
-
   cat("Probability calculator\n")
   cat("Distribution: Exponential\n")
-  cat("Rate        :", rate, "\n")
-  cat("Mean        :", round(1 / rate, dec), "\n")
-  cat("Variance    :", round(rate ^ -2, dec), "\n")
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
+  attach(object)
+
+  cat("Rate        :", rate, "\n")
+  cat("Mean        :", round(1 / rate, dec), "\n")
+  cat("Variance    :", round(rate ^ -2, dec), "\n")
 
   if (type == "values") {
     cat("Lower bound :", if (is.na(lb)) "0" else lb, "\n")
@@ -2186,6 +2028,7 @@ summary.prob_expo <- function(object, type = "values", ...) {
       }
     }
   }
+  detach(object)
 }
 
 #' Probability calculator for the poisson distribution
@@ -2272,12 +2115,6 @@ prob_pois <- function(
     }
   }
 
-  if (!is.na(pub) && !is.na(plb)) {
-    vp_int <- sum(dpois(vlb:vub, lambda)) %>% max(0) %>% round(dec)
-  } else {
-    vp_int <- NA
-  }
-
   if (!is.na(lb) && !is.na(ub)) {
     if (lb > ub) {
       lb <- ub <- NA
@@ -2286,10 +2123,16 @@ prob_pois <- function(
   }
 
   if (!is.na(vlb) && !is.na(vub)) {
-    if (vlb > vub) {
+    if (vlb > vub || plb > pub) {
       plb <- pub <- vlb <- vub <- NA
       mess_probs <- "\nPlease ensure the lower bound is smaller than the upper bound"
     }
+  }
+
+  if (!is.na(pub) && !is.na(plb)) {
+    vp_int <- sum(dpois(vlb:vub, lambda)) %>% max(0) %>% round(dec)
+  } else {
+    vp_int <- NA
   }
 
   as.list(environment()) %>% add_class("prob_pois")
@@ -2307,19 +2150,17 @@ prob_pois <- function(
 #' @export
 plot.prob_pois <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(invisible())
+  if (!is.null(x[[mess]])) return(" ")
 
-  object <- x
-  rm(x)
   if (type == "values") {
-    lb <- object$lb
-    ub <- object$ub
+    lb <- x$lb
+    ub <- x$ub
   } else {
-    lb <- object$vlb
-    ub <- object$vub
+    lb <- x$vlb
+    ub <- x$vub
   }
 
-  lambda <- object$lambda
+  lambda <- x$lambda
   limits <- 0:(ceiling(qpois(1 - 0.00001, lambda)))
   n <- max(limits)
 
@@ -2342,7 +2183,7 @@ plot.prob_pois <- function(x, type = "values", ...) {
     k[lb + 1] <- "equal"
     k[0:n > lb] <- "above"
   } else {
-    return(invisible())
+    return(" ")
   }
 
   dat <- data.frame(
@@ -2355,8 +2196,8 @@ plot.prob_pois <- function(x, type = "values", ...) {
   if (nrow(dat) < 40) {
     breaks <- dat$x
   } else {
-    x <- as_integer(dat$x)
-    breaks <- seq(min(x), max(x), length.out = 10) %>% round(0)
+    dx <- as_integer(dat$x)
+    breaks <- seq(min(dx), max(dx), length.out = 10) %>% round(0)
   }
 
   cols <- c(below = "red", equal = "blue", above = "black")
@@ -2383,40 +2224,16 @@ plot.prob_pois <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_pois <- function(object, type = "values", ...) {
-  lambda <- object$lambda
-  dec <- object$dec
-
-  ub <- object$ub
-  lb <- object$lb
-  p_ub <- object$p_ub
-  p_lb <- object$p_lb
-  p_eub <- object$p_eub
-  p_elb <- object$p_elb
-  p_leub <- object$p_leub
-  p_lelb <- object$p_lelb
-  p_int <- object$p_int
-
-  pub <- object$pub
-  plb <- object$plb
-  vub <- object$vub
-  vlb <- object$vlb
-
-  vp_ub <- object$vp_ub
-  vp_lb <- object$vp_lb
-  vp_eub <- object$vp_eub
-  vp_elb <- object$vp_elb
-  vp_leub <- object$vp_leub
-  vp_lelb <- object$vp_lelb
-  vp_int <- object$vp_int
-
   cat("Probability calculator\n")
   cat("Distribution: Poisson\n")
-  cat("Lambda      :", lambda, "\n")
-  cat("Mean        :", lambda, "\n")
-  cat("Variance    :", lambda, "\n")
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
+  attach(object)
+
+  cat("Lambda      :", lambda, "\n")
+  cat("Mean        :", lambda, "\n")
+  cat("Variance    :", lambda, "\n")
 
   if (type == "values") {
     cat("Lower bound :", {
@@ -2487,4 +2304,5 @@ summary.prob_pois <- function(object, type = "values", ...) {
       }
     }
   }
+  detach(object)
 }
