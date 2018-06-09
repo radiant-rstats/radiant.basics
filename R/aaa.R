@@ -1,7 +1,11 @@
 # to avoid 'no visible binding for global variable' NOTE
 globalVariables(c(
   ".", "..count..", "n", "se", "Freq", "ci", "col1", "n",
-  "y", "parameter", "variable"
+  "y", "parameter", "variable", "dec", "df1", "df2", "lambda",
+  "lb", "meanlog", "p_elb", "p_eub", "p_int", "p_lb", "p_lelb",
+  "p_leub", "p_ub", "plb", "pub", "rate", "sdlog", "stdev",
+  "ub", "v", "v_lb", "v_ub", "vlb", "vp_elb", "vp_eub", "vp_int",
+   "vp_lb", "vp_lelb", "vp_leub", "vp_ub", "vub"
 ))
 
 #' radiant.basics
