@@ -811,7 +811,7 @@ pc_available <- reactive({
         a <- "Please provide a mean and standard deviation (> 0)"
       }
     } else if (input$pc_dist == "binom") {
-      if (is_not(input$pcb_n) || is_not(input$pcb_p)) {
+      if (is_not(input$pcb_n) || input$pcb_n < 0 || is_not(input$pcb_p) || input$pcb_p < 0) {
         a <- "Please provide a value for n (number of trials) and p (probability of success)"
       }
     } else if (input$pc_dist == "unif") {
