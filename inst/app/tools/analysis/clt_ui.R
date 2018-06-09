@@ -180,7 +180,6 @@ output$clt <- renderUI({
 .clt <- eventReactive(input$clt_run, {
   ## avoiding input errors
   ret <- ""
-  print(input$clt_norm_mean)
   if (is.na(input$clt_n) || input$clt_n < 2) {
     ret <- "Please choose a sample size larger than 2"
   } else if (is.na(input$clt_m) || input$clt_m < 2) {
