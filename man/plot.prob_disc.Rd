@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{Return value from \code{\link{prob_disc}}}
 
-\item{type}{Probabilities or values}
+\item{type}{Probabilities ("probs") or values ("values")}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -20,7 +20,7 @@ Plot method for the probability calculator (discrete)
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
 \examples{
-result <- prob_disc(v = "5 6 7 8 9 10 11 ", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+result <- prob_disc(v = "5 6 7 8 9 10 11", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
 plot(result, type = "probs")
 
 }

@@ -27,3 +27,7 @@ Probability calculator for the F-distribution
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
+\examples{
+prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
+
+}

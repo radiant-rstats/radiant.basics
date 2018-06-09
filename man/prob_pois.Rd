@@ -25,3 +25,7 @@ Probability calculator for the poisson distribution
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
+\examples{
+prob_pois(lambda = 1, ub = 3)
+
+}

@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{Return value from \code{\link{prob_tdist}}}
 
-\item{type}{Probabilities or values}
+\item{type}{Probabilities ("probs") or values ("values")}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -18,4 +18,9 @@ Plot method for the probability calculator (t-distribution)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
+}
+\examples{
+result <- prob_tdist(df = 10, ub = 2.228)
+plot(result, type = "values")
+
 }

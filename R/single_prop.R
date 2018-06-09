@@ -13,8 +13,8 @@
 #' @return A list of variables used in single_prop as an object of class single_prop
 #'
 #' @examples
-#' result <- single_prop(diamonds, "cut")
-#' result <- single_prop(diamonds, "clarity", lev = "IF", comp_value = 0.05)
+#' single_prop(diamonds, "cut") %>% str()
+#' single_prop(diamonds, "clarity", lev = "IF", comp_value = 0.05) %>% str()
 #'
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
 #' @seealso \code{\link{plot.single_prop}} to plot the results
@@ -28,7 +28,7 @@ single_prop <- function(
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   # dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE)
-  dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE) %>% 
+  dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE) %>%
     mutate_all(funs(as.factor))
 
   ## removing any missing values
@@ -61,10 +61,10 @@ single_prop <- function(
 
   ## use binom.test for exact
   res <- binom.test(
-    ns, n, p = comp_value, alternative = alternative, 
+    ns, n, p = comp_value, alternative = alternative,
     conf.level = conf_lev
   ) %>%
-    tidy() 
+    tidy()
 
   as.list(environment()) %>% add_class("single_prop")
 }
@@ -153,7 +153,7 @@ summary.single_prop <- function(object, dec = 3, ...) {
 #'
 #' @export
 plot.single_prop <- function(
-  x, plots = "bar", 
+  x, plots = "bar",
   shiny = FALSE, custom = FALSE, ...
 ) {
 

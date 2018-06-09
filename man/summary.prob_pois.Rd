@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{Return value from \code{\link{prob_pois}}}
 
-\item{type}{Probabilities or values}
+\item{type}{Probabilities ("probs") or values ("values")}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -18,4 +18,9 @@ Summary method for the probability calculator (poisson)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
+}
+\examples{
+result <- prob_pois(lambda = 1, ub = 3)
+summary(result, type = "values")
+
 }

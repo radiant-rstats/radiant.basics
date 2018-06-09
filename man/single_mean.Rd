@@ -30,7 +30,7 @@ Compare a sample mean to a population mean
 See \url{https://radiant-rstats.github.io/docs/basics/single_mean.html} for an example in Radiant
 }
 \examples{
-single_mean(diamonds, "price")
+single_mean(diamonds, "price") \%>\% str()
 
 }
 \seealso{

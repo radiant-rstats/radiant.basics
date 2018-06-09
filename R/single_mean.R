@@ -2,7 +2,7 @@
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/single_mean.html} for an example in Radiant
 #'
-#' @param dataset Dataset 
+#' @param dataset Dataset
 #' @param var The variable selected for the mean comparison
 #' @param comp_value Population value to compare to the sample mean
 #' @param alternative The alternative hypothesis ("two.sided", "greater", or "less")
@@ -12,7 +12,7 @@
 #' @return A list of variables defined in single_mean as an object of class single_mean
 #'
 #' @examples
-#' single_mean(diamonds, "price")
+#' single_mean(diamonds, "price") %>% str()
 #'
 #' @seealso \code{\link{summary.single_mean}} to summarize results
 #' @seealso \code{\link{plot.single_mean}} to plot results
@@ -32,15 +32,15 @@ single_mean <- function(
   ## removing any missing values
   dataset <- na.omit(dataset)
 
-  res <- t.test(dataset[[var]], mu = comp_value, alternative = alternative, conf.level = conf_lev) %>% 
+  res <- t.test(dataset[[var]], mu = comp_value, alternative = alternative, conf.level = conf_lev) %>%
     tidy()
 
-  dat_summary <- summarise_all(dataset, 
+  dat_summary <- summarise_all(dataset,
     funs(
-      diff = mean(.) - comp_value, 
-      se = se, 
+      diff = mean(.) - comp_value,
+      se = se,
       mean = mean,
-      sd = sd, 
+      sd = sd,
       n_obs = length
     )
   )
@@ -88,8 +88,8 @@ summary.single_mean <- function(object, dec = 3, ...) {
   ci_perc <- ci_label(object$alternative, object$conf_lev)
 
   ## print summary statistics
-  object$dat_summary[ ,-(1:2)] %>% 
-    # round(dec) %>% 
+  object$dat_summary[ ,-(1:2)] %>%
+    # round(dec) %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
     format_df(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
@@ -138,7 +138,7 @@ summary.single_mean <- function(object, dec = 3, ...) {
 #'
 #' @export
 plot.single_mean <- function(
-  x, plots = "hist", 
+  x, plots = "hist",
   shiny = FALSE, custom = FALSE, ...
 ) {
 

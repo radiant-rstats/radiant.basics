@@ -27,3 +27,7 @@ Probability calculator for the binomial distribution
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
+\examples{
+prob_binom(n = 10, p = 0.3, ub = 3)
+
+}

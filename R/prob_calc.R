@@ -64,7 +64,7 @@ prob_norm <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_norm}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -133,7 +133,7 @@ plot.prob_norm <- function(x, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_norm}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -219,6 +219,9 @@ summary.prob_norm <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @examples
+#' prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
+#'
 #' @export
 prob_lnorm <- function(
   meanlog, sdlog, lb = NA, ub = NA,
@@ -267,8 +270,12 @@ prob_lnorm <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_norm}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
+#' plot(result, type = "values")
 #'
 #' @export
 plot.prob_lnorm <- function(x, type = "values", ...) {
@@ -330,8 +337,12 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_norm}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
+#' summary(result, type = "values")
 #'
 #' @export
 summary.prob_lnorm <- function(object, type = "values", ...) {
@@ -401,18 +412,19 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param df Degrees of freedom
-#' @param mean Mean
-#' @param stdev Standard deviation
 #' @param lb Lower bound (default is -Inf)
 #' @param ub Upper bound (default is Inf)
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @examples
+#' prob_tdist(df = 10, ub = 2.228)
+#'
 #' @export
 prob_tdist <- function(
-  df, mean = 0, stdev = 1, lb = NA,
-  ub = NA, plb = NA, pub = NA, dec = 3
+  df, lb = NA, ub = NA,
+  plb = NA, pub = NA, dec = 3
 ) {
 
   p_ub <- pt(ub, df)
@@ -461,8 +473,12 @@ prob_tdist <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_tdist}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_tdist(df = 10, ub = 2.228)
+#' plot(result, type = "values")
 #'
 #' @export
 plot.prob_tdist <- function(x, type = "values", ...) {
@@ -522,8 +538,12 @@ plot.prob_tdist <- function(x, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_tdist}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_tdist(df = 10, ub = 2.228)
+#' summary(result, type = "values")
 #'
 #' @export
 summary.prob_tdist <- function(object, type = "values", ...) {
@@ -603,6 +623,9 @@ summary.prob_tdist <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @examples
+#' prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
+#'
 #' @export
 prob_fdist <- function(
   df1, df2, lb = NA, ub = NA,
@@ -658,8 +681,12 @@ prob_fdist <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_fdist}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
+#' plot(result, type = "values")
 #'
 #' @export
 plot.prob_fdist <- function(x, type = "values", ...) {
@@ -733,8 +760,12 @@ plot.prob_fdist <- function(x, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_fdist}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
+#' summary(result, type = "values")
 #'
 #' @export
 summary.prob_fdist <- function(object, type = "values", ...) {
@@ -819,6 +850,9 @@ summary.prob_fdist <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @examples
+#' prob_chisq(df = 1, ub = 3.841)
+#'
 #' @export
 prob_chisq <- function(
   df, lb = NA, ub = NA, plb = NA,
@@ -874,8 +908,12 @@ prob_chisq <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_chisq}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_chisq(df = 1, ub = 3.841)
+#' plot(result, type = "values")
 #'
 #' @export
 plot.prob_chisq <- function(x, type = "values", ...) {
@@ -947,8 +985,12 @@ plot.prob_chisq <- function(x, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_chisq}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_chisq(df = 1, ub = 3.841)
+#' summary(result, type = "values")
 #'
 #' @export
 summary.prob_chisq <- function(object, type = "values", ...) {
@@ -1026,6 +1068,9 @@ summary.prob_chisq <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @examples
+#' prob_unif(min = 0, max = 1, ub = 0.3)
+#'
 #' @export
 prob_unif <- function(
   min, max, lb = NA, ub = NA,
@@ -1082,8 +1127,12 @@ prob_unif <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_unif}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_unif(min = 0, max = 1, ub = 0.3)
+#' plot(result, type = "values")
 #'
 #' @export
 plot.prob_unif <- function(x, type = "values", ...) {
@@ -1148,8 +1197,12 @@ plot.prob_unif <- function(x, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_unif}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_unif(min = 0, max = 1, ub = 0.3)
+#' summary(result, type = "values")
 #'
 #' @export
 summary.prob_unif <- function(object, type = "values", ...) {
@@ -1233,6 +1286,9 @@ summary.prob_unif <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
+#'
+#' @examples
+#' prob_binom(n = 10, p = 0.3, ub = 3)
 #'
 #' @export
 prob_binom <- function(
@@ -1340,8 +1396,12 @@ prob_binom <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_binom}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_binom(n = 10, p = 0.3, ub = 3)
+#' plot(result, type = "values")
 #'
 #' @export
 plot.prob_binom <- function(x, type = "values", ...) {
@@ -1408,8 +1468,12 @@ plot.prob_binom <- function(x, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_binom}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_binom(n = 10, p = 0.3, ub = 3)
+#' summary(result, type = "values")
 #'
 #' @export
 summary.prob_binom <- function(object, type = "values", ...) {
@@ -1517,6 +1581,9 @@ summary.prob_binom <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @examples
+#' prob_disc(v = "5 6 7 8 9 10 11", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+#'
 #' @export
 prob_disc <- function(
   v, p, lb = NA, ub = NA,
@@ -1542,6 +1609,7 @@ prob_disc <- function(
   rex <- "/"
   p <- sshhr(strsplit(p, rex) %>% sapply(asNum))
   v <- sshhr(strsplit(v, rex) %>% sapply(asNum))
+  rm(rex)
 
   if (anyNA(p) | anyNA(v)) {
     mess <- "The number of probabilities entered must be a multiple of the number of values"
@@ -1643,6 +1711,8 @@ prob_disc <- function(
     }
   }
 
+  rm(qdisc, pdisc, ddisc, asNum)
+
   as.list(environment()) %>% add_class("prob_disc")
 }
 
@@ -1651,11 +1721,11 @@ prob_disc <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_disc}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- prob_disc(v = "5 6 7 8 9 10 11 ", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+#' result <- prob_disc(v = "5 6 7 8 9 10 11", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
 #' plot(result, type = "probs")
 #'
 #' @export
@@ -1724,7 +1794,7 @@ plot.prob_disc <- function(x, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_disc}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
@@ -1838,6 +1908,9 @@ summary.prob_disc <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @examples
+#' prob_expo(rate = 1, ub = 2.996)
+#'
 #' @export
 prob_expo <- function(
   rate, lb = NA, ub = NA,
@@ -1890,8 +1963,12 @@ prob_expo <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_expo}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_expo(rate = 1, ub = 2.996)
+#' plot(result, type = "values")
 #'
 #' @export
 plot.prob_expo <- function(x, type = "values", ...) {
@@ -1963,8 +2040,12 @@ plot.prob_expo <- function(x, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_expo}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_expo(rate = 1, ub = 2.996)
+#' summary(result, type = "values")
 #'
 #' @export
 summary.prob_expo <- function(object, type = "values", ...) {
@@ -2040,6 +2121,9 @@ summary.prob_expo <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
+#'
+#' @examples
+#' prob_pois(lambda = 1, ub = 3)
 #'
 #' @export
 prob_pois <- function(
@@ -2143,8 +2227,12 @@ prob_pois <- function(
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param x Return value from \code{\link{prob_pois}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_pois(lambda = 1, ub = 3)
+#' plot(result, type = "values")
 #'
 #' @export
 plot.prob_pois <- function(x, type = "values", ...) {
@@ -2218,8 +2306,12 @@ plot.prob_pois <- function(x, type = "values", ...) {
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{prob_pois}}
-#' @param type Probabilities or values
+#' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#'
+#' @examples
+#' result <- prob_pois(lambda = 1, ub = 3)
+#' summary(result, type = "values")
 #'
 #' @export
 summary.prob_pois <- function(object, type = "values", ...) {

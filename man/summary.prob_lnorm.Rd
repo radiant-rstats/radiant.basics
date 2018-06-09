@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{Return value from \code{\link{prob_norm}}}
 
-\item{type}{Probabilities or values}
+\item{type}{Probabilities ("probs") or values ("values")}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -18,4 +18,9 @@ Summary method for the probability calculator (log normal)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
+}
+\examples{
+result <- prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
+summary(result, type = "values")
+
 }

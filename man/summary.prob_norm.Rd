@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{Return value from \code{\link{prob_norm}}}
 
-\item{type}{Probabilities or values}
+\item{type}{Probabilities ("probs") or values ("values")}
 
 \item{...}{further arguments passed to or from other methods}
 }

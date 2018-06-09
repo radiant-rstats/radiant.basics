@@ -15,7 +15,7 @@
 #' @return A list of all variables defined in the function as an object of class compare_props
 #'
 #' @examples
-#' compare_props(titanic, "pclass", "survived")
+#' compare_props(titanic, "pclass", "survived") %>% str()
 #'
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #' @seealso \code{\link{plot.compare_props}} to plot results

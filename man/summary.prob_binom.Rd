@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{Return value from \code{\link{prob_binom}}}
 
-\item{type}{Probabilities or values}
+\item{type}{Probabilities ("probs") or values ("values")}
 
 \item{...}{further arguments passed to or from other methods}
 }
@@ -18,4 +18,9 @@ Summary method for the probability calculator (binomial)
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
+}
+\examples{
+result <- prob_binom(n = 10, p = 0.3, ub = 3)
+summary(result, type = "values")
+
 }

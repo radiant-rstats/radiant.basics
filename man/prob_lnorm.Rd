@@ -28,3 +28,7 @@ Probability calculator for the log normal distribution
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
+\examples{
+prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
+
+}

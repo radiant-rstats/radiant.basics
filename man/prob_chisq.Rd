@@ -25,3 +25,7 @@ Probability calculator for the chi-squared distribution
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
+\examples{
+prob_chisq(df = 1, ub = 3.841)
+
+}
