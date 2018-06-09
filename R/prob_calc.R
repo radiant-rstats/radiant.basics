@@ -151,7 +151,8 @@ summary.prob_norm <- function(object, type = "values", ...) {
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
-  attach(object)
+  env <- environment()
+  ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
   cat("Mean        :", round(mean, dec), "\n")
   cat("St. dev     :", round(stdev, dec), "\n")
@@ -204,10 +205,7 @@ summary.prob_norm <- function(object, type = "values", ...) {
       }
     }
   }
-  detach(object)
 }
-
-
 
 #' Probability calculator for the log normal distribution
 #'
@@ -342,7 +340,8 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
-  attach(object)
+  env <- environment()
+  ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
   cat("Mean log    :", round(meanlog, dec), "\n")
   cat("St. dev log :", round(sdlog, dec), "\n")
@@ -395,7 +394,6 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
       }
     }
   }
-  detach(object)
 }
 
 #' Probability calculator for the t-distribution
@@ -535,7 +533,8 @@ summary.prob_tdist <- function(object, type = "values", ...) {
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
 
-  attach(object)
+  env <- environment()
+  ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
   n <- df + 1
 
   cat("Df          :", df, "\n")
@@ -590,7 +589,6 @@ summary.prob_tdist <- function(object, type = "values", ...) {
       }
     }
   }
-  detach(object)
 }
 
 #' Probability calculator for the F-distribution
@@ -745,7 +743,9 @@ summary.prob_fdist <- function(object, type = "values", ...) {
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
-  attach(object)
+  env <- environment()
+  ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
+
 
   cat("Df 1        :", df1, "\n")
   cat("Df 2        :", df2, "\n")
@@ -806,7 +806,6 @@ summary.prob_fdist <- function(object, type = "values", ...) {
       }
     }
   }
-  detach(object)
 }
 
 #' Probability calculator for the chi-squared distribution
@@ -958,7 +957,8 @@ summary.prob_chisq <- function(object, type = "values", ...) {
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
-  attach(object)
+  env <- environment()
+  ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
   cat("Df          :", df, "\n")
   cat("Mean        :", df, "\n")
@@ -1012,7 +1012,6 @@ summary.prob_chisq <- function(object, type = "values", ...) {
       }
     }
   }
-  detach(object)
 }
 
 #' Probability calculator for the uniform distribution
@@ -1159,7 +1158,8 @@ summary.prob_unif <- function(object, type = "values", ...) {
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
-  attach(object)
+  env <- environment()
+  ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
   cat("Min         :", min, "\n")
   cat("Max         :", max, "\n")
@@ -1220,7 +1220,6 @@ summary.prob_unif <- function(object, type = "values", ...) {
       }
     }
   }
-  detach(object)
 }
 
 #' Probability calculator for the binomial distribution
@@ -1419,7 +1418,8 @@ summary.prob_binom <- function(object, type = "values", ...) {
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
-  attach(object)
+  env <- environment()
+  ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
   cat("n           :", n, "\n")
   cat("p           :", p, "\n")
@@ -1503,7 +1503,6 @@ summary.prob_binom <- function(object, type = "values", ...) {
       }
     }
   }
-  detach(object)
 }
 
 #' Probability calculator for a discrete distribution
@@ -1729,7 +1728,7 @@ plot.prob_disc <- function(x, type = "values", ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- prob_disc(v = "5 6 7 8 9 10 11 ", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+#' result <- prob_disc(v = "5 6 7 8 9 10 11", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
 #' summary(result, type = "probs")
 #'
 #' @export
@@ -1739,10 +1738,11 @@ summary.prob_disc <- function(object, type = "values", ...) {
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
-  attach(object)
+  env <- environment()
+  ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
   cat("Values       :", paste0(v, collapse = " "), "\n")
-  cat("Probabilities:", paste0(p %>% round(dec), collapse = " "), "\n")
+  cat("Probabilities:", paste0(round(p, dec), collapse = " "), "\n")
   m <- sum(v * p)
   std <- sqrt(sum(p * (v - m) ^ 2))
   cat("Mean         :", round(m, dec), "\n")
@@ -1825,7 +1825,6 @@ summary.prob_disc <- function(object, type = "values", ...) {
       }
     }
   }
-  detach(object)
 }
 
 #' Probability calculator for the exponential distribution
@@ -1974,7 +1973,8 @@ summary.prob_expo <- function(object, type = "values", ...) {
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
-  attach(object)
+  env <- environment()
+  ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
   cat("Rate        :", rate, "\n")
   cat("Mean        :", round(1 / rate, dec), "\n")
@@ -2028,7 +2028,6 @@ summary.prob_expo <- function(object, type = "values", ...) {
       }
     }
   }
-  detach(object)
 }
 
 #' Probability calculator for the poisson distribution
@@ -2229,7 +2228,8 @@ summary.prob_pois <- function(object, type = "values", ...) {
 
   mess <- object[[paste0("mess_", type)]]
   if (!is.null(mess)) return(mess)
-  attach(object)
+  env <- environment()
+  ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
   cat("Lambda      :", lambda, "\n")
   cat("Mean        :", lambda, "\n")
@@ -2304,5 +2304,4 @@ summary.prob_pois <- function(object, type = "values", ...) {
       }
     }
   }
-  detach(object)
 }
