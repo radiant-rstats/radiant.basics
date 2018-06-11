@@ -97,7 +97,7 @@ reference:
     - correlation
     - summary.correlation
     - plot.correlation
-    - print.correlation
+    - print.rcorr
 - title: Data sets
   desc: Data sets bundled with radiant.basics
   contents:

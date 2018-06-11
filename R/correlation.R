@@ -34,7 +34,7 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
   ## calculate covariance matrix
   cvmat <- sshhr(cov(dataset, method = method))
 
-  as.list(environment()) %>% add_class("correlation")
+  as.list(environment()) %>% add_class("correlation") %>% add_class("rcorr") 
 }
 
 #' Summary method for the correlation function
@@ -115,9 +115,7 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-print.correlation <- function(x, ...) {
-  summary.correlation(x, ...)
-}
+print.rcorr <- function(x, ...) summary.correlation(x, ...)
 
 #' Plot method for the correlation function
 #'
