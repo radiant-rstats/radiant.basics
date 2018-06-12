@@ -10,7 +10,7 @@
 \arguments{
 \item{object}{Return value from \code{\link{correlation}}}
 
-\item{cutoff}{Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0}
+\item{cutoff}{Show only correlations larger than the cutoff in absolute value. Default is a cutoff of 0}
 
 \item{covar}{Show the covariance matrix (default is FALSE)}
 

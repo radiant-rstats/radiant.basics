@@ -4,7 +4,7 @@
 #'
 #' @param dataset Dataset
 #' @param var1 A numeric variable or factor selected for comparison
-#' @param var2 One or more numeric variables for comparison. If var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of va1r
+#' @param var2 One or more numeric variables for comparison. If var1 is a factor only one variable can be selected and the mean of this variable is compared across (factor) levels of var1
 #' @param samples Are samples independent ("independent") or not ("paired")
 #' @param alternative The alternative hypothesis ("two.sided", "greater" or "less")
 #' @param conf_lev Span of the confidence interval
@@ -261,7 +261,7 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
       ) +
       geom_bar(stat = "identity") +
       geom_errorbar(width = .1, aes(ymin = mean - ci, ymax = mean + ci)) +
-      geom_errorbar(width = .05, aes(ymin = mean - se, ymax = mean + se), colour = "blue") +
+      geom_errorbar(width = .05, aes(ymin = mean - se, ymax = mean + se), color = "blue") +
       theme(legend.position = "none") +
       labs(x = var1, y = paste0(var2, " (mean)"))
   }

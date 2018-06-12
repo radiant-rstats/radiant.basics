@@ -816,7 +816,7 @@ pc_available <- reactive({
       }
     } else if (input$pc_dist == "unif") {
       if (is_not(input$pcu_min) || is_not(input$pcu_max)) {
-        a <- "Please provide a minimum and a maxium value"
+        a <- "Please provide a minimum and a maximum value"
       }
     } else if (input$pc_dist == "tdist") {
       if (is_not(input$pct_df)) {

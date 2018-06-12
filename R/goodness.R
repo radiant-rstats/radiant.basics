@@ -1,4 +1,4 @@
-#' Evaluate if sample data for a categorical variable is consistent wtih a hypothesized distribution
+#' Evaluate if sample data for a categorical variable is consistent with a hypothesized distribution
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/goodness.html} for an example in Radiant
 #'

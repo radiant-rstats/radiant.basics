@@ -2,7 +2,7 @@
 % Please edit documentation in R/goodness.R
 \name{goodness}
 \alias{goodness}
-\title{Evaluate if sample data for a categorical variable is consistent wtih a hypothesized distribution}
+\title{Evaluate if sample data for a categorical variable is consistent with a hypothesized distribution}
 \usage{
 goodness(dataset, var, p = NULL, tab = NULL, data_filter = "")
 }
@@ -21,7 +21,7 @@ goodness(dataset, var, p = NULL, tab = NULL, data_filter = "")
 A list of all variables used in goodness as an object of class goodness
 }
 \description{
-Evaluate if sample data for a categorical variable is consistent wtih a hypothesized distribution
+Evaluate if sample data for a categorical variable is consistent with a hypothesized distribution
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs/basics/goodness.html} for an example in Radiant

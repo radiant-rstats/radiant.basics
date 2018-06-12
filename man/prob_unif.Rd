@@ -7,7 +7,7 @@
 prob_unif(min, max, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 }
 \arguments{
-\item{min}{Minmum value}
+\item{min}{Minimum value}
 
 \item{max}{Maximum value}
 

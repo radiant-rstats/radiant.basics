@@ -42,7 +42,7 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
 #'
 #' @param object Return value from \code{\link{correlation}}
-#' @param cutoff Show only corrlations larger than the cutoff in absolute value. Default is a cutoff of 0
+#' @param cutoff Show only correlations larger than the cutoff in absolute value. Default is a cutoff of 0
 #' @param covar Show the covariance matrix (default is FALSE)
 #' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods.

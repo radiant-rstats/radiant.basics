@@ -1060,7 +1060,7 @@ summary.prob_chisq <- function(object, type = "values", ...) {
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 #'
-#' @param min Minmum value
+#' @param min Minimum value
 #' @param max Maximum value
 #' @param lb Lower bound (default = 0)
 #' @param ub Upper bound (default = 1)

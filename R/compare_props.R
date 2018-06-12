@@ -233,7 +233,7 @@ plot.compare_props <- function(
       ggplot(x$dat_summary, aes_string(x = v1, y = "p", fill = v1)) +
       geom_bar(stat = "identity", alpha = 0.5) +
       geom_errorbar(width = .1, aes(ymin = p - ci, ymax = p + ci)) +
-      geom_errorbar(width = .05, aes(ymin = p - se, ymax = p + se), colour = "blue") +
+      geom_errorbar(width = .05, aes(ymin = p - se, ymax = p + se), color = "blue") +
       theme(legend.position = "none") +
       scale_y_continuous(labels = scales::percent) +
       labs(y = paste0("Proportion of \"", lev_name, "\" in ", v2))
