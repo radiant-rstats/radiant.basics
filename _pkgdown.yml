@@ -1,3 +1,11 @@
+url: https://radiant-rstats.github.io/radiant.basics
+
+template:
+  params:
+    docsearch:
+      api_key: 0629d253426ce7046f92e2bc5bb11b03
+      index_name: radiant_basics
+
 navbar:
   title: "radiant.basics"
   left:
