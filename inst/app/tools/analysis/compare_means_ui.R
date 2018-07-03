@@ -235,8 +235,9 @@ observeEvent(input$compare_means_report, {
 download_handler(
   id = "dlp_compare_means", 
   fun = download_handler_plot, 
-  fn = paste0(input$dataset, "_compare_means.png"),
-  caption = "Download compare means plot",
+  fn = function() paste0(input$dataset, "_compare_means"),
+  type = "png",
+  caption = "Save compare means plot",
   plot = .plot_compare_means,
   width = cm_plot_width,
   height = cm_plot_height

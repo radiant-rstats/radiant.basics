@@ -892,8 +892,9 @@ observeEvent(input$prob_calc_report, {
 download_handler(
   id = "dlp_prob_calc", 
   fun = download_handler_plot, 
-  fn = "prob_calc.png",
-  caption = "Download probability calculator plot",
+  fn = function() paste0(input$pc_dist, "_prob_calc"),
+  type = "png",
+  caption = "Save probability calculator plot",
   plot = .plot_prob_calc,
   width = pc_plot_width,
   height = pc_plot_height

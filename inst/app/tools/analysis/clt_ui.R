@@ -254,8 +254,9 @@ observeEvent(input$clt_report, {
 download_handler(
   id = "dlp_clt", 
   fun = download_handler_plot, 
-  fn = "clt.png",
-  caption = "Download central limit theorem plot",
+  fn = function() paste0(tolower(input$clt_dist), "_clt"),
+  type = "png",
+  caption = "Save central limit theorem plot",
   plot = .plot_clt,
   width = clt_plot_width,
   height = clt_plot_height

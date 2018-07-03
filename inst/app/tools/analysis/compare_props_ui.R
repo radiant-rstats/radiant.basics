@@ -221,8 +221,9 @@ observeEvent(input$compare_props_report, {
 download_handler(
   id = "dlp_compare_props", 
   fun = download_handler_plot, 
-  fn = paste0(input$dataset, "_compare_props.png"),
-  caption = "Download compare proportions plot",
+  fn = function() paste0(input$dataset, "_compare_props"),
+  type = "png",
+  caption = "Save compare proportions plot",
   plot = .plot_compare_props,
   width = cp_plot_width,
   height = cp_plot_height

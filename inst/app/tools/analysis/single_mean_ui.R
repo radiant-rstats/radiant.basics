@@ -156,8 +156,9 @@ observeEvent(input$single_mean_report, {
 download_handler(
   id = "dlp_single_mean", 
   fun = download_handler_plot, 
-  fn = paste0(input$dataset, "_single_mean.png"),
-  caption = "Download single mean plot",
+  fn = function() paste0(input$dataset, "_single_mean"),
+  type = "png",
+  caption = "Save single mean plot",
   plot = .plot_single_mean,
   width = sm_plot_width,
   height = sm_plot_height

@@ -154,8 +154,9 @@ observeEvent(input$goodness_report, {
 download_handler(
   id = "dlp_goodness", 
   fun = download_handler_plot, 
-  fn = paste0(input$dataset, "_goodness.png"),
-  caption = "Download goodness of fit plot",
+  fn = function() paste0(input$dataset, "_goodness"),
+  type = "png",
+  caption = "Save goodness of fit plot",
   plot = .plot_goodness,
   width = gd_plot_width,
   height = gd_plot_height

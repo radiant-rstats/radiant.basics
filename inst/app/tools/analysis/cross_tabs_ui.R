@@ -159,8 +159,9 @@ observeEvent(input$cross_tabs_report, {
 download_handler(
   id = "dlp_cross_tabs", 
   fun = download_handler_plot, 
-  fn = paste0(input$dataset, "_cross_tabs.png"),
-  caption = "Download cross-tabs plot",
+  fn = function() paste0(input$dataset, "_cross_tabs"),
+  type = "png",
+  caption = "Save cross-tabs plot",
   plot = .plot_cross_tabs,
   width = ct_plot_width,
   height = ct_plot_height

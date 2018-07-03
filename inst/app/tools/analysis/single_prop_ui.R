@@ -175,8 +175,9 @@ observeEvent(input$single_prop_report, {
 download_handler(
   id = "dlp_single_prop", 
   fun = download_handler_plot, 
-  fn = paste0(input$dataset, "_single_prop.png"),
-  caption = "Download single proportion plot",
+  fn = function() paste0(input$dataset, "_single_prop"),
+  type = "png",
+  caption = "Save single proportion plot",
   plot = .plot_single_prop,
   width = sp_plot_width,
   height = sp_plot_height

@@ -190,8 +190,9 @@ observeEvent(input$correlation_report, {
 download_handler(
   id = "dlp_correlation", 
   fun = download_handler_plot, 
-  fn = paste0(input$dataset, "_correlation.png"),
-  caption = "Download correlation plot",
+  fn = function() paste0(input$dataset, "_correlation"),
+  type = "png",
+  caption = "Save correlation plot",
   plot = .plot_correlation,
   width = cor_plot_width,
   height = cor_plot_height
