@@ -4,7 +4,8 @@
 \alias{prob_norm}
 \title{Probability calculator for the normal distribution}
 \usage{
-prob_norm(mean, stdev, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
+prob_norm(mean, stdev, lb = NA, ub = NA, plb = NA, pub = NA,
+  dec = 3)
 }
 \arguments{
 \item{mean}{Mean}

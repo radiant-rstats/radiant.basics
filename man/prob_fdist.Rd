@@ -4,7 +4,8 @@
 \alias{prob_fdist}
 \title{Probability calculator for the F-distribution}
 \usage{
-prob_fdist(df1, df2, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
+prob_fdist(df1, df2, lb = NA, ub = NA, plb = NA, pub = NA,
+  dec = 3)
 }
 \arguments{
 \item{df1}{Degrees of freedom}

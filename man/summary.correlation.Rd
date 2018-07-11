@@ -4,8 +4,8 @@
 \alias{summary.correlation}
 \title{Summary method for the correlation function}
 \usage{
-\method{summary}{correlation}(object, cutoff = 0, covar = FALSE, dec = 2,
-  ...)
+\method{summary}{correlation}(object, cutoff = 0, covar = FALSE,
+  dec = 2, ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{correlation}}}

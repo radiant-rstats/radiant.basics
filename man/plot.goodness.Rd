@@ -4,8 +4,8 @@
 \alias{plot.goodness}
 \title{Plot method for the goodness function}
 \usage{
-\method{plot}{goodness}(x, check = "", fillcol = "blue", shiny = FALSE,
-  custom = FALSE, ...)
+\method{plot}{goodness}(x, check = "", fillcol = "blue",
+  shiny = FALSE, custom = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{goodness}}}
