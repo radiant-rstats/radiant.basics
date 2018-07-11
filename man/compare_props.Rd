@@ -4,9 +4,8 @@
 \alias{compare_props}
 \title{Compare sample proportions across groups}
 \usage{
-compare_props(dataset, var1, var2, levs = "",
-  alternative = "two.sided", conf_lev = 0.95, comb = "",
-  adjust = "none", data_filter = "")
+compare_props(dataset, var1, var2, levs = "", alternative = "two.sided",
+  conf_lev = 0.95, comb = "", adjust = "none", data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset}

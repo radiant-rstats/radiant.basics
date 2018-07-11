@@ -4,6 +4,7 @@
 \name{radiant.basics}
 \alias{radiant.basics}
 \alias{radiant.basics-package}
+\alias{radiant.basics}
 \title{radiant.basics}
 \usage{
 radiant.basics()
