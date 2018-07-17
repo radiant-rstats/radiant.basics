@@ -1,9 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^inst/rstudio$
-^build$
-^docs$
-^vignettes$
+build/
+docs/
+vignettes/
 ^\.travis\.yml$
 ^.*\.sublime-project
 _pkgdown.yml

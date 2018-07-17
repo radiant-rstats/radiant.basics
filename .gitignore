@@ -3,8 +3,8 @@
 .Rapp.history
 .RData
 .Ruserdata
-radiant.basics.sublime-project
 radiant.basics.Rproj
 .DS_Store
-^revdep$
+revdep/
 cran-comments.md
+docs/
