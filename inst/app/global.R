@@ -12,5 +12,5 @@ addResourcePath("figures_basics", "tools/help/figures/")
 addResourcePath("www_basics", file.path(getOption("radiant.path.basics"), "app/www/"))
 
 ## loading urls and ui
-source("init.R", encoding = getOption("radiant.encoding"), local = TRUE)
+source("init.R", encoding = getOption("radiant.encoding", "UTF-8"), local = TRUE)
 options(radiant.url.patterns = make_url_patterns())
