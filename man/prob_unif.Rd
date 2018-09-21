@@ -4,7 +4,8 @@
 \alias{prob_unif}
 \title{Probability calculator for the uniform distribution}
 \usage{
-prob_unif(min, max, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
+prob_unif(min, max, lb = NA, ub = NA, plb = NA, pub = NA,
+  dec = 3)
 }
 \arguments{
 \item{min}{Minimum value}
