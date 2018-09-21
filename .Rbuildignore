@@ -1,10 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^inst/rstudio$
+^\.travis\.yml$
 build/
 docs/
 vignettes/
-^\.travis\.yml$
-^.*\.sublime-project
 _pkgdown.yml
 cran-comments.md
+radiant.basics.code-workspace
