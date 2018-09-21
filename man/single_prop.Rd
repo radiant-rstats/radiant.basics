@@ -32,8 +32,8 @@ Compare a sample proportion to a population proportion
 See \url{https://radiant-rstats.github.io/docs/basics/single_prop.html} for an example in Radiant
 }
 \examples{
-single_prop(diamonds, "cut") \%>\% str()
-single_prop(diamonds, "clarity", lev = "IF", comp_value = 0.05) \%>\% str()
+single_prop(titanic, "survived") \%>\% str()
+single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5,  alternative = "less") \%>\% str()
 
 }
 \seealso{

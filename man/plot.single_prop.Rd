@@ -25,10 +25,8 @@ Plot method for the single_prop function
 See \url{https://radiant-rstats.github.io/docs/basics/single_prop.html} for an example in Radiant
 }
 \examples{
-result <- single_prop(diamonds,"clarity", lev = "IF", comp_value = 0.05)
+result <- single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5,  alternative = "less")
 plot(result, plots = c("bar", "simulate"))
-result <- single_prop(titanic,"pclass", lev = "1st")
-plot(result, plots = c("bar","simulate"))
 
 }
 \seealso{

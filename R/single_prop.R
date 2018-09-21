@@ -13,8 +13,8 @@
 #' @return A list of variables used in single_prop as an object of class single_prop
 #'
 #' @examples
-#' single_prop(diamonds, "cut") %>% str()
-#' single_prop(diamonds, "clarity", lev = "IF", comp_value = 0.05) %>% str()
+#' single_prop(titanic, "survived") %>% str()
+#' single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5,  alternative = "less") %>% str()
 #'
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
 #' @seealso \code{\link{plot.single_prop}} to plot the results
@@ -27,7 +27,6 @@ single_prop <- function(
 ) {
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  # dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE)
   dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE) %>%
     mutate_all(funs(as.factor))
 
@@ -78,9 +77,8 @@ single_prop <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- single_prop(diamonds,"clarity", lev = "IF", comp_value = 0.05)
+#' result <- single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5,  alternative = "less")
 #' summary(result)
-#' diamonds %>% single_prop("clarity", lev = "IF", comp_value = 0.05) %>% summary()
 #'
 #' @seealso \code{\link{single_prop}} to generate the results
 #' @seealso \code{\link{plot.single_prop}} to plot the results
@@ -111,7 +109,6 @@ summary.single_prop <- function(object, dec = 3, ...) {
 
   ## print summary statistics
   object$dat_summary[-1] %>%
-    # round(dec) %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
     format_df(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
@@ -143,10 +140,8 @@ summary.single_prop <- function(object, dec = 3, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- single_prop(diamonds,"clarity", lev = "IF", comp_value = 0.05)
+#' result <- single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5,  alternative = "less")
 #' plot(result, plots = c("bar", "simulate"))
-#' result <- single_prop(titanic,"pclass", lev = "1st")
-#' plot(result, plots = c("bar","simulate"))
 #'
 #' @seealso \code{\link{single_prop}} to generate the result
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
