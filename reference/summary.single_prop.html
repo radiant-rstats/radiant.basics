@@ -193,34 +193,20 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='fu'>single_prop</span>(<span class='no'>diamonds</span>,<span class='st'>"clarity"</span>, <span class='kw'>lev</span> <span class='kw'>=</span> <span class='st'>"IF"</span>, <span class='kw'>comp_value</span> <span class='kw'>=</span> <span class='fl'>0.05</span>)
+    <pre class="examples"><div class='input'><span class='no'>result</span> <span class='kw'>&lt;-</span> <span class='fu'>single_prop</span>(<span class='no'>titanic</span>, <span class='st'>"survived"</span>, <span class='kw'>lev</span> <span class='kw'>=</span> <span class='st'>"Yes"</span>, <span class='kw'>comp_value</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,  <span class='kw'>alternative</span> <span class='kw'>=</span> <span class='st'>"less"</span>)
 <span class='fu'>summary</span>(<span class='no'>result</span>)</div><div class='output co'>#&gt; Single proportion test (binomial exact)
-#&gt; Data      : diamonds 
-#&gt; Variable  : clarity 
-#&gt; Level     : IF in clarity 
+#&gt; Data      : titanic 
+#&gt; Variable  : survived 
+#&gt; Level     : Yes in survived 
 #&gt; Confidence: 0.95 
-#&gt; Null hyp. : the proportion of IF in clarity = 0.05 
-#&gt; Alt. hyp. : the proportion of IF in clarity not equal to 0.05 
+#&gt; Null hyp. : the proportion of Yes in survived = 0.5 
+#&gt; Alt. hyp. : the proportion of Yes in survived &lt; 0.5 
 #&gt; 
-#&gt;   prop mean    sd     n n_missing
-#&gt;  0.033   99 9.784 3,000         0
+#&gt;   prop mean     sd     n n_missing
+#&gt;  0.407  425 15.869 1,043         0
 #&gt; 
-#&gt;    diff ns p.value  2.5% 97.5%    
-#&gt;  -0.017 99  &lt; .001 0.027 0.040 ***
-#&gt; 
-#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</div><div class='input'><span class='no'>diamonds</span> <span class='kw'>%&gt;%</span> <span class='fu'>single_prop</span>(<span class='st'>"clarity"</span>, <span class='kw'>lev</span> <span class='kw'>=</span> <span class='st'>"IF"</span>, <span class='kw'>comp_value</span> <span class='kw'>=</span> <span class='fl'>0.05</span>) <span class='kw'>%&gt;%</span> <span class='fu'>summary</span>()</div><div class='output co'>#&gt; Single proportion test (binomial exact)
-#&gt; Data      : . 
-#&gt; Variable  : clarity 
-#&gt; Level     : IF in clarity 
-#&gt; Confidence: 0.95 
-#&gt; Null hyp. : the proportion of IF in clarity = 0.05 
-#&gt; Alt. hyp. : the proportion of IF in clarity not equal to 0.05 
-#&gt; 
-#&gt;   prop mean    sd     n n_missing
-#&gt;  0.033   99 9.784 3,000         0
-#&gt; 
-#&gt;    diff ns p.value  2.5% 97.5%    
-#&gt;  -0.017 99  &lt; .001 0.027 0.040 ***
+#&gt;    diff  ns p.value    0%   95%    
+#&gt;  -0.093 425  &lt; .001 0.000 0.433 ***
 #&gt; 
 #&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</div><div class='input'>
 </div></pre>

@@ -162,8 +162,9 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>compare_props</span>(<span class='no'>dataset</span>, <span class='no'>var1</span>, <span class='no'>var2</span>, <span class='kw'>levs</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>alternative</span> <span class='kw'>=</span> <span class='st'>"two.sided"</span>,
-  <span class='kw'>conf_lev</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>comb</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>data_filter</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
+    <pre class="usage"><span class='fu'>compare_props</span>(<span class='no'>dataset</span>, <span class='no'>var1</span>, <span class='no'>var2</span>, <span class='kw'>levs</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>alternative</span> <span class='kw'>=</span> <span class='st'>"two.sided"</span>, <span class='kw'>conf_lev</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>comb</span> <span class='kw'>=</span> <span class='st'>""</span>,
+  <span class='kw'>adjust</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>data_filter</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -231,8 +232,8 @@
 #&gt;   ..$ se    : num [1:3] 0.0287 0.0307 0.0197
 #&gt;   ..$ ci    : num [1:3] 0.0562 0.0602 0.0385
 #&gt;  $ ci_calc    :function (se, conf.lev = 0.95)  
-#&gt;   ..- attr(*, "srcref")= 'srcref' int [1:8] 106 14 107 52 14 52 106 107
-#&gt;   .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0xa4c1f40&gt; 
+#&gt;   ..- attr(*, "srcref")=Class 'srcref'  atomic [1:8] 106 14 107 52 14 52 106 107
+#&gt;   .. .. ..- attr(*, "srcfile")=Classes 'srcfilecopy', 'srcfile' &lt;environment: 0x7986238&gt; 
 #&gt;  $ E          : num [1:2, 1:2] 84.4 161.6 176.6 338.4
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : NULL
@@ -264,7 +265,7 @@
 #&gt;  $ lv         : chr [1:3] "1st" "2nd" "3rd"
 #&gt;  $ vars       : chr "pclass, survived"
 #&gt;  $ df_name    : chr "titanic"
-#&gt;  $ dataset    :'data.frame':	1043 obs. of  2 variables:
+#&gt;  $ dataset    :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1043 obs. of  2 variables:
 #&gt;   ..$ pclass  : Factor w/ 3 levels "1st","2nd","3rd": 1 1 1 1 1 1 1 1 1 1 ...
 #&gt;   ..$ survived: Factor w/ 2 levels "Yes","No": 1 1 2 2 2 1 1 2 1 2 ...
 #&gt;  $ var1       : chr "pclass"

@@ -213,66 +213,66 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>single_prop</span>(<span class='no'>diamonds</span>, <span class='st'>"cut"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>str</span>()</div><div class='output co'>#&gt; List of 15
-#&gt;  $ res        :'data.frame':	1 obs. of  8 variables:
-#&gt;   ..$ estimate   : num 0.0337
-#&gt;   ..$ statistic  : num 101
-#&gt;   ..$ p.value    : num 0
-#&gt;   ..$ parameter  : num 3000
-#&gt;   ..$ conf.low   : num 0.0275
-#&gt;   ..$ conf.high  : num 0.0408
-#&gt;   ..$ method     : Factor w/ 1 level "Exact binomial test": 1
-#&gt;   ..$ alternative: Factor w/ 1 level "two.sided": 1
+    <pre class="examples"><div class='input'><span class='fu'>single_prop</span>(<span class='no'>titanic</span>, <span class='st'>"survived"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>str</span>()</div><div class='output co'>#&gt; List of 15
+#&gt;  $ res        :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1 obs. of  8 variables:
+#&gt;   ..$ estimate   : num 0.407
+#&gt;   ..$ statistic  : num 425
+#&gt;   ..$ p.value    : num 2.5e-09
+#&gt;   ..$ parameter  : num 1043
+#&gt;   ..$ conf.low   : num 0.377
+#&gt;   ..$ conf.high  : num 0.438
+#&gt;   ..$ method     : chr "Exact binomial test"
+#&gt;   ..$ alternative: chr "two.sided"
 #&gt;  $ dat_summary:'data.frame':	1 obs. of  6 variables:
-#&gt;   ..$ diff     : num -0.466
-#&gt;   ..$ prop     : num 0.0337
-#&gt;   ..$ mean     : int 101
-#&gt;   ..$ sd       : num 9.88
-#&gt;   ..$ n        : int 3000
+#&gt;   ..$ diff     : num -0.0925
+#&gt;   ..$ prop     : num 0.407
+#&gt;   ..$ mean     : int 425
+#&gt;   ..$ sd       : num 15.9
+#&gt;   ..$ n        : int 1043
 #&gt;   ..$ n_missing: int 0
-#&gt;  $ p          : num 0.0337
-#&gt;  $ ns         : int 101
-#&gt;  $ n          : int 3000
-#&gt;  $ levs       : chr [1:5] "Fair" "Good" "Very Good" "Premium" ...
+#&gt;  $ p          : num 0.407
+#&gt;  $ ns         : int 425
+#&gt;  $ n          : int 1043
+#&gt;  $ levs       : chr [1:2] "Yes" "No"
 #&gt;  $ miss       : int 0
-#&gt;  $ df_name    : chr "diamonds"
-#&gt;  $ dataset    :'data.frame':	3000 obs. of  1 variable:
-#&gt;   ..$ cut: Factor w/ 5 levels "Fair","Good",..: 5 3 3 5 4 5 5 4 3 2 ...
-#&gt;  $ var        : chr "cut"
-#&gt;  $ lev        : chr "Fair"
+#&gt;  $ df_name    : chr "titanic"
+#&gt;  $ dataset    :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1043 obs. of  1 variable:
+#&gt;   ..$ survived: Factor w/ 2 levels "Yes","No": 1 1 2 2 2 1 1 2 1 2 ...
+#&gt;  $ var        : chr "survived"
+#&gt;  $ lev        : chr "Yes"
 #&gt;  $ comp_value : num 0.5
 #&gt;  $ alternative: chr "two.sided"
 #&gt;  $ conf_lev   : num 0.95
 #&gt;  $ data_filter: chr ""
-#&gt;  - attr(*, "class")= chr [1:2] "single_prop" "list"</div><div class='input'><span class='fu'>single_prop</span>(<span class='no'>diamonds</span>, <span class='st'>"clarity"</span>, <span class='kw'>lev</span> <span class='kw'>=</span> <span class='st'>"IF"</span>, <span class='kw'>comp_value</span> <span class='kw'>=</span> <span class='fl'>0.05</span>) <span class='kw'>%&gt;%</span> <span class='fu'>str</span>()</div><div class='output co'>#&gt; List of 15
-#&gt;  $ res        :'data.frame':	1 obs. of  8 variables:
-#&gt;   ..$ estimate   : num 0.033
-#&gt;   ..$ statistic  : num 99
-#&gt;   ..$ p.value    : num 7.1e-06
-#&gt;   ..$ parameter  : num 3000
-#&gt;   ..$ conf.low   : num 0.0269
-#&gt;   ..$ conf.high  : num 0.04
-#&gt;   ..$ method     : Factor w/ 1 level "Exact binomial test": 1
-#&gt;   ..$ alternative: Factor w/ 1 level "two.sided": 1
+#&gt;  - attr(*, "class")= chr [1:2] "single_prop" "list"</div><div class='input'><span class='fu'>single_prop</span>(<span class='no'>titanic</span>, <span class='st'>"survived"</span>, <span class='kw'>lev</span> <span class='kw'>=</span> <span class='st'>"Yes"</span>, <span class='kw'>comp_value</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,  <span class='kw'>alternative</span> <span class='kw'>=</span> <span class='st'>"less"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>str</span>()</div><div class='output co'>#&gt; List of 15
+#&gt;  $ res        :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1 obs. of  8 variables:
+#&gt;   ..$ estimate   : num 0.407
+#&gt;   ..$ statistic  : num 425
+#&gt;   ..$ p.value    : num 1.25e-09
+#&gt;   ..$ parameter  : num 1043
+#&gt;   ..$ conf.low   : num 0
+#&gt;   ..$ conf.high  : num 0.433
+#&gt;   ..$ method     : chr "Exact binomial test"
+#&gt;   ..$ alternative: chr "less"
 #&gt;  $ dat_summary:'data.frame':	1 obs. of  6 variables:
-#&gt;   ..$ diff     : num -0.017
-#&gt;   ..$ prop     : num 0.033
-#&gt;   ..$ mean     : int 99
-#&gt;   ..$ sd       : num 9.78
-#&gt;   ..$ n        : int 3000
+#&gt;   ..$ diff     : num -0.0925
+#&gt;   ..$ prop     : num 0.407
+#&gt;   ..$ mean     : int 425
+#&gt;   ..$ sd       : num 15.9
+#&gt;   ..$ n        : int 1043
 #&gt;   ..$ n_missing: int 0
-#&gt;  $ p          : num 0.033
-#&gt;  $ ns         : int 99
-#&gt;  $ n          : int 3000
-#&gt;  $ levs       : chr [1:8] "IF" "I1" "SI1" "SI2" ...
+#&gt;  $ p          : num 0.407
+#&gt;  $ ns         : int 425
+#&gt;  $ n          : int 1043
+#&gt;  $ levs       : chr [1:2] "Yes" "No"
 #&gt;  $ miss       : int 0
-#&gt;  $ df_name    : chr "diamonds"
-#&gt;  $ dataset    :'data.frame':	3000 obs. of  1 variable:
-#&gt;   ..$ clarity: Factor w/ 8 levels "IF","I1","SI1",..: 5 3 6 8 6 7 3 3 8 4 ...
-#&gt;  $ var        : chr "clarity"
-#&gt;  $ lev        : chr "IF"
-#&gt;  $ comp_value : num 0.05
-#&gt;  $ alternative: chr "two.sided"
+#&gt;  $ df_name    : chr "titanic"
+#&gt;  $ dataset    :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1043 obs. of  1 variable:
+#&gt;   ..$ survived: Factor w/ 2 levels "Yes","No": 1 1 2 2 2 1 1 2 1 2 ...
+#&gt;  $ var        : chr "survived"
+#&gt;  $ lev        : chr "Yes"
+#&gt;  $ comp_value : num 0.5
+#&gt;  $ alternative: chr "less"
 #&gt;  $ conf_lev   : num 0.95
 #&gt;  $ data_filter: chr ""
 #&gt;  - attr(*, "class")= chr [1:2] "single_prop" "list"</div><div class='input'>
