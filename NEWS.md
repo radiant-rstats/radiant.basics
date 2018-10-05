@@ -1,4 +1,4 @@
-# radiant.data 0.9.6.0
+# radiant.data 0.9.7.0
 
 * Using [`shinyFiles`](https://github.com/thomasp85/shinyFiles) to provide convenient access to data located on a server
 
