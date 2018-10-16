@@ -6,7 +6,10 @@
 \alias{radiant.basics-package}
 \title{radiant.basics}
 \usage{
-radiant.basics()
+radiant.basics(state)
+}
+\arguments{
+\item{state}{Path to state file to load}
 }
 \description{
 radiant.basics

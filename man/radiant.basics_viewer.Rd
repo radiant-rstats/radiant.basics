@@ -4,7 +4,10 @@
 \alias{radiant.basics_viewer}
 \title{Launch radiant.basics in the Rstudio viewer}
 \usage{
-radiant.basics_viewer()
+radiant.basics_viewer(state)
+}
+\arguments{
+\item{state}{Path to state file to load}
 }
 \description{
 Launch radiant.basics in the Rstudio viewer

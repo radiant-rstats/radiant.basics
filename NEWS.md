@@ -1,8 +1,12 @@
-# radiant.data 0.9.7.0
+# radiant.basics 0.9.7.2
+
+* Load a state file on startup by providing a (relative) file path or a url
+
+# radiant.basics 0.9.7.0
 
 * Using [`shinyFiles`](https://github.com/thomasp85/shinyFiles) to provide convenient access to data located on a server
 
-# radiant.design 0.9.5.0
+# radiant.basics 0.9.5.0
 
 ## Major changes
 
