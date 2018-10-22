@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.basics</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7.3</span>
       </span>
     </div>
 
@@ -153,8 +153,22 @@
 <code>p.value</code> is the probability of finding a value as extreme or more extreme than <code>diff</code> if the null hypothesis is true</li>
 </ul>
 <p>If we check <code>Show additional statistics</code> the following output is added:</p>
-<p align="center">
-<img src="https://radiant-rstats.github.io/docs/basics/figures_basics//compare_props_summary_additional.png"></p>
+<pre>
+Pairwise proportion comparisons
+Data      : titanic 
+Variables : pclass, survived 
+Level     : Yes in survived 
+Confidence: 0.95 
+Adjustment: None 
+
+ pclass Yes  No   n     p    se    me
+    1st 179 103 282 0.635 0.029 0.056
+    2nd 115 146 261 0.441 0.031 0.060
+    3rd 131 369 500 0.262 0.020 0.039
+
+ Null hyp.   Alt. hyp.              diff  p.value chisq.value df 2.5%  97.5%    
+ 1st = 2nd   1st not equal to 2nd   0.194 
+</pre>
 <ul>
 <li>
 <code>chisq.value</code> is the chi-squared statistic associated with <code>diff</code> that we can compare to a chi-squared distribution. For additional discussion on how this metric is calculated see the help file in <em>Basics &gt; Tables &gt; Cross-tabs</em>. For each combination the equivalent of a 2X2 cross-tab is calculated.</li>
@@ -221,7 +235,7 @@
 <div id="r-functions" class="section level3">
 <h3 class="hasAnchor">
 <a href="#r-functions" class="anchor"></a>R-functions</h3>
-<p>For an overview of related R-functions used by Radiant to evaluate proportions see <a href="https://radiant-rstats.github.io/radiant.basics/reference/index.html#section-basics-proportions" target="_blank">_Basics &gt; Proportions</a></p>
+<p>For an overview of related R-functions used by Radiant to evaluate proportions see <a href="https://radiant-rstats.github.io/radiant.basics/reference/index.html#section-basics-proportions" target="_blank"><em>Basics &gt; Proportions</em></a></p>
 <p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="./images/by-nc-sa.png"></a></p>
 </div>
   </div>

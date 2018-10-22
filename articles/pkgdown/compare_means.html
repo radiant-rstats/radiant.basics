@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.basics</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7.3</span>
       </span>
     </div>
 
@@ -156,8 +156,22 @@
 <code>p.value</code> is the probability of finding a value as extreme or more extreme than <code>diff</code> if the null hypothesis is true</li>
 </ul>
 <p>If we check <code>Show additional statistics</code> the following output is added:</p>
-<p align="center">
-<img src="https://radiant-rstats.github.io/docs/basics/figures_basics//compare_means_summary_additional.png"></p>
+<pre>
+Pairwise mean comparisons (t-test)
+Data      : salary 
+Variables : rank, salary 
+Samples   : independent 
+Confidence: 0.95 
+Adjustment: None 
+
+      rank        mean   n         sd        se        me
+  AsstProf  80,775.985  67  8,174.113   998.627 1,993.823
+ AssocProf  93,876.438  64 13,831.700 1,728.962 3,455.056
+      Prof 126,772.109 266 27,718.675 1,699.541 3,346.322
+
+ Null hyp.              Alt. hyp.              diff      p.value se       t.value df      0%   95%           
+ AsstProf = AssocProf   AsstProf 
+</pre>
 <ul>
 <li>
 <code>se</code> is the standard error (i.e., the standard deviation of the sampling distribution of <code>diff</code>)</li>
@@ -218,7 +232,7 @@
 <div id="r-functions" class="section level3">
 <h3 class="hasAnchor">
 <a href="#r-functions" class="anchor"></a>R-functions</h3>
-<p>For an overview of related R-functions used by Radiant to evaluate means see <a href="https://radiant-rstats.github.io/radiant.basics/reference/index.html#section-basics-means" target="_blank">_Basics &gt; Means</a></p>
+<p>For an overview of related R-functions used by Radiant to evaluate means see <a href="https://radiant-rstats.github.io/radiant.basics/reference/index.html#section-basics-means" target="_blank"><em>Basics &gt; Means</em></a></p>
 <p>© Vincent Nijs (2018) <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width: 0" src="./images/by-nc-sa.png"></a></p>
 </div>
   </div>

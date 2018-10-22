@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.basics</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.7.3</span>
       </span>
     </div>
 
@@ -163,7 +163,8 @@
     </div>
 
     <pre class="usage"><span class='fu'>single_prop</span>(<span class='no'>dataset</span>, <span class='no'>var</span>, <span class='kw'>lev</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>comp_value</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,
-  <span class='kw'>alternative</span> <span class='kw'>=</span> <span class='st'>"two.sided"</span>, <span class='kw'>conf_lev</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>data_filter</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
+  <span class='kw'>alternative</span> <span class='kw'>=</span> <span class='st'>"two.sided"</span>, <span class='kw'>conf_lev</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>test</span> <span class='kw'>=</span> <span class='st'>"binom"</span>,
+  <span class='kw'>data_filter</span> <span class='kw'>=</span> <span class='st'>""</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -193,6 +194,10 @@
       <td><p>Span of the confidence interval</p></td>
     </tr>
     <tr>
+      <th>test</th>
+      <td><p>bionomial exact test ("binom") or Z-test ("z")</p></td>
+    </tr>
+    <tr>
       <th>data_filter</th>
       <td><p>Expression entered in, e.g., Data &gt; View to filter the dataset in Radiant. The expression should be a string (e.g., "price &gt; 10000")</p></td>
     </tr>
@@ -213,7 +218,7 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>single_prop</span>(<span class='no'>titanic</span>, <span class='st'>"survived"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>str</span>()</div><div class='output co'>#&gt; List of 15
+    <pre class="examples"><div class='input'><span class='fu'>single_prop</span>(<span class='no'>titanic</span>, <span class='st'>"survived"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>str</span>()</div><div class='output co'>#&gt; List of 16
 #&gt;  $ res        :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1 obs. of  8 variables:
 #&gt;   ..$ estimate   : num 0.407
 #&gt;   ..$ statistic  : num 425
@@ -243,8 +248,9 @@
 #&gt;  $ comp_value : num 0.5
 #&gt;  $ alternative: chr "two.sided"
 #&gt;  $ conf_lev   : num 0.95
+#&gt;  $ test       : chr "binom"
 #&gt;  $ data_filter: chr ""
-#&gt;  - attr(*, "class")= chr [1:2] "single_prop" "list"</div><div class='input'><span class='fu'>single_prop</span>(<span class='no'>titanic</span>, <span class='st'>"survived"</span>, <span class='kw'>lev</span> <span class='kw'>=</span> <span class='st'>"Yes"</span>, <span class='kw'>comp_value</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,  <span class='kw'>alternative</span> <span class='kw'>=</span> <span class='st'>"less"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>str</span>()</div><div class='output co'>#&gt; List of 15
+#&gt;  - attr(*, "class")= chr [1:2] "single_prop" "list"</div><div class='input'><span class='fu'>single_prop</span>(<span class='no'>titanic</span>, <span class='st'>"survived"</span>, <span class='kw'>lev</span> <span class='kw'>=</span> <span class='st'>"Yes"</span>, <span class='kw'>comp_value</span> <span class='kw'>=</span> <span class='fl'>0.5</span>,  <span class='kw'>alternative</span> <span class='kw'>=</span> <span class='st'>"less"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>str</span>()</div><div class='output co'>#&gt; List of 16
 #&gt;  $ res        :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1 obs. of  8 variables:
 #&gt;   ..$ estimate   : num 0.407
 #&gt;   ..$ statistic  : num 425
@@ -274,6 +280,7 @@
 #&gt;  $ comp_value : num 0.5
 #&gt;  $ alternative: chr "less"
 #&gt;  $ conf_lev   : num 0.95
+#&gt;  $ test       : chr "binom"
 #&gt;  $ data_filter: chr ""
 #&gt;  - attr(*, "class")= chr [1:2] "single_prop" "list"</div><div class='input'>
 </div></pre>
