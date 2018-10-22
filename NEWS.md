@@ -1,3 +1,8 @@
+# radiant.basics 0.9.7.3
+
+* `ci` in summary table `compare_means` and `compare_props` should be margin of err (`me`)
+* Option to use `Z-test` in `single_prop`
+
 # radiant.basics 0.9.7.2
 
 * Load a state file on startup by providing a (relative) file path or a url

@@ -103,7 +103,7 @@ compare_props <- function(
   res$sig_star <- sig_stars(res$p.value)
 
   ## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
-  ci_calc <- function(se, conf.lev = .95)
+  me_calc <- function(se, conf.lev = .95)
     se * qnorm(conf.lev / 2 + .5, lower.tail = TRUE)
 
   dat_summary <- data.frame(prop_input, check.names = FALSE, stringsAsFactors = FALSE) %>%
@@ -112,14 +112,14 @@ compare_props <- function(
       n = as.integer(rowSums(.[, 1:2])),
       p = .[[1]] / n,
       se = sqrt((p * (1 - p) / n)),
-      ci = ci_calc(se, conf_lev)
+      me = me_calc(se, conf_lev)
     ) %>%
       set_rownames(rownames(prop_input)) %>%
       rownames_to_column(var = var1)
 
   dat_summary[[var1]] %<>% factor(., levels = .)
-
   vars <- paste0(vars, collapse = ", ")
+  rm(i, me_calc)
   as.list(environment()) %>% add_class("compare_props")
 }
 
@@ -232,7 +232,7 @@ plot.compare_props <- function(
     plot_list[[which("bar" == plots)]] <-
       ggplot(x$dat_summary, aes_string(x = v1, y = "p", fill = v1)) +
       geom_bar(stat = "identity", alpha = 0.5) +
-      geom_errorbar(width = .1, aes(ymin = p - ci, ymax = p + ci)) +
+      geom_errorbar(width = .1, aes(ymin = p - me, ymax = p + me)) +
       geom_errorbar(width = .05, aes(ymin = p - se, ymax = p + se), color = "blue") +
       theme(legend.position = "none") +
       scale_y_continuous(labels = scales::percent) +

@@ -124,7 +124,7 @@ compare_means <- function(
   res$sig_star <- sig_stars(res$p.value)
 
   ## from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
-  ci_calc <- function(se, n, conf.lev = .95)
+  me_calc <- function(se, n, conf.lev = .95)
     se * qt(conf.lev / 2 + .5, n - 1)
 
   dat_summary <- group_by_at(dataset, .vars = "variable") %>%
@@ -134,13 +134,13 @@ compare_means <- function(
         n = length(.),
         sd,
         se = sd / sqrt(n),
-        ci = ci_calc(se, n, conf_lev)
+        me = me_calc(se, n, conf_lev)
       )
     ) %>%
     rename(!!! setNames("variable", cname))
 
   vars <- paste0(vars, collapse = ", ")
-  rm(x, y, sel, i, ci_calc)
+  rm(x, y, sel, i, me_calc)
   as.list(environment()) %>% add_class("compare_means")
 }
 
@@ -260,7 +260,7 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
         aes_string(x = "variable", y = "mean", fill = "variable")
       ) +
       geom_bar(stat = "identity") +
-      geom_errorbar(width = .1, aes(ymin = mean - ci, ymax = mean + ci)) +
+      geom_errorbar(width = .1, aes(ymin = mean - me, ymax = mean + me)) +
       geom_errorbar(width = .05, aes(ymin = mean - se, ymax = mean + se), color = "blue") +
       theme(legend.position = "none") +
       labs(x = var1, y = paste0(var2, " (mean)"))
