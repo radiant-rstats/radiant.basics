@@ -64,10 +64,12 @@ output$ui_single_prop <- renderUI({
           "sp_comp_value", "Comparison value:",
           value = state_init("sp_comp_value", sp_args$comp_value),
           min = 0.01, max = 0.99, step = 0.01
-        )
+        ),
         # radioButtons("sp_type", label = "Test:", c("Binomial" = "binom", "Chi-square" = "chisq"),
-        #     selected = state_init("sp_type", "binom"),
-        #     inline = TRUE)
+        radioButtons(
+          "sp_test", "Test type:", c("Binomial exact" = "binom", "Z-test" = "z"),
+          selected = state_init("sp_test", "binom"), inline = TRUE
+        )
       ),
       conditionalPanel(
         condition = "input.tabs_single_prop == 'Plot'",

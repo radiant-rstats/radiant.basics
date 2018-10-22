@@ -5,7 +5,8 @@
 \title{Compare a sample proportion to a population proportion}
 \usage{
 single_prop(dataset, var, lev = "", comp_value = 0.5,
-  alternative = "two.sided", conf_lev = 0.95, data_filter = "")
+  alternative = "two.sided", conf_lev = 0.95, test = "binom",
+  data_filter = "")
 }
 \arguments{
 \item{dataset}{Dataset}
@@ -19,6 +20,8 @@ single_prop(dataset, var, lev = "", comp_value = 0.5,
 \item{alternative}{The alternative hypothesis ("two.sided", "greater", or "less")}
 
 \item{conf_lev}{Span of the confidence interval}
+
+\item{test}{bionomial exact test ("binom") or Z-test ("z")}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 }
