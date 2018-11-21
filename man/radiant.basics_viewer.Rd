@@ -4,10 +4,12 @@
 \alias{radiant.basics_viewer}
 \title{Launch radiant.basics in the Rstudio viewer}
 \usage{
-radiant.basics_viewer(state)
+radiant.basics_viewer(state, ...)
 }
 \arguments{
 \item{state}{Path to state file to load}
+
+\item{...}{additional arguments to pass to shiny::runApp (e.g, port = 8080)}
 }
 \description{
 Launch radiant.basics in the Rstudio viewer

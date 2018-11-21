@@ -1,5 +1,8 @@
-# radiant.basics 0.9.7.3
+# radiant.basics 0.9.7.5
 
+* Option to pass additional arguments to `shiny::runApp` when starting radiant such as the port to use. For example, radiant.basics::radiant.basics("https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda", port = 8080) 
+* Catch settings where the number of levels in a comparison of means or proportions is the same as the number of rows in the data (e.g., grouping by a unique identifier)
+* Show significant stars for `Compare means` and `Compare proportions` even when `Show additional output` is not selected
 * `ci` in summary table `compare_means` and `compare_props` should be margin of err (`me`)
 * Option to use `Z-test` in `single_prop`
 

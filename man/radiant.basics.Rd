@@ -6,10 +6,12 @@
 \alias{radiant.basics-package}
 \title{radiant.basics}
 \usage{
-radiant.basics(state)
+radiant.basics(state, ...)
 }
 \arguments{
 \item{state}{Path to state file to load}
+
+\item{...}{additional arguments to pass to shiny::runApp (e.g, port = 8080)}
 }
 \description{
 radiant.basics
