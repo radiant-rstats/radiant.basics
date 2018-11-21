@@ -62,11 +62,13 @@ output$ui_cp_levs <- renderUI({
 output$ui_cp_comb <- renderUI({
   if (not_available(input$cp_var1)) return()
 
-  levs <- .get_data()[[input$cp_var1]] %>% as.factor() %>% levels()
-  alevs <- .get_data()[[input$cp_var1]] %>% unique()
+  dat <- .get_data()[[input$cp_var1]] %>% as.factor()
+  levs <- levels(dat)
+  alevs <- unique(dat)
+  len <- length(dat)
   levs <- levs[levs %in% alevs]
 
-  if (length(levs) > 2) {
+  if (length(levs) > 2 && length(levs) < len) {
     cmb <- combn(levs, 2) %>% apply(2, paste, collapse = ":")
   } else {
     return()
@@ -219,8 +221,8 @@ observeEvent(input$compare_props_report, {
 })
 
 download_handler(
-  id = "dlp_compare_props", 
-  fun = download_handler_plot, 
+  id = "dlp_compare_props",
+  fun = download_handler_plot,
   fn = function() paste0(input$dataset, "_compare_props"),
   type = "png",
   caption = "Save compare proportions plot",

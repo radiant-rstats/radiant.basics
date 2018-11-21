@@ -42,6 +42,10 @@ compare_means <- function(
     cname <- " "
   } else {
     if (is.character(dataset[[var1]])) dataset[[var1]] <- as.factor(dataset[[var1]])
+    if (length(levels(dataset[[var1]])) == nrow(dataset)) {
+      return("Test requires multiple observations in each group. Please select another variable." %>%
+        add_class("compare_means"))
+    }
     colnames(dataset) <- c("variable", "values")
     cname <- var1
   }
@@ -204,12 +208,12 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
     mod <- mod[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "se", "t.value", "df", "ci_low", "ci_high", "sig_star")]
     if (!is.integer(mod[["df"]])) mod[["df"]] %<>% round(dec)
     mod[, c("t.value", "ci_low", "ci_high")] %<>% round(dec)
-    mod <- rename(mod, !!! setNames(c("ci_low", "ci_high"), ci_perc)) %>%
-      rename(` ` = "sig_star")
+    mod <- rename(mod, !!! setNames(c("ci_low", "ci_high"), ci_perc))
   } else {
-    mod <- mod[, c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
+    mod <- mod[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "sig_star")]
   }
 
+  mod <- rename(mod, ` ` = "sig_star")
   mod$p.value <- round(mod$p.value, dec)
   mod$p.value[mod$p.value < .001] <- "< .001"
   print(mod, row.names = FALSE, right = FALSE)

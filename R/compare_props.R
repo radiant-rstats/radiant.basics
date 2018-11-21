@@ -31,6 +31,11 @@ compare_props <- function(
   vars <- c(var1, var2)
   dataset <- get_data(dataset, vars, filt = data_filter) %>% mutate_all(funs(as.factor))
 
+  if (length(levels(dataset[[var1]])) == nrow(dataset)) {
+    return("Test requires multiple observations in each group. Please select another variable." %>%
+      add_class("compare_props"))
+  }
+
   lv <- levels(dataset[[var2]])
   if (levs != "") {
     if (levs %in% lv && lv[1] != levs) {
@@ -181,15 +186,13 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
     res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "chisq.value", "df", "ci_low", "ci_high", "sig_star")]
     res[, c("chisq.value", "ci_low", "ci_high")] %<>% format_df(dec, mark = ",")
 
-    ## apparantely you can get negative number here
-    # res$ci_low[res$ci_low < 0] <- 0
     res$df[res_sim] <- "*1*"
-    res <- rename(res, !!! setNames(c("ci_low", "ci_high"), ci_perc)) %>%
-      rename(` ` = "sig_star")
+    res <- rename(res, !!! setNames(c("ci_low", "ci_high"), ci_perc))
   } else {
-    res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value")]
+    res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "sig_star")]
   }
 
+  res <- rename(res, ` ` = "sig_star")
   res$p.value[res$p.value >= .001] %<>% round(dec)
   res$p.value[res$p.value < .001] <- "< .001"
   res$p.value[res_sim] %<>% paste0(" (2000 replicates)")
