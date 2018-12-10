@@ -135,7 +135,7 @@ summary.single_prop <- function(object, dec = 3, ...) {
     select(base::setdiff(colnames(.), c("parameter", "method", "alternative")))
 
   if (object$test == "z") {
-    names(res) <- c("diff", "Z", "p.value", ci_perc[1], ci_perc[2])
+    names(res) <- c("diff", "z.value", "p.value", ci_perc[1], ci_perc[2])
     res <- format_df(res, dec = dec, mark = ",") # restrict the number of decimals
   } else {
     names(res) <- c("diff", "ns", "p.value", ci_perc[1], ci_perc[2])
