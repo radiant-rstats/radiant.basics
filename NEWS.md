@@ -1,4 +1,4 @@
-# radiant.basics 0.9.7.6
+# radiant.basics 0.9.8.0
 
 * Option to pass additional arguments to `shiny::runApp` when starting radiant such as the port to use. For example, radiant.basics::radiant.basics("https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda", port = 8080) 
 * Catch settings where the number of levels in a comparison of means or proportions is the same as the number of rows in the data (e.g., grouping by a unique identifier)
