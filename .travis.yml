@@ -12,6 +12,7 @@ r_packages:
   - devtools
 
 r_github_packages:
+  - trestletech/shinyAce
   - radiant-rstats/radiant.data
 
 ## based on https://www.datacamp.com/community/tutorials/cd-package-docs-pkgdown-travis
