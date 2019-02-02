@@ -26,7 +26,7 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
   ## data.matrix as the last step in the chain is about 25% slower using
   ## system.time but results (using diamonds and mtcars) are identical
   dataset <- get_data(dataset, vars, filt = data_filter) %>%
-    mutate_all(funs(as_numeric))
+    mutate_all(as_numeric)
 
   ## calculate the correlation matrix with p.values using the psych package
   cmat <- sshhr(psych::corr.test(dataset, method = method))

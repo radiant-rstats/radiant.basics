@@ -29,7 +29,7 @@ single_prop <- function(
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE) %>%
-    mutate_all(funs(as.factor))
+    mutate_all(as.factor)
 
   ## removing any missing values
   miss <- n_missing(dataset)

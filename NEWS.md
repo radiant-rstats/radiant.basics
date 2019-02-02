@@ -1,3 +1,7 @@
+# radiant.basics 0.9.8.1
+
+* Various fixes to address (soft) deprecations in dplyr 0.8.0
+
 # radiant.basics 0.9.8.0
 
 * Option to pass additional arguments to `shiny::runApp` when starting radiant such as the port to use. For example, radiant.basics::radiant.basics("https://github.com/radiant-rstats/docs/raw/gh-pages/examples/demo-dvd-rnd.state.rda", port = 8080) 

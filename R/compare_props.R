@@ -29,7 +29,7 @@ compare_props <- function(
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   vars <- c(var1, var2)
-  dataset <- get_data(dataset, vars, filt = data_filter) %>% mutate_all(funs(as.factor))
+  dataset <- get_data(dataset, vars, filt = data_filter) %>% mutate_all(as.factor)
 
   if (length(levels(dataset[[var1]])) == nrow(dataset)) {
     return("Test requires multiple observations in each group. Please select another variable." %>%
@@ -45,7 +45,7 @@ compare_props <- function(
   }
 
   ## check if there is variation in the data
-  if (any(summarise_all(dataset, funs(does_vary)) == FALSE)) {
+  if (any(summarise_all(dataset, does_vary) == FALSE)) {
     return("One or more selected variables show no variation. Please select other variables." %>%
       add_class("compare_props"))
   }

@@ -36,8 +36,8 @@ single_mean <- function(
     tidy()
 
   dat_summary <- summarise_all(dataset,
-    funs(
-      diff = mean(.) - comp_value,
+    list(
+      diff = ~ mean(.) - comp_value,
       se = se,
       mean = mean,
       sd = sd,
