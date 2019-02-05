@@ -150,7 +150,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 
   cat("Pairwise proportion comparisons\n")
   cat("Data      :", object$df_name, "\n")
-  if (object$data_filter %>% gsub("\\s", "", .) != "") {
+  if (!is_empty(object$data_filter)) {
     cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
   }
   cat("Variables :", object$vars, "\n")

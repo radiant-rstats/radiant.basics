@@ -69,7 +69,7 @@ single_mean <- function(
 summary.single_mean <- function(object, dec = 3, ...) {
   cat("Single mean test\n")
   cat("Data      :", object$df_name, "\n")
-  if (object$data_filter %>% gsub("\\s", "", .) != "") {
+  if (!is_empty(object$data_filter)) {
     cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
   }
   cat("Variable  :", object$var, "\n")

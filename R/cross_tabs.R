@@ -95,7 +95,7 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
   if (is.character(object)) return(object)
   cat("Cross-tabs\n")
   cat("Data     :", object$df_name, "\n")
-  if (object$data_filter %>% gsub("\\s", "", .) != "") {
+  if (!is_empty(object$data_filter)) {
     cat("Filter   :", gsub("\\n", "", object$data_filter), "\n")
   }
   cat("Variables:", paste0(c(object$var1, object$var2), collapse = ", "), "\n")

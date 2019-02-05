@@ -99,7 +99,7 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 
   cat("Goodness of fit test\n")
   cat("Data     :", object$df_name, "\n")
-  if (object$data_filter %>% gsub("\\s", "", .) != "") {
+  if (!is_empty(object$data_filter)) {
     cat("Filter   :", gsub("\\n", "", object$data_filter), "\n")
   }
   if (length(object$var) > 0) {
