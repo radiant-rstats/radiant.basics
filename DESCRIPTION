@@ -10,15 +10,15 @@ Description: The Radiant Basics menu includes interfaces for probability
     the functionality in radiant.data.
 Depends:
     R (>= 3.4.0),
-    radiant.data (>= 0.9.8.0)
+    radiant.data (>= 0.9.8.9)
 Imports:
     ggplot2 (>= 2.2.1),
     gridExtra (>= 2.0.0),
     scales (>= 0.4.0),
-    dplyr (>= 0.7.6),
-    tidyr (>= 0.8.0),
+    dplyr (>= 0.8.0),
+    tidyr (>= 0.8.2),
     magrittr (>= 1.5),
-    shiny (>= 1.1.0),
+    shiny (>= 1.2.0),
     psych (>= 1.8.3.3),
     import (>= 1.1.0)
 Suggests:
