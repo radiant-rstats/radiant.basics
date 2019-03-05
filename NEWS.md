@@ -1,4 +1,4 @@
-# radiant.basics 0.9.8.2
+# radiant.basics 0.9.9.0
 
 * Various fixes to address (soft) deprecations in dplyr 0.8.0
 

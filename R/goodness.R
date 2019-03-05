@@ -36,7 +36,7 @@ goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") {
   ## dataset not needed in summary or plot
   rm(dataset)
 
-  if (is_not(p) || p == "") {
+  if (is_empty(p)) {
     p <- rep(1 / length(tab), length(tab))
   } else if (is.character(p)) {
     p <- gsub(",", " ", p) %>% strsplit("\\s+") %>% unlist() %>% strsplit("/")
