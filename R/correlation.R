@@ -123,7 +123,7 @@ print.rcorr <- function(x, ...) summary.correlation(x, ...)
 #'
 #' @param x Return value from \code{\link{correlation}}
 #' @param nrobs Number of data points to show in scatter plots (-1 for all)
-#' @param jit Level of jittering to apply to scatter plot. Default is .3. Use 0 for no jittering
+#' @param jit A numeric vector that determines the amount of jittering to apply to scatter plot. Default is 0. Use, e.g., 0.3 to add some jittering
 #' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods.
 #'
@@ -137,7 +137,7 @@ print.rcorr <- function(x, ...) summary.correlation(x, ...)
 #' @importFrom ggplot2 alpha
 #'
 #' @export
-plot.correlation <- function(x, nrobs = -1, jit = .3, dec = 2, ...) {
+plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
 
   ## defined method to be use in panel.plot
   method <- x$method
@@ -166,7 +166,7 @@ plot.correlation <- function(x, nrobs = -1, jit = .3, dec = 2, ...) {
       y <- y[ind]
     }
     points(
-      jitter(x, jit), jitter(y, jit), pch = 16,
+      jitter(x, jit[1]), jitter(y, jit[length(jit)]), pch = 16,
       col = ggplot2::alpha("black", 0.5)
     )
     ## uncomment the lines below if you want linear and loess lines
