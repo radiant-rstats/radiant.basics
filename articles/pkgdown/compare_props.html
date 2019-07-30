@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.basics</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -141,7 +141,7 @@
 <li>pclass = Passenger Class (1st, 2nd, 3rd). This is a proxy for socio-economic status (SES) 1st ~ Upper; 2nd ~ Middle; 3rd ~ Lower</li>
 </ul>
 <p>Suppose we want to test if the proportion of people that survived the sinking of the Titanic differs across passenger classes. To test this hypothesis we select <code>pclass</code> as the grouping variable and calculate proportions of <code>yes</code> (see <code>Choose level</code>) for <code>survived</code> (see <code>Variable (select one)</code>).</p>
-<p>In the <code>Choose combinations</code> box select all available entries to conduct pair-wise comparisons across the three passenger class levels. Note that removing all entries will automatically select all combinations. Unless we have an explicit hypothesis for the direction of the effect we should use a two-sided test (i.e., <code>two.sided</code>). Our first alternative hypothesis would be ‘The proportion of survivors amongst 1st class passengers was different compared to 2nd class passengers’.</p>
+<p>In the <code>Choose combinations</code> box select all available entries to conduct pair-wise comparisons across the three passenger class levels. Note that removing all entries will automatically select all combinations. Unless we have an explicit hypothesis for the direction of the effect we should use a two-sided test (i.e., <code>two.sided</code>). Our first alternative hypothesis would be ‘The proportion of survivors among 1st class passengers was different compared to 2nd class passengers’.</p>
 <p align="center">
 <img src="https://radiant-rstats.github.io/docs/basics/figures_basics//compare_props_summary.png"></p>
 <p>The first two blocks of output show basic information about the test (e.g.,. selected variables and confidence levels) and summary statistics (e.g., proportions, standard errors, etc. per group). The final block of output shows the following:</p>

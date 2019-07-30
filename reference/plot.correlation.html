@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.basics</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -165,7 +165,8 @@
     </div>
 
     <pre class="usage"><span class='co'># S3 method for correlation</span>
-<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>nrobs</span> <span class='kw'>=</span> -<span class='fl'>1</span>, <span class='kw'>jit</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>2</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://www.rdocumentation.org/packages/graphics/topics/plot'>plot</a></span>(<span class='no'>x</span>, <span class='kw'>nrobs</span> <span class='kw'>=</span> -<span class='fl'>1</span>, <span class='kw'>jit</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0</span>), <span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>2</span>,
+  <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -180,7 +181,7 @@
     </tr>
     <tr>
       <th>jit</th>
-      <td><p>Level of jittering to apply to scatter plot. Default is .3. Use 0 for no jittering</p></td>
+      <td><p>A numeric vector that determines the amount of jittering to apply to scatter plot. Default is 0. Use, e.g., 0.3 to add some jittering</p></td>
     </tr>
     <tr>
       <th>dec</th>
