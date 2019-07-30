@@ -1,3 +1,8 @@
+# radiant.basics 1.0.0
+
+* Flexible adjustment of level of jitter in `plot.correlation`
+* Support for variables of type `ts`
+
 # radiant.basics 0.9.9.0
 
 * Various fixes to address (soft) deprecations in dplyr 0.8.0
@@ -22,7 +27,7 @@
 
 ## Major changes
 
-* Various changes to the code to accomodate the use of `shiny::makeReactiveBinding`. The advantage is that the code generated for _Report > Rmd_ and _Report > R_ will no longer have to use `r_data` to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well.
+* Various changes to the code to accommodate the use of `shiny::makeReactiveBinding`. The advantage is that the code generated for _Report > Rmd_ and _Report > R_ will no longer have to use `r_data` to store and access data. This means that code generated and used in the Radiant browser interface will be directly usable without the browser interface as well.
 
 # radiant.basics 0.9.2.0
 

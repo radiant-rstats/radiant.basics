@@ -22,7 +22,7 @@ cm_inputs <- reactive({
 ###############################
 output$ui_cm_var1 <- renderUI({
   vars <- c("None" = "", groupable_vars())
-  isNum <- "numeric" == .get_class() | "integer" == .get_class()
+  isNum <- .get_class() %in% c("integer", "numeric", "ts")
 
   ## can't use unique here - removes variable type information
   vars <- c(vars, varnames()[isNum]) %>% .[!duplicated(.)]
@@ -38,7 +38,7 @@ output$ui_cm_var1 <- renderUI({
 
 output$ui_cm_var2 <- renderUI({
   if (not_available(input$cm_var1)) return()
-  isNum <- "numeric" == .get_class() | "integer" == .get_class()
+  isNum <- .get_class() %in% c("integer", "numeric", "ts")
   vars <- varnames()[isNum]
 
   if (input$cm_var1 %in% vars) {
