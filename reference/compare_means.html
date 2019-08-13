@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.basics</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -228,7 +228,7 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>compare_means</span>(<span class='no'>diamonds</span>, <span class='st'>"cut"</span>, <span class='st'>"price"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>()</div><div class='output co'>#&gt; List of 17
+    <pre class="examples"><div class='input'><span class='fu'>compare_means</span>(<span class='no'>diamonds</span>, <span class='st'>"cut"</span>, <span class='st'>"price"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/utils/topics/str'>str</a></span>()</div><div class='output co'>#&gt; List of 18
 #&gt;  $ dat_summary:Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	5 obs. of  6 variables:
 #&gt;   ..$ cut : Factor w/ 5 levels "Fair","Good",..: 1 2 3 4 5
 #&gt;   ..$ mean: num [1:5] 4505 4130 3960 4369 3470
@@ -252,6 +252,7 @@
 #&gt;   ..$ group1: chr [1:10] "Fair" "Fair" "Fair" "Fair" ...
 #&gt;   ..$ group2: chr [1:10] "Good" "Very Good" "Premium" "Ideal" ...
 #&gt;  $ levs       : chr [1:5] "Fair" "Good" "Very Good" "Premium" ...
+#&gt;  $ not_vary   : chr(0) 
 #&gt;  $ cname      : chr "cut"
 #&gt;  $ df_name    : chr "diamonds"
 #&gt;  $ vars       : chr "cut, price"
