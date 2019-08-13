@@ -20,7 +20,7 @@ cor_sum_args <- as.list(if (exists("summary.correlation")) {
   formals(summary.correlation)
 } else {
   formals(radiant.basics::summary.correlation)
-} )
+})
 
 ## list of function inputs selected by user
 cor_sum_inputs <- reactive({
@@ -55,7 +55,7 @@ output$ui_cor_nrobs <- renderUI({
   choices <- c("1,000" = 1000, "5,000" = 5000, "10,000" = 10000, "All" = -1) %>%
     .[. < nrobs]
   selectInput(
-    "cor_nrobs", "Number of data points plotted:", 
+    "cor_nrobs", "Number of data points plotted:",
     choices = choices,
     selected = state_single("cor_nrobs", choices, 1000)
   )
@@ -188,8 +188,8 @@ observeEvent(input$correlation_report, {
 })
 
 download_handler(
-  id = "dlp_correlation", 
-  fun = download_handler_plot, 
+  id = "dlp_correlation",
+  fun = download_handler_plot,
   fn = function() paste0(input$dataset, "_correlation"),
   type = "png",
   caption = "Save correlation plot",
