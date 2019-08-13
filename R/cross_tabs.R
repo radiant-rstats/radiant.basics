@@ -42,9 +42,10 @@ cross_tabs <- function(dataset, var1, var2, tab = NULL, data_filter = "") {
     # http://stats.stackexchange.com/questions/14226/given-the-power-of-computers-these-days-is-there-ever-a-reason-to-do-a-chi-squa/14230#14230
     # http://stats.stackexchange.com/questions/62445/rules-to-apply-monte-carlo-simulation-of-p-values-for-chi-squared-test
 
-    if (any(summarise_all(dataset, does_vary) == FALSE)) {
-      return("One or more selected variables show no variation. Please select other variables." %>%
-        add_class("cross_tabs"))
+    not_vary <- colnames(dataset)[summarise_all(dataset, does_vary) == FALSE]
+    if (length(not_vary) > 0) {
+      return(paste0("The following variable(s) show no variation. Please select other variables.\n\n** ", paste0(not_vary, collapse = ", "), " **") %>%
+               add_class("cross_tabs"))
     }
 
     tab <- table(dataset[[var1]], dataset[[var2]])

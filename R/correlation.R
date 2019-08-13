@@ -28,13 +28,19 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
   dataset <- get_data(dataset, vars, filt = data_filter) %>%
     mutate_all(as_numeric)
 
+  not_vary <- colnames(dataset)[summarise_all(dataset, does_vary) == FALSE]
+  if (length(not_vary) > 0) {
+    return(paste0("The following variable(s) show no variation. Please select other variables.\n\n** ", paste0(not_vary, collapse = ", "), " **") %>%
+      add_class("correlation"))
+  }
+
   ## calculate the correlation matrix with p.values using the psych package
   cmat <- sshhr(psych::corr.test(dataset, method = method))
 
   ## calculate covariance matrix
   cvmat <- sshhr(cov(dataset, method = method))
 
-  as.list(environment()) %>% add_class("correlation") %>% add_class("rcorr") 
+  as.list(environment()) %>% add_class("correlation") %>% add_class("rcorr")
 }
 
 #' Summary method for the correlation function
@@ -56,6 +62,8 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
 #'
 #' @export
 summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...) {
+
+  if (is.character(object)) return(object)
 
   ## calculate the correlation matrix with p.values using the psych package
   cr <- apply(object$cmat$r, 2, format_nr, dec = dec) %>%
@@ -138,6 +146,8 @@ print.rcorr <- function(x, ...) summary.correlation(x, ...)
 #'
 #' @export
 plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
+
+  if (is.character(x)) return(NULL)
 
   ## defined method to be use in panel.plot
   method <- x$method

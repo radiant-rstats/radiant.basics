@@ -53,10 +53,10 @@ compare_means <- function(
   ## needed with new tidyr
   dataset$variable %<>% as.factor()
 
-  ## check there is variation in the data
-  if (any(summarise_all(dataset, does_vary) == FALSE)) {
-    return("Test could not be calculated (no variation). Please select another variable." %>%
-      add_class("compare_means"))
+  not_vary <- vars[summarise_all(dataset, does_vary) == FALSE]
+  if (length(not_vary) > 0) {
+    return(paste0("The following variable(s) show no variation. Please select other variables.\n\n** ", paste0(not_vary, collapse = ", "), " **") %>%
+             add_class("compare_means"))
   }
 
   ## resetting option to independent if the number of observations is unequal
@@ -133,7 +133,7 @@ compare_means <- function(
 
   dat_summary <- group_by_at(dataset, .vars = "variable") %>%
     summarise_all(
-      list( 
+      list(
         mean = mean,
         n = length,
         sd = sd,

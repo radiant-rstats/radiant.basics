@@ -1,3 +1,7 @@
+# radiant.basics 1.0.1
+
+* Improved checks for variables that show no variation
+
 # radiant.basics 1.0.0
 
 * Flexible adjustment of level of jitter in `plot.correlation`
