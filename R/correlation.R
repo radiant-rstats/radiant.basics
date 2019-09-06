@@ -6,6 +6,7 @@
 #' @param vars Variables to include in the analysis. Default is all but character and factor variables with more than two unique values are removed
 #' @param method Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param envir Environment to extract data from
 #'
 #' @return A list with all variables defined in the function as an object of class compare_means
 #'
@@ -19,13 +20,16 @@
 #' @importFrom psych corr.test
 #'
 #' @export
-correlation <- function(dataset, vars = "", method = "pearson", data_filter = "") {
+correlation <- function(
+  dataset, vars = "", method = "pearson",
+  data_filter = "", envir = parent.frame()
+) {
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
 
   ## data.matrix as the last step in the chain is about 25% slower using
   ## system.time but results (using diamonds and mtcars) are identical
-  dataset <- get_data(dataset, vars, filt = data_filter) %>%
+  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir) %>%
     mutate_all(as_numeric)
 
   not_vary <- colnames(dataset)[summarise_all(dataset, does_vary) == FALSE]
@@ -39,6 +43,8 @@ correlation <- function(dataset, vars = "", method = "pearson", data_filter = ""
 
   ## calculate covariance matrix
   cvmat <- sshhr(cov(dataset, method = method))
+
+  rm(envir)
 
   as.list(environment()) %>% add_class("correlation") %>% add_class("rcorr")
 }

@@ -7,6 +7,7 @@
 #' @param var2 A categorical variable
 #' @param tab Table with frequencies as alternative to dataset
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param envir Environment to extract data from
 #'
 #' @return A list of all variables used in cross_tabs as an object of class cross_tabs
 #'
@@ -18,7 +19,10 @@
 #' @seealso \code{\link{plot.cross_tabs}} to plot results
 #'
 #' @export
-cross_tabs <- function(dataset, var1, var2, tab = NULL, data_filter = "") {
+cross_tabs <- function(
+  dataset, var1, var2,  tab = NULL,
+  data_filter = "", envir = parent.frame()
+) {
 
   if (is.table(tab)) {
     df_name <- deparse(substitute(tab))
@@ -35,7 +39,7 @@ cross_tabs <- function(dataset, var1, var2, tab = NULL, data_filter = "") {
     }
   } else {
     df_name <- if (!is_string(dataset)) deparse(substitute(dataset)) else dataset
-    dataset <- get_data(dataset, c(var1, var2), filt = data_filter)
+    dataset <- get_data(dataset, c(var1, var2), filt = data_filter, envir = envir)
 
     ## Use simulated p-values when
     # http://stats.stackexchange.com/questions/100976/n-1-pearsons-chi-square-in-r
@@ -70,6 +74,8 @@ cross_tabs <- function(dataset, var1, var2, tab = NULL, data_filter = "") {
     res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy() %>% .$p.value
     res$parameter <- paste0("*", res$parameter, "*")
   }
+
+  rm(envir)
 
   as.list(environment()) %>% add_class("cross_tabs")
 }

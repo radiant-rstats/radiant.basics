@@ -11,6 +11,7 @@
 #' @param comb Combinations to evaluate
 #' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param envir Environment to extract data from
 #'
 #' @return A list of all variables defined in the function as an object of class compare_props
 #'
@@ -24,12 +25,13 @@
 compare_props <- function(
   dataset, var1, var2, levs = "",
   alternative = "two.sided", conf_lev = .95,
-  comb = "", adjust = "none", data_filter = ""
+  comb = "", adjust = "none", data_filter = "",
+  envir = parent.frame()
 ) {
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   vars <- c(var1, var2)
-  dataset <- get_data(dataset, vars, filt = data_filter) %>% mutate_all(as.factor)
+  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir) %>% mutate_all(as.factor)
 
   if (length(levels(dataset[[var1]])) == nrow(dataset)) {
     return("Test requires multiple observations in each group. Please select another variable." %>%
@@ -125,7 +127,7 @@ compare_props <- function(
 
   dat_summary[[var1]] %<>% factor(., levels = .)
   vars <- paste0(vars, collapse = ", ")
-  rm(i, me_calc)
+  rm(i, me_calc, envir)
   as.list(environment()) %>% add_class("compare_props")
 }
 

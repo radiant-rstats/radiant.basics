@@ -1,8 +1,9 @@
-# radiant.basics 1.0.1
+# radiant.basics 1.1.0.0
 
 * Improved checks for variables that show no variation
+* Numerous small code changes to support enhanced auto-completion, tooltips, and annotations in shinyAce 0.4.1
 
-# radiant.basics 1.0.0
+# radiant.basics 1.0.0.0
 
 * Flexible adjustment of level of jitter in `plot.correlation`
 * Support for variables of type `ts`

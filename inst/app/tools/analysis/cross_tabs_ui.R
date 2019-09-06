@@ -115,7 +115,9 @@ ct_available <- reactive({
 })
 
 .cross_tabs <- reactive({
-  do.call(cross_tabs, ct_inputs())
+  cti <- ct_inputs()
+  cti$envir <- r_data
+  do.call(cross_tabs, cti)
 })
 
 .summary_cross_tabs <- reactive({

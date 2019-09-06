@@ -14,3 +14,12 @@ addResourcePath("www_basics", file.path(getOption("radiant.path.basics"), "app/w
 ## loading urls and ui
 source("init.R", encoding = getOption("radiant.encoding", "UTF-8"), local = TRUE)
 options(radiant.url.patterns = make_url_patterns())
+
+## if radiant.data is not in search main function from dplyr etc. won't be available
+if (!"package:radiant.basics" %in% search() &&
+    isTRUE(getOption("radiant.development")) &&
+    getOption("radiant.path.basics") == "..") {
+  options(radiant.from.package = FALSE)
+} else {
+  options(radiant.from.package = TRUE)
+}

@@ -10,6 +10,7 @@
 #' @param conf_lev Span of the confidence interval
 #' @param test bionomial exact test ("binom") or Z-test ("z")
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param envir Environment to extract data from
 #'
 #' @return A list of variables used in single_prop as an object of class single_prop
 #'
@@ -24,11 +25,12 @@
 single_prop <- function(
   dataset, var, lev = "", comp_value = 0.5,
   alternative = "two.sided", conf_lev = .95,
-  test = "binom", data_filter = ""
+  test = "binom", data_filter = "",
+  envir = parent.frame()
 ) {
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE) %>%
+  dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE, envir = envir) %>%
     mutate_all(as.factor)
 
   ## removing any missing values
@@ -76,6 +78,9 @@ single_prop <- function(
     ) %>%
       tidy()
   }
+
+  # removing unneeded arguments
+  rm(envir)
 
   as.list(environment()) %>% add_class("single_prop")
 }

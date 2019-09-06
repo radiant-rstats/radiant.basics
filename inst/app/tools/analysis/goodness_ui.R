@@ -110,7 +110,9 @@ gd_available <- reactive({
 })
 
 .goodness <- reactive({
-  do.call(goodness, gd_inputs())
+  gdi <- gd_inputs()
+  gdi$envir <- r_data
+  do.call(goodness, gdi)
 })
 
 .summary_goodness <- reactive({

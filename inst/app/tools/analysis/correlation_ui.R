@@ -158,7 +158,9 @@ cor_available <- reactive({
       "Provide a correlation cutoff value in the range from 0 to 1"
     )
   )
-  do.call(correlation, cor_inputs())
+  cori <- cor_inputs()
+  cori$envir <- r_data
+  do.call(correlation, cori)
 })
 
 .summary_correlation <- reactive({

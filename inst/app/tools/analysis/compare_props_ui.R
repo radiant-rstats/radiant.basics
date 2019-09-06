@@ -182,7 +182,9 @@ cp_available <- reactive({
 })
 
 .compare_props <- reactive({
-  do.call(compare_props, cp_inputs())
+  cpi <- cp_inputs()
+  cpi$envir <- r_data
+  do.call(compare_props, cpi)
 })
 
 .summary_compare_props <- reactive({

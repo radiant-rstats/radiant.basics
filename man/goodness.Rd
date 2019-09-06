@@ -4,7 +4,8 @@
 \alias{goodness}
 \title{Evaluate if sample data for a categorical variable is consistent with a hypothesized distribution}
 \usage{
-goodness(dataset, var, p = NULL, tab = NULL, data_filter = "")
+goodness(dataset, var, p = NULL, tab = NULL, data_filter = "",
+  envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Dataset}
@@ -16,6 +17,8 @@ goodness(dataset, var, p = NULL, tab = NULL, data_filter = "")
 \item{tab}{Table with frequencies as alternative to dataset}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+
+\item{envir}{Environment to extract data from}
 }
 \value{
 A list of all variables used in goodness as an object of class goodness

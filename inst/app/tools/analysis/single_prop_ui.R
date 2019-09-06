@@ -138,7 +138,9 @@ sp_available <- reactive({
 })
 
 .single_prop <- reactive({
-  do.call(single_prop, sp_inputs())
+  spi <- sp_inputs()
+  spi$envir <- r_data
+  do.call(single_prop, spi)
 })
 
 .summary_single_prop <- reactive({

@@ -6,7 +6,7 @@
 \usage{
 single_prop(dataset, var, lev = "", comp_value = 0.5,
   alternative = "two.sided", conf_lev = 0.95, test = "binom",
-  data_filter = "")
+  data_filter = "", envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Dataset}
@@ -24,6 +24,8 @@ single_prop(dataset, var, lev = "", comp_value = 0.5,
 \item{test}{bionomial exact test ("binom") or Z-test ("z")}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+
+\item{envir}{Environment to extract data from}
 }
 \value{
 A list of variables used in single_prop as an object of class single_prop

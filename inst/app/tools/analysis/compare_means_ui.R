@@ -195,7 +195,9 @@ cm_available <- reactive({
 })
 
 .compare_means <- reactive({
-  do.call(compare_means, cm_inputs())
+  cmi <- cm_inputs()
+  cmi$envir <- r_data
+  do.call(compare_means, cmi)
 })
 
 .summary_compare_means <- reactive({

@@ -5,7 +5,7 @@
 \title{Compare a sample mean to a population mean}
 \usage{
 single_mean(dataset, var, comp_value = 0, alternative = "two.sided",
-  conf_lev = 0.95, data_filter = "")
+  conf_lev = 0.95, data_filter = "", envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Dataset}
@@ -19,6 +19,8 @@ single_mean(dataset, var, comp_value = 0, alternative = "two.sided",
 \item{conf_lev}{Span for the confidence interval}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+
+\item{envir}{Environment to extract data from}
 }
 \value{
 A list of variables defined in single_mean as an object of class single_mean

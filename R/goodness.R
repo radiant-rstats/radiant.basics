@@ -7,6 +7,7 @@
 #' @param p Hypothesized distribution as a number, fraction, or numeric vector. If unspecified, defaults to an even distribution
 #' @param tab Table with frequencies as alternative to dataset
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param envir Environment to extract data from
 #'
 #' @return A list of all variables used in goodness as an object of class goodness
 #'
@@ -18,14 +19,17 @@
 #' @seealso \code{\link{plot.goodness}} to plot results
 #'
 #' @export
-goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") {
+goodness <- function(
+  dataset, var, p = NULL, tab = NULL,
+  data_filter = "", envir = parent.frame()
+) {
 
   if (is.table(tab)) {
     df_name <- deparse(substitute(tab))
     if (missing(var)) var <- "variable"
   } else {
     df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-    dataset <- get_data(dataset, var, filt = data_filter)
+    dataset <- get_data(dataset, var, filt = data_filter, envir = envir)
 
     ## creating and cleaning up the table
     tab <- table(dataset[[var]])
@@ -72,6 +76,8 @@ goodness <- function(dataset, var, p = NULL, tab = NULL, data_filter = "") {
     res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy() %>% .$p.value
     res$parameter <- paste0("*", res$parameter, "*")
   }
+
+  rm(envir)
 
   as.list(environment()) %>% add_class("goodness")
 }

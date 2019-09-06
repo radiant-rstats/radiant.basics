@@ -1,3 +1,7 @@
+if (isTRUE(getOption("radiant.from.package"))) {
+  library(radiant.basics)
+}
+
 shinyServer(function(input, output, session) {
 
   ## source shared functions
@@ -35,14 +39,15 @@ shinyServer(function(input, output, session) {
   ))
     source(file, encoding = getOption("radiant.encoding"), local = TRUE)
 
-  ## 'sourcing' radiant's package functions in the server.R environment
-  if (!"package:radiant.basics" %in% search() && getOption("radiant.path.basics") == "..") {
-    ## for shiny-server and development
-    for (file in list.files("../../R", pattern = "\\.(r|R)$", full.names = TRUE))
+  ## 'sourcing' package functions in the server.R environment for development
+  if (!isTRUE(getOption("radiant.from.package"))) {
+    for (file in list.files("../../R", pattern = "\\.(r|R)$", full.names = TRUE)) {
       source(file, encoding = getOption("radiant.encoding"), local = TRUE)
+    }
+    cat("\nGetting radiant.basics from source ...\n")
   } else {
-    ## for use with launcher
-    radiant.data::copy_all(radiant.basics)
+    ## weired but required
+    summary.correlation <- radiant.basics:::summary.correlation
   }
 
   ## source analysis tools for basic app

@@ -12,6 +12,7 @@
 #' @param adjust Adjustment for multiple comparisons ("none" or "bonf" for Bonferroni)
 #' @param test t-test ("t") or Wilcox ("wilcox")
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
+#' @param envir Environment to extract data from
 #'
 #' @return A list of all variables defined in the function as an object of class compare_means
 #'
@@ -26,12 +27,12 @@ compare_means <- function(
   dataset, var1, var2, samples = "independent",
   alternative = "two.sided", conf_lev = .95,
   comb = "", adjust = "none", test = "t",
-  data_filter = ""
+  data_filter = "", envir = parent.frame()
 ) {
 
   vars <- c(var1, var2)
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, vars, filt = data_filter)
+  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir)
 
   ## in case : was used for var2
   vars <- colnames(dataset)
@@ -144,7 +145,7 @@ compare_means <- function(
     rename(!!! setNames("variable", cname))
 
   vars <- paste0(vars, collapse = ", ")
-  rm(x, y, sel, i, me_calc)
+  rm(x, y, sel, i, me_calc, envir)
   as.list(environment()) %>% add_class("compare_means")
 }
 

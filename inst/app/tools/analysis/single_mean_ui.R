@@ -117,7 +117,9 @@ sm_available <- reactive({
 })
 
 .single_mean <- reactive({
-  do.call(single_mean, sm_inputs())
+  smi <- sm_inputs()
+  smi$envir <- r_data
+  do.call(single_mean, smi)
 })
 
 .summary_single_mean <- reactive({

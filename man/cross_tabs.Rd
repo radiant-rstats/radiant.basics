@@ -4,7 +4,8 @@
 \alias{cross_tabs}
 \title{Evaluate associations between categorical variables}
 \usage{
-cross_tabs(dataset, var1, var2, tab = NULL, data_filter = "")
+cross_tabs(dataset, var1, var2, tab = NULL, data_filter = "",
+  envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Dataset (i.e., a data.frame or table)}
@@ -16,6 +17,8 @@ cross_tabs(dataset, var1, var2, tab = NULL, data_filter = "")
 \item{tab}{Table with frequencies as alternative to dataset}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
+
+\item{envir}{Environment to extract data from}
 }
 \value{
 A list of all variables used in cross_tabs as an object of class cross_tabs
