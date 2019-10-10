@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.basics</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
       </span>
     </div>
 
@@ -249,6 +249,43 @@
 #&gt;   ..- attr(*, "dimnames")=List of 1
 #&gt;   .. ..$ : chr [1:2] "Low Income" "High Income"
 #&gt;  $ data_filter: chr ""
+#&gt;  - attr(*, "class")= chr [1:2] "goodness" "list"</div><div class='input'><span class='fu'>goodness</span>(<span class='no'>newspaper</span>, <span class='st'>"Income"</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>3</span>/<span class='fl'>4</span>, <span class='fl'>1</span>/<span class='fl'>4</span>)) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>()</div><div class='output co'>#&gt; List of 8
+#&gt;  $ elow       : int 0
+#&gt;  $ res        :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1 obs. of  4 variables:
+#&gt;   ..$ statistic: num 53.1
+#&gt;   ..$ p.value  : num 3.15e-13
+#&gt;   ..$ parameter: int 1
+#&gt;   ..$ method   : chr "Chi-squared test for given probabilities"
+#&gt;  $ cst        :List of 10
+#&gt;   ..$ statistic: Named num 53.1
+#&gt;   .. ..- attr(*, "names")= chr "X-squared"
+#&gt;   ..$ parameter: Named num 1
+#&gt;   .. ..- attr(*, "names")= chr "df"
+#&gt;   ..$ p.value  : num 3.15e-13
+#&gt;   ..$ method   : chr "Chi-squared test for given probabilities"
+#&gt;   ..$ data.name: chr "tab"
+#&gt;   ..$ observed : 'table' num [1:2(1d)] 359 221
+#&gt;   .. ..- attr(*, "dimnames")=List of 1
+#&gt;   .. .. ..$ : chr [1:2] "Low Income" "High Income"
+#&gt;   ..$ expected : Named num [1:2] 435 145
+#&gt;   .. ..- attr(*, "names")= chr [1:2] "Low Income" "High Income"
+#&gt;   ..$ residuals: 'table' num [1:2(1d)] -3.64 6.31
+#&gt;   .. ..- attr(*, "dimnames")=List of 1
+#&gt;   .. .. ..$ : chr [1:2] "Low Income" "High Income"
+#&gt;   ..$ stdres   : 'table' num [1:2(1d)] -7.29 7.29
+#&gt;   .. ..- attr(*, "dimnames")=List of 1
+#&gt;   .. .. ..$ : chr [1:2] "Low Income" "High Income"
+#&gt;   ..$ chi_sq   : 'table' num [1:2(1d)] 13.3 39.8
+#&gt;   .. ..- attr(*, "dimnames")=List of 1
+#&gt;   .. .. ..$ : chr [1:2] "Low Income" "High Income"
+#&gt;   ..- attr(*, "class")= chr "htest"
+#&gt;  $ df_name    : chr "newspaper"
+#&gt;  $ var        : chr "Income"
+#&gt;  $ p          : num [1:2] 0.75 0.25
+#&gt;  $ tab        : 'table' num [1:2(1d)] 359 221
+#&gt;   ..- attr(*, "dimnames")=List of 1
+#&gt;   .. ..$ : chr [1:2] "Low Income" "High Income"
+#&gt;  $ data_filter: chr ""
 #&gt;  - attr(*, "class")= chr [1:2] "goodness" "list"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span>(<span class='fu'>select</span>(<span class='no'>newspaper</span>, <span class='no'>Income</span>)) <span class='kw'>%&gt;%</span> <span class='fu'>goodness</span>(<span class='kw'>tab</span> <span class='kw'>=</span> <span class='no'>.</span>)</div><div class='output co'>#&gt; $elow
 #&gt; [1] 0
 #&gt; 
@@ -307,7 +344,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>

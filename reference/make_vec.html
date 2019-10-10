@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Probability calculator for the binomial distribution — prob_binom • radiant.basics</title>
+<title>Convert a string of numbers into a vector — make_vec • radiant.basics</title>
 
 
 <!-- jquery -->
@@ -41,8 +41,8 @@
 
 
 
-<meta property="og:title" content="Probability calculator for the binomial distribution — prob_binom" />
-<meta property="og:description" content="Probability calculator for the binomial distribution" />
+<meta property="og:title" content="Convert a string of numbers into a vector — make_vec" />
+<meta property="og:description" content="Convert a string of numbers into a vector" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -159,117 +159,38 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Probability calculator for the binomial distribution</h1>
-    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.basics/blob/master/R/prob_calc.R'><code>R/prob_calc.R</code></a></small>
-    <div class="hidden name"><code>prob_binom.Rd</code></div>
+    <h1>Convert a string of numbers into a vector</h1>
+    <small class="dont-index">Source: <a href='https://github.com/radiant-rstats/radiant.basics/blob/master/R/radiant.R'><code>R/radiant.R</code></a></small>
+    <div class="hidden name"><code>make_vec.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Probability calculator for the binomial distribution</p>
+    <p>Convert a string of numbers into a vector</p>
     </div>
 
-    <pre class="usage"><span class='fu'>prob_binom</span>(<span class='no'>n</span>, <span class='no'>p</span>, <span class='kw'>lb</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>ub</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>plb</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>pub</span> <span class='kw'>=</span> <span class='fl'>NA</span>, <span class='kw'>dec</span> <span class='kw'>=</span> <span class='fl'>3</span>)</pre>
+    <pre class="usage"><span class='fu'>make_vec</span>(<span class='no'>x</span>, <span class='kw'>char</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>n</th>
-      <td><p>Number of trials</p></td>
+      <th>x</th>
+      <td><p>A string of numbers that may include fractions</p></td>
     </tr>
     <tr>
-      <th>p</th>
-      <td><p>Probability</p></td>
-    </tr>
-    <tr>
-      <th>lb</th>
-      <td><p>Lower bound on the number of successes</p></td>
-    </tr>
-    <tr>
-      <th>ub</th>
-      <td><p>Upper bound on the number of successes</p></td>
-    </tr>
-    <tr>
-      <th>plb</th>
-      <td><p>Lower probability bound</p></td>
-    </tr>
-    <tr>
-      <th>pub</th>
-      <td><p>Upper probability bound</p></td>
-    </tr>
-    <tr>
-      <th>dec</th>
-      <td><p>Number of decimals to show</p></td>
+      <th>char</th>
+      <td><p>If string contains fractions, return as a character vector</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>See <a href='https://radiant-rstats.github.io/docs/basics/prob_calc.html'>https://radiant-rstats.github.io/docs/basics/prob_calc.html</a> for an example in Radiant</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code>summary.prob_binom</code> to summarize results</p>
-<p><code>plot.prob_binom</code> to plot results</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>prob_binom</span>(<span class='kw'>n</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fl'>0.3</span>, <span class='kw'>ub</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; $vp_int
-#&gt; [1] NA
-#&gt; 
-#&gt; $vub
-#&gt; [1] NA
-#&gt; 
-#&gt; $vlb
-#&gt; [1] NA
-#&gt; 
-#&gt; $p_int
-#&gt; [1] NA
-#&gt; 
-#&gt; $p_ub
-#&gt; [1] 0.383
-#&gt; 
-#&gt; $p_leub
-#&gt; [1] 0.65
-#&gt; 
-#&gt; $p_eub
-#&gt; [1] 0.267
-#&gt; 
-#&gt; $p_elb
-#&gt; [1] NA
-#&gt; 
-#&gt; $p_lb
-#&gt; [1] NA
-#&gt; 
-#&gt; $n
-#&gt; [1] 10
-#&gt; 
-#&gt; $p
-#&gt; [1] 0.3
-#&gt; 
-#&gt; $lb
-#&gt; [1] NA
-#&gt; 
-#&gt; $ub
-#&gt; [1] 3
-#&gt; 
-#&gt; $plb
-#&gt; [1] NA
-#&gt; 
-#&gt; $pub
-#&gt; [1] NA
-#&gt; 
-#&gt; $dec
-#&gt; [1] 3
-#&gt; 
-#&gt; attr(,"class")
-#&gt; [1] "prob_binom" "list"      </div><div class='input'>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>make_vec</span>(<span class='st'>"1 2 4"</span>)</div><div class='output co'>#&gt; [1] 1 2 4</div><div class='input'><span class='fu'>make_vec</span>(<span class='st'>"1/2 2/3 4/5"</span>)</div><div class='output co'>#&gt; [1] 1/2 2/3 4/5</div><div class='input'><span class='fu'>make_vec</span>(<span class='st'>"1/2 2/3 4/5"</span>, <span class='kw'>char</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 1/2 2/3 4/5</div><div class='input'><span class='fu'>make_vec</span>(<span class='st'>"1/2 2/3 1"</span>, <span class='kw'>char</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; [1] 1/2 2/3   1</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 
