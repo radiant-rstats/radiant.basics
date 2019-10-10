@@ -877,6 +877,10 @@ observeEvent(input$prob_calc_report, {
     inp_out <- list("", "")
     inp[["pub"]] <- inp[["plb"]] <- NA
   }
+
+  inp$v <- radiant.basics::make_vec(inp$v)
+  inp$p <- radiant.basics::make_vec(inp$p)
+
   outputs <- c("summary", "plot")
   update_report(
     inp_main = clean_args(inp, pc_args()),

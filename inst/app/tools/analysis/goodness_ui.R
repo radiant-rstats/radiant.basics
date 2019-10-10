@@ -46,7 +46,8 @@ output$ui_goodness <- renderUI({
       conditionalPanel(
         condition = "input.tabs_goodness == 'Summary'",
         uiOutput("ui_gd_var"),
-        uiOutput("ui_gd_p")
+        uiOutput("ui_gd_p"),
+        br()
       ),
       checkboxGroupInput(
         "gd_check", NULL,
@@ -138,12 +139,14 @@ observeEvent(input$goodness_report, {
     figs <- TRUE
   } else {
     outputs <- "summary"
-    inp_out[[1]] <- list(check = "")
     figs <- FALSE
   }
 
+  gdi <- gd_inputs()
+  gdi$p <- radiant.basics::make_vec(gdi$p)
+
   update_report(
-    inp_main = clean_args(gd_inputs(), gd_args),
+    inp_main = clean_args(gdi, gd_args),
     inp_out = inp_out,
     fun_name = "goodness",
     outputs = outputs,

@@ -218,6 +218,9 @@ summary.prob_norm <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
+#' 
+#' @seealso \code{\link{summary.prob_lnorm}} to summarize results
+#' @seealso \code{\link{plot.prob_lnorm}} to plot results
 #'
 #' @examples
 #' prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
@@ -273,6 +276,9 @@ prob_lnorm <- function(
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
 #'
+#' @seealso \code{\link{prob_lnorm}} to calculate results
+#' @seealso \code{\link{plot.prob_lnorm}} to plot results
+#' 
 #' @examples
 #' result <- prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
 #' plot(result, type = "values")
@@ -339,6 +345,9 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_norm}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_lnorm}} to calculate results
+#' @seealso \code{\link{plot.prob_lnorm}} to summarize results
 #'
 #' @examples
 #' result <- prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
@@ -417,6 +426,9 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
+#' 
+#' @seealso \code{\link{summary.prob_tdist}} to summarize results
+#' @seealso \code{\link{plot.prob_tdist}} to plot results
 #'
 #' @examples
 #' prob_tdist(df = 10, ub = 2.228)
@@ -475,6 +487,9 @@ prob_tdist <- function(
 #' @param x Return value from \code{\link{prob_tdist}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_tdist}} to calculate results
+#' @seealso \code{\link{summary.prob_tdist}} to summarize results
 #'
 #' @examples
 #' result <- prob_tdist(df = 10, ub = 2.228)
@@ -532,7 +547,6 @@ plot.prob_tdist <- function(x, type = "values", ...) {
   sshhr(plt)
 }
 
-
 #' Summary method for the probability calculator (t-distribution)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
@@ -540,6 +554,9 @@ plot.prob_tdist <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_tdist}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_tdist}} to calculate results
+#' @seealso \code{\link{plot.prob_tdist}} to plot results
 #'
 #' @examples
 #' result <- prob_tdist(df = 10, ub = 2.228)
@@ -623,6 +640,9 @@ summary.prob_tdist <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @seealso \code{\link{summary.prob_fdist}} to summarize results
+#' @seealso \code{\link{plot.prob_fdist}} to plot results
+#' 
 #' @examples
 #' prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
 #'
@@ -684,6 +704,9 @@ prob_fdist <- function(
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
 #'
+#' @seealso \code{\link{prob_fdist}} to calculate results
+#' @seealso \code{\link{summary.prob_fdist}} to summarize results
+#' 
 #' @examples
 #' result <- prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
 #' plot(result, type = "values")
@@ -754,7 +777,6 @@ plot.prob_fdist <- function(x, type = "values", ...) {
   sshhr(plt)
 }
 
-
 #' Summary method for the probability calculator (F-distribution)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
@@ -762,6 +784,9 @@ plot.prob_fdist <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_fdist}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_fdist}} to calculate results
+#' @seealso \code{\link{plot.prob_fdist}} to plot results
 #'
 #' @examples
 #' result <- prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
@@ -850,6 +875,9 @@ summary.prob_fdist <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @seealso \code{\link{summary.prob_chisq}} to summarize results
+#' @seealso \code{\link{plot.prob_chisq}} to plot results
+#' 
 #' @examples
 #' prob_chisq(df = 1, ub = 3.841)
 #'
@@ -910,6 +938,9 @@ prob_chisq <- function(
 #' @param x Return value from \code{\link{prob_chisq}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_chisq}} to calculate results
+#' @seealso \code{\link{summary.prob_chisq}} to summarize results
 #'
 #' @examples
 #' result <- prob_chisq(df = 1, ub = 3.841)
@@ -979,7 +1010,6 @@ plot.prob_chisq <- function(x, type = "values", ...) {
   sshhr(plt)
 }
 
-
 #' Summary method for the probability calculator (Chi-squared distribution)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
@@ -987,6 +1017,9 @@ plot.prob_chisq <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_chisq}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_chisq}} to calculate results
+#' @seealso \code{\link{plot.prob_chisq}} to plot results
 #'
 #' @examples
 #' result <- prob_chisq(df = 1, ub = 3.841)
@@ -1068,6 +1101,9 @@ summary.prob_chisq <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @seealso \code{\link{summary.prob_unif}} to summarize results
+#' @seealso \code{\link{plot.prob_unif}} to plot results
+#' 
 #' @examples
 #' prob_unif(min = 0, max = 1, ub = 0.3)
 #'
@@ -1130,6 +1166,9 @@ prob_unif <- function(
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
 #'
+#' @seealso \code{\link{prob_unif}} to calculate results
+#' @seealso \code{\link{summary.prob_unif}} to summarize results
+#' 
 #' @examples
 #' result <- prob_unif(min = 0, max = 1, ub = 0.3)
 #' plot(result, type = "values")
@@ -1199,6 +1238,9 @@ plot.prob_unif <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_unif}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_unif}} to calculate results
+#' @seealso \code{\link{plot.prob_unif}} to plot results
 #'
 #' @examples
 #' result <- prob_unif(min = 0, max = 1, ub = 0.3)
@@ -1287,6 +1329,9 @@ summary.prob_unif <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @seealso \code{\link{summary.prob_binom}} to summarize results
+#' @seealso \code{\link{plot.prob_binom}} to plot results
+#' 
 #' @examples
 #' prob_binom(n = 10, p = 0.3, ub = 3)
 #'
@@ -1398,7 +1443,10 @@ prob_binom <- function(
 #' @param x Return value from \code{\link{prob_binom}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#'
+#
+#' @seealso \code{\link{prob_binom}} to calculate results
+#' @seealso \code{\link{summary.prob_binom}} to summarize results
+#' 
 #' @examples
 #' result <- prob_binom(n = 10, p = 0.3, ub = 3)
 #' plot(result, type = "values")
@@ -1470,6 +1518,9 @@ plot.prob_binom <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_binom}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_binom}} to calculate results
+#' @seealso \code{\link{plot.prob_binom}} to plot results
 #'
 #' @examples
 #' result <- prob_binom(n = 10, p = 0.3, ub = 3)
@@ -1580,9 +1631,13 @@ summary.prob_binom <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
+#' 
+#' @seealso \code{\link{summary.prob_disc}} to summarize results
+#' @seealso \code{\link{plot.prob_disc}} to plot results
 #'
 #' @examples
-#' prob_disc(v = "5 6 7 8 9 10 11", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+#' prob_disc(v = 1:6, p = 1/6, pub = 0.95)
+#' prob_disc(v = 1:6, p = c(2/6, 2/6, 1/12, 1/12, 1/12, 1/12), pub = 0.95)
 #'
 #' @export
 prob_disc <- function(
@@ -1593,8 +1648,9 @@ prob_disc <- function(
   # Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
   # expand.grid(height = 1:6, weight = 1:6)
   rex <- "(\\s*,\\s*|\\s*;\\s*|\\s+)"
-  v <- strsplit(v, rex) %>% unlist()
-  p <- strsplit(p, rex) %>% unlist()
+  if (is.character(v)) v <- strsplit(v, rex) %>% unlist()
+  if (is.character(p)) p <- strsplit(p, rex) %>% unlist()
+  rm(rex)
 
   lp <- length(p)
   lv <- length(v)
@@ -1606,10 +1662,8 @@ prob_disc <- function(
   }
 
   asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1]) / as.numeric(x[2]), as.numeric(x[1]))
-  rex <- "/"
-  p <- sshhr(strsplit(p, rex) %>% sapply(asNum))
-  v <- sshhr(strsplit(v, rex) %>% sapply(asNum))
-  rm(rex)
+  if (is.character(v)) v <- sshhr(strsplit(v, "/") %>% sapply(asNum))
+  if (is.character(p)) p <- sshhr(strsplit(p, "/") %>% sapply(asNum))
 
   if (anyNA(p) | anyNA(v)) {
     mess <- "The number of probabilities entered must be a multiple of the number of values"
@@ -1723,9 +1777,13 @@ prob_disc <- function(
 #' @param x Return value from \code{\link{prob_disc}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' 
+#' @seealso \code{\link{prob_disc}} to calculate results
+#' @seealso \code{\link{summary.prob_disc}} to summarize results
 #'
 #' @examples
-#' result <- prob_disc(v = "5 6 7 8 9 10 11", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+#' result <- prob_disc(v = 1:6, p = c(2/6, 2/6, 1/12, 1/12, 1/12, 1/12), pub = 0.95)
 #' plot(result, type = "probs")
 #'
 #' @export
@@ -1796,9 +1854,12 @@ plot.prob_disc <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_disc}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_disc}} to calculate results
+#' @seealso \code{\link{plot.prob_disc}} to plot results
 #'
 #' @examples
-#' result <- prob_disc(v = "5 6 7 8 9 10 11", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+#' result <- prob_disc(v = 1:6, p = c(2/6, 2/6, 1/12, 1/12, 1/12, 1/12), pub = 0.95)
 #' summary(result, type = "probs")
 #'
 #' @export
@@ -1908,6 +1969,9 @@ summary.prob_disc <- function(object, type = "values", ...) {
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
 #'
+#' @seealso \code{\link{summary.prob_expo}} to summarize results
+#' @seealso \code{\link{plot.prob_expo}} to plot results
+#' 
 #' @examples
 #' prob_expo(rate = 1, ub = 2.996)
 #'
@@ -1965,6 +2029,9 @@ prob_expo <- function(
 #' @param x Return value from \code{\link{prob_expo}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_expo}} to calculate results
+#' @seealso \code{\link{summary.prob_expo}} to summarize results
 #'
 #' @examples
 #' result <- prob_expo(rate = 1, ub = 2.996)
@@ -2042,6 +2109,9 @@ plot.prob_expo <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_expo}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_expo}} to calculate results
+#' @seealso \code{\link{plot.prob_expo}} to plot results
 #'
 #' @examples
 #' result <- prob_expo(rate = 1, ub = 2.996)
@@ -2121,6 +2191,9 @@ summary.prob_expo <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
+#' 
+#' @seealso \code{\link{summary.prob_pois}} to summarize results
+#' @seealso \code{\link{plot.prob_pois}} to plot results
 #'
 #' @examples
 #' prob_pois(lambda = 1, ub = 3)
@@ -2221,7 +2294,6 @@ prob_pois <- function(
   as.list(environment()) %>% add_class("prob_pois")
 }
 
-
 #' Plot method for the probability calculator (poisson)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
@@ -2229,6 +2301,9 @@ prob_pois <- function(
 #' @param x Return value from \code{\link{prob_pois}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_pois}} to calculate results
+#' @seealso \code{\link{summary.prob_pois}} to summarize results
 #'
 #' @examples
 #' result <- prob_pois(lambda = 1, ub = 3)
@@ -2308,6 +2383,9 @@ plot.prob_pois <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_pois}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
+#' 
+#' @seealso \code{\link{prob_pois}} to calculate results
+#' @seealso \code{\link{plot.prob_pois}} to plot results
 #'
 #' @examples
 #' result <- prob_pois(lambda = 1, ub = 3)

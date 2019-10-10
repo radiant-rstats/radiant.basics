@@ -13,6 +13,7 @@
 #'
 #' @examples
 #' goodness(newspaper, "Income") %>% str()
+#' goodness(newspaper, "Income", p = c(3/4, 1/4)) %>% str()
 #' table(select(newspaper, Income)) %>% goodness(tab = .)
 #'
 #' @seealso \code{\link{summary.goodness}} to summarize results
@@ -42,6 +43,8 @@ goodness <- function(
 
   if (is_empty(p)) {
     p <- rep(1 / length(tab), length(tab))
+  } else if (is.numeric(p)) {
+    if (length(p) == 1) p <- rep(p, length(tab))
   } else if (is.character(p)) {
     p <- gsub(",", " ", p) %>% strsplit("\\s+") %>% unlist() %>% strsplit("/")
     asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1]) / as.numeric(x[2]), as.numeric(x[1]))
@@ -55,12 +58,13 @@ goodness <- function(
     lt <- length(tab)
     if (lt != lp && lt %% lp == 0) p <- rep(p, lt / lp)
 
-    if (!is.numeric(p) || sum(p) != 1) {
-      return(
-        paste0("Probabilities do not sum to 1 (", round(sum(p), 3), ")\nUse fractions if appropriate. Variable ", var, " has ", length(tab), " unique values.") %>%
-          add_class("goodness")
-      )
-    }
+  }
+
+  if (!is.numeric(p) || sum(p) != 1) {
+    return(
+      paste0("Probabilities do not sum to 1 (", round(sum(p), 3), ")\nUse fractions if appropriate. Variable ", var, " has ", length(tab), " unique values.") %>%
+        add_class("goodness")
+    )
   }
 
   cst <- sshhr(chisq.test(tab, p = p, correct = FALSE))
@@ -94,7 +98,7 @@ goodness <- function(
 #' @examples
 #' result <- goodness(newspaper, "Income", c(.3, .7))
 #' summary(result, check = c("observed", "expected", "chi_sq"))
-#' goodness(newspaper, "Income", "1/3 2/3") %>% summary("observed")
+#' goodness(newspaper, "Income", c(1/3, 2/3)) %>% summary("observed")
 #'
 #' @seealso \code{\link{goodness}} to calculate results
 #' @seealso \code{\link{plot.goodness}} to plot results
