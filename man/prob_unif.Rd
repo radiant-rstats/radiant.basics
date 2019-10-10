@@ -32,3 +32,8 @@ See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an exa
 prob_unif(min = 0, max = 1, ub = 0.3)
 
 }
+\seealso{
+\code{\link{summary.prob_unif}} to summarize results
+
+\code{\link{plot.prob_unif}} to plot results
+}

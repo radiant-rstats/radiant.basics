@@ -32,3 +32,8 @@ See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an exa
 prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
 
 }
+\seealso{
+\code{\link{summary.prob_fdist}} to summarize results
+
+\code{\link{plot.prob_fdist}} to plot results
+}

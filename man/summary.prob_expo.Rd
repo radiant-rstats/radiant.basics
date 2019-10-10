@@ -24,3 +24,8 @@ result <- prob_expo(rate = 1, ub = 2.996)
 summary(result, type = "values")
 
 }
+\seealso{
+\code{\link{prob_expo}} to calculate results
+
+\code{\link{plot.prob_expo}} to plot results
+}

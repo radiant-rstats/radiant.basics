@@ -24,3 +24,8 @@ result <- prob_binom(n = 10, p = 0.3, ub = 3)
 plot(result, type = "values")
 
 }
+\seealso{
+\code{\link{prob_binom}} to calculate results
+
+\code{\link{summary.prob_binom}} to summarize results
+}

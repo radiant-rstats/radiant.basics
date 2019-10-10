@@ -20,7 +20,12 @@ Plot method for the probability calculator (discrete)
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
 \examples{
-result <- prob_disc(v = "5 6 7 8 9 10 11", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+result <- prob_disc(v = 1:6, p = c(2/6, 2/6, 1/12, 1/12, 1/12, 1/12), pub = 0.95)
 plot(result, type = "probs")
 
+}
+\seealso{
+\code{\link{prob_disc}} to calculate results
+
+\code{\link{summary.prob_disc}} to summarize results
 }

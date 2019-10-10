@@ -24,3 +24,8 @@ result <- prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
 summary(result, type = "values")
 
 }
+\seealso{
+\code{\link{prob_fdist}} to calculate results
+
+\code{\link{plot.prob_fdist}} to plot results
+}

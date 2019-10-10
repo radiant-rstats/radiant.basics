@@ -29,3 +29,8 @@ See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an exa
 prob_tdist(df = 10, ub = 2.228)
 
 }
+\seealso{
+\code{\link{summary.prob_tdist}} to summarize results
+
+\code{\link{plot.prob_tdist}} to plot results
+}

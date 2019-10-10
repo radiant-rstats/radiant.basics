@@ -29,3 +29,8 @@ See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an exa
 prob_expo(rate = 1, ub = 2.996)
 
 }
+\seealso{
+\code{\link{summary.prob_expo}} to summarize results
+
+\code{\link{plot.prob_expo}} to plot results
+}

@@ -29,3 +29,8 @@ See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an exa
 prob_pois(lambda = 1, ub = 3)
 
 }
+\seealso{
+\code{\link{summary.prob_pois}} to summarize results
+
+\code{\link{plot.prob_pois}} to plot results
+}

@@ -28,6 +28,12 @@ Probability calculator for a discrete distribution
 See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
 }
 \examples{
-prob_disc(v = "5 6 7 8 9 10 11", p = ".1 .2 .3 .15 .1 .1 .05", pub = 0.95)
+prob_disc(v = 1:6, p = 1/6, pub = 0.95)
+prob_disc(v = 1:6, p = c(2/6, 2/6, 1/12, 1/12, 1/12, 1/12), pub = 0.95)
 
+}
+\seealso{
+\code{\link{summary.prob_disc}} to summarize results
+
+\code{\link{plot.prob_disc}} to plot results
 }

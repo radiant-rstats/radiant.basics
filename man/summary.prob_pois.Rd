@@ -24,3 +24,8 @@ result <- prob_pois(lambda = 1, ub = 3)
 summary(result, type = "values")
 
 }
+\seealso{
+\code{\link{prob_pois}} to calculate results
+
+\code{\link{plot.prob_pois}} to plot results
+}

@@ -32,3 +32,8 @@ See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an exa
 prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
 
 }
+\seealso{
+\code{\link{summary.prob_lnorm}} to summarize results
+
+\code{\link{plot.prob_lnorm}} to plot results
+}

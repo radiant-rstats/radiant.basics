@@ -24,3 +24,8 @@ result <- prob_unif(min = 0, max = 1, ub = 0.3)
 summary(result, type = "values")
 
 }
+\seealso{
+\code{\link{prob_unif}} to calculate results
+
+\code{\link{plot.prob_unif}} to plot results
+}

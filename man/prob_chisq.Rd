@@ -29,3 +29,8 @@ See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an exa
 prob_chisq(df = 1, ub = 3.841)
 
 }
+\seealso{
+\code{\link{summary.prob_chisq}} to summarize results
+
+\code{\link{plot.prob_chisq}} to plot results
+}

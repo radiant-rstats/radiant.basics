@@ -24,3 +24,8 @@ result <- prob_chisq(df = 1, ub = 3.841)
 summary(result, type = "values")
 
 }
+\seealso{
+\code{\link{prob_chisq}} to calculate results
+
+\code{\link{plot.prob_chisq}} to plot results
+}

@@ -31,3 +31,8 @@ See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an exa
 prob_binom(n = 10, p = 0.3, ub = 3)
 
 }
+\seealso{
+\code{\link{summary.prob_binom}} to summarize results
+
+\code{\link{plot.prob_binom}} to plot results
+}

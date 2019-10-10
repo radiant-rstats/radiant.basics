@@ -24,3 +24,8 @@ result <- prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
 plot(result, type = "values")
 
 }
+\seealso{
+\code{\link{prob_lnorm}} to calculate results
+
+\code{\link{plot.prob_lnorm}} to plot results
+}

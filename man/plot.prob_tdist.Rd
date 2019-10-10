@@ -24,3 +24,8 @@ result <- prob_tdist(df = 10, ub = 2.228)
 plot(result, type = "values")
 
 }
+\seealso{
+\code{\link{prob_tdist}} to calculate results
+
+\code{\link{summary.prob_tdist}} to summarize results
+}
