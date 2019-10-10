@@ -1,5 +1,6 @@
 # radiant.basics 1.1.1.0
-
+  
+* Documentation updates (i.e., key functions for each tool)
 * Improvements in `goodness` and `prob_dics` to allow fractions in generated code sent to _Report > rmd_ or _Report > R_
 * Improved checks for variables that show no variation
 * Numerous small code changes to support enhanced auto-completion, tooltips, and annotations in shinyAce 0.4.1
