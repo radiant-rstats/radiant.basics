@@ -1,3 +1,7 @@
+# radiant.basics 1.1.2.0
+
+* Fix for input restoration from a state file for the probability calculator. For the _value_ or _probability_ inputs two sided values might be restored when only a one-sided input was previously specified
+
 # radiant.basics 1.1.1.0
   
 * Documentation updates (i.e., key functions for each tool)
