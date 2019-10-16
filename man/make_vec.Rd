@@ -4,12 +4,10 @@
 \alias{make_vec}
 \title{Convert a string of numbers into a vector}
 \usage{
-make_vec(x, char = FALSE)
+make_vec(x)
 }
 \arguments{
 \item{x}{A string of numbers that may include fractions}
-
-\item{char}{If string contains fractions, return as a character vector}
 }
 \description{
 Convert a string of numbers into a vector
@@ -17,6 +15,5 @@ Convert a string of numbers into a vector
 \examples{
 make_vec("1 2 4")
 make_vec("1/2 2/3 4/5")
-make_vec("1/2 2/3 4/5", char = TRUE)
-make_vec("1/2 2/3 1", char = TRUE)
+make_vec(0.1)
 }

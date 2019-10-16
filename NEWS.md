@@ -1,5 +1,6 @@
-# radiant.basics 1.1.2.0
+# radiant.basics 1.1.3.0
 
+* Fix for code generation from the probability calculator when the `distribution` type is set to binomial
 * Fix for input restoration from a state file for the probability calculator. For the _value_ or _probability_ inputs two sided values might be restored when only a one-sided input was previously specified
 
 # radiant.basics 1.1.1.0

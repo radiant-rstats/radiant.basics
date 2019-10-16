@@ -564,6 +564,7 @@ pc_available <- reactive({
 })
 
 observeEvent(input$prob_calc_report, {
+  req(input$pc_dist)
   type <- input$pc_type
   inp <- pc_inputs()
   if (!is.null(type) && type == "probs") {
@@ -574,8 +575,10 @@ observeEvent(input$prob_calc_report, {
     inp[["pub"]] <- inp[["plb"]] <- NA
   }
 
-  inp$v <- radiant.basics::make_vec(inp$v)
-  inp$p <- radiant.basics::make_vec(inp$p)
+  if (input$pc_dist == "disc") {
+    inp$v <- radiant.basics::make_vec(inp$v)
+    inp$p <- radiant.basics::make_vec(inp$p)
+  }
 
   outputs <- c("summary", "plot")
   update_report(

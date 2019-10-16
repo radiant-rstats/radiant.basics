@@ -49,7 +49,6 @@ radiant.basics_viewer <- function(state, ...) radiant.data::launch(package = "ra
 #' Convert a string of numbers into a vector
 #'
 #' @param x A string of numbers that may include fractions
-#' @param char If string contains fractions, return as a character vector
 #'
 #' @importFrom radiant.data is_empty
 #' @importFrom MASS fractions
@@ -57,13 +56,15 @@ radiant.basics_viewer <- function(state, ...) radiant.data::launch(package = "ra
 #' @examples
 #' make_vec("1 2 4")
 #' make_vec("1/2 2/3 4/5")
-#' make_vec("1/2 2/3 4/5", char = TRUE)
-#' make_vec("1/2 2/3 1", char = TRUE)
+#' make_vec(0.1)
 #' @export
-make_vec <- function(x, char = FALSE) {
+make_vec <- function(x) {
   if (is_empty(x)) {
     return(NULL)
+  } else if (!is.character(x)) {
+    return(x)
   }
+
   any_frac <- FALSE
   check_frac <- function(x) {
     if (length(x) == 2) {
@@ -79,7 +80,8 @@ make_vec <- function(x, char = FALSE) {
     sapply(check_frac)
 
   if (any_frac) {
-    x <- MASS::fractions(x)
+    MASS::fractions(x)
+  } else {
+    x
   }
-  x
 }
