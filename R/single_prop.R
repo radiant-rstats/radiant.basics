@@ -34,7 +34,7 @@ single_prop <- function(
     mutate_all(as.factor)
 
   ## removing any missing values
-  miss <- n_missing(dataset)
+  n_miss <- n_missing(dataset)
   dataset <- na.omit(dataset)
 
   levs <- levels(dataset[[var]])
@@ -50,14 +50,18 @@ single_prop <- function(
   n <- nrow(dataset)
   ns <- sum(dataset == lev)
   p <- ns / n
+  se <- sqrt(p * (1 - p) / n)
+  me <- se * qnorm(conf_lev / 2 + .5, lower.tail = TRUE)
 
   dat_summary <- data.frame(
     diff = p - comp_value,
-    prop = p,
-    mean = ns, ## or mean = n * p,
-    sd = sqrt(n * p * (1 - p)),
+    p = p,
+    ns = ns,
     n = n,
-    n_missing = miss,
+    n_missing = n_miss,
+    sd = sqrt(n * p * (1 - p)),
+    se = se,
+    me = me,
     stringsAsFactors = FALSE
   )
 

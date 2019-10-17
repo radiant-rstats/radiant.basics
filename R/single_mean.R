@@ -29,26 +29,31 @@ single_mean <- function(
   dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE, envir = envir)
 
   ## counting missing values
-  miss <- n_missing(dataset)
+  # miss <- n_missing(dataset)
   ## removing any missing values
-  dataset <- na.omit(dataset)
+  # dataset <- na.omit(dataset)
 
   res <- t.test(dataset[[var]], mu = comp_value, alternative = alternative, conf.level = conf_lev) %>%
     tidy()
 
+  ## from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
+  me_calc <- function(se, n, conf.lev = .95)
+    se * qt(conf.lev / 2 + .5, n - 1)
+
   dat_summary <- summarise_all(dataset,
     list(
-      diff = ~ mean(.) - comp_value,
+      diff = ~ mean(., na.rm = TRUE) - comp_value,
+      mean = ~ mean(., na.rm = TRUE),
+      n = length,
+      n_missing = n_missing,
+      sd = ~ sd(., na.rm = TRUE),
       se = se,
-      mean = mean,
-      sd = sd,
-      n_obs = length
+      me = ~ me_calc(se, n, conf_lev)
     )
   )
-  dat_summary$n_missing <- miss
 
   # removing unneeded arguments
-  rm(envir)
+  rm(envir, me_calc)
 
   as.list(environment()) %>% add_class("single_mean")
 }
@@ -92,8 +97,9 @@ summary.single_mean <- function(object, dec = 3, ...) {
   ci_perc <- ci_label(object$alternative, object$conf_lev)
 
   ## print summary statistics
-  object$dat_summary[ ,-(1:2)] %>%
-    # round(dec) %>%
+  object$dat_summary %>%
+    select(-1) %>%
+    # select_at(c("mean", "n", "n_missing", "sd", "se", "me")) %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
     format_df(dec = dec, mark = ",") %>%
     print(row.names = FALSE)
@@ -173,7 +179,7 @@ plot.single_mean <- function(
       )
   }
   if ("simulate" %in% plots) {
-    var <- x$dataset[[x$var]]
+    var <- na.omit(x$dataset[[x$var]])
     nr <- length(var)
 
     simdat <- replicate(1000, mean(sample(var, nr, replace = TRUE))) %>%

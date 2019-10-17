@@ -1,3 +1,8 @@
+# radiant.basics 1.1.4.0
+
+* Summary statistics provided for _single_mean_, _single_prop_, _compare_means_, and _compare_props_ are now consistent
+* `n_missing` were not show correctly for _compare_means_ and _compare_props_
+
 # radiant.basics 1.1.3.0
 
 * Fix for code generation from the probability calculator when the `distribution` type is set to binomial

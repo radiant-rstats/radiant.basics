@@ -32,7 +32,7 @@ compare_means <- function(
 
   vars <- c(var1, var2)
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
-  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir)
+  dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE, envir = envir)
 
   ## in case : was used for var2
   vars <- colnames(dataset)
@@ -135,10 +135,11 @@ compare_means <- function(
   dat_summary <- group_by_at(dataset, .vars = "variable") %>%
     summarise_all(
       list(
-        mean = mean,
+        mean = ~ mean(., na.rm = TRUE),
         n = length,
-        sd = sd,
-        se = se,
+        n_missing = n_missing,
+        sd = ~ sd(., na.rm = TRUE),
+        se = ~ se(., na.rm = TRUE),
         me = ~ me_calc(se, n, conf_lev)
       )
     ) %>%

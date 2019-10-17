@@ -31,7 +31,14 @@ compare_props <- function(
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   vars <- c(var1, var2)
-  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir) %>% mutate_all(as.factor)
+  dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE, envir = envir) %>% 
+    mutate_all(as.factor)
+
+  dataset <- dataset[!is.na(dataset[[1]]), , drop = FALSE]
+  n_miss_df <- group_by_at(dataset, var1) %>%
+    summarize_at(n_missing, .vars = var2) %>%
+    set_colnames(c(var1, "n_miss"))
+  dataset <- na.omit(dataset)
 
   if (length(levels(dataset[[var1]])) == nrow(dataset)) {
     return("Test requires multiple observations in each group. Please select another variable." %>%
@@ -117,8 +124,10 @@ compare_props <- function(
   dat_summary <- data.frame(prop_input, check.names = FALSE, stringsAsFactors = FALSE) %>%
     mutate_if(is.numeric, as.integer) %>%
     mutate(
+      p = .[[1]] / as.integer(rowSums(.[, 1:2])),
       n = as.integer(rowSums(.[, 1:2])),
-      p = .[[1]] / n,
+      n_missing = 0,
+      sd = sqrt(n * p * (1 - p)),
       se = sqrt((p * (1 - p) / n)),
       me = me_calc(se, conf_lev)
     ) %>%
@@ -126,6 +135,9 @@ compare_props <- function(
       rownames_to_column(var = var1)
 
   dat_summary[[var1]] %<>% factor(., levels = .)
+  dat_summary <- suppressWarnings(left_join(dat_summary, n_miss_df, by = var1)) %>%
+    mutate(n_missing = n_miss) %>%
+    select(-n_miss)
   vars <- paste0(vars, collapse = ", ")
   rm(i, me_calc, envir)
   as.list(environment()) %>% add_class("compare_props")
