@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../../index.html">radiant.basics</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
       </span>
     </div>
 
@@ -149,7 +149,7 @@
 <p>Suppose we want to test if professors of lower rank earn lower salaries compared to those of higher rank. To test this hypothesis we first select professor <code>rank</code> and select <code>salary</code> as the numerical variable to compare across ranks. In the <code>Choose combinations</code> box select all available entries to conduct pair-wise comparisons across the three levels. Note that removing all entries will automatically select all combinations. We are interested in a one-sided hypothesis (i.e., <code>less than</code>).</p>
 <p align="center">
 <img src="https://radiant-rstats.github.io/docs/basics/figures_basics//compare_means_summary.png"></p>
-<p>The first two blocks of output show basic information about the test (e.g.,. selected variables and confidence levels) and summary statistics (e.g., mean, standard deviation, etc. per group). The final block of output shows the following:</p>
+<p>The first two blocks of output show basic information about the test (e.g., selected variables and confidence levels) and summary statistics (e.g., mean, standard deviation, margin or error, etc. per group). The final block of output shows the following:</p>
 <ul>
 <li>
 <code>Null hyp.</code> is the null hypothesis and <code>Alt. hyp.</code> the alternative hypothesis</li>
@@ -167,10 +167,10 @@ Samples   : independent
 Confidence: 0.95 
 Adjustment: None 
 
-      rank        mean   n         sd        se        me
-  AsstProf  80,775.985  67  8,174.113   998.627 1,993.823
- AssocProf  93,876.438  64 13,831.700 1,728.962 3,455.056
-      Prof 126,772.109 266 27,718.675 1,699.541 3,346.322
+      rank        mean   n n_missing         sd        se        me
+  AsstProf  80,775.985  67         0  8,174.113   998.627 1,993.823
+ AssocProf  93,876.438  64         0 13,831.700 1,728.962 3,455.056
+      Prof 126,772.109 266         0 27,718.675 1,699.541 3,346.322
 
  Null hyp.              Alt. hyp.              diff      p.value se       t.value df      0%   95%           
  AsstProf = AssocProf   AsstProf 

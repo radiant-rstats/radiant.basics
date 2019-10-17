@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.basics</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
       </span>
     </div>
 
@@ -216,14 +216,15 @@
 <p><code>plot.single_mean</code> to plot results</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>single_mean</span>(<span class='no'>diamonds</span>, <span class='st'>"price"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>()</div><div class='output co'>#&gt; List of 10
-#&gt;  $ dat_summary:Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1 obs. of  6 variables:
+    <pre class="examples"><div class='input'><span class='fu'>single_mean</span>(<span class='no'>diamonds</span>, <span class='st'>"price"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>()</div><div class='output co'>#&gt; List of 9
+#&gt;  $ dat_summary:Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1 obs. of  7 variables:
 #&gt;   ..$ diff     : num 3907
-#&gt;   ..$ se       : num 72.2
 #&gt;   ..$ mean     : num 3907
-#&gt;   ..$ sd       : num 3957
-#&gt;   ..$ n_obs    : int 3000
+#&gt;   ..$ n        : int 3000
 #&gt;   ..$ n_missing: int 0
+#&gt;   ..$ sd       : num 3957
+#&gt;   ..$ se       : num 72.2
+#&gt;   ..$ me       : num 142
 #&gt;   ..- attr(*, "description")= chr "## Diamond prices\n\nPrices of 3,000 round cut diamonds\n\n### Description\n\nA dataset containing the prices a"| __truncated__
 #&gt;  $ res        :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	1 obs. of  8 variables:
 #&gt;   ..$ estimate   : num 3907
@@ -234,7 +235,6 @@
 #&gt;   ..$ conf.high  : num 4049
 #&gt;   ..$ method     : chr "One Sample t-test"
 #&gt;   ..$ alternative: chr "two.sided"
-#&gt;  $ miss       : int 0
 #&gt;  $ df_name    : chr "diamonds"
 #&gt;  $ dataset    :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	3000 obs. of  1 variable:
 #&gt;   ..$ price: int [1:3000] 580 650 630 706 1080 3082 3328 4229 1895 3546 ...
