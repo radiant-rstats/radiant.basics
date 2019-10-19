@@ -180,7 +180,6 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
   cat("Confidence:", object$conf_lev, "\n")
   cat("Adjustment:", if (object$adjust == "bonf") "Bonferroni" else "None", "\n\n")
 
-  # object$dat_summary[, -1] %<>% round(dec)
   object$dat_summary %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
     format_df(dec = dec, mark = ",") %>%
@@ -247,7 +246,7 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
   v2 <- cn[-1]
 
   ## cname is equal to " " when the xvar is numeric
-  if (x$cname == " ") {
+  if (is_empty(x$cname)) {
     var1 <- v1
     var2 <- v2
   } else {
