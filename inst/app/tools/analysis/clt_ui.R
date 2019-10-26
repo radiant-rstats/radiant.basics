@@ -16,16 +16,8 @@ clt_inputs <- reactive({
   clt_args
 })
 
-observe({
-  sapply(names(clt_args), function(x) input[[paste0("clt_", x)]])
-  if (pressed(input$clt_run) && !is.character(.plot_clt())) {
-    if (isTRUE(attr(clt_inputs, "observable")$.invalidated)) {
-      updateActionButton(session, "clt_run", "Re-run simulation", icon = icon("refresh", class = "fa-spin"))
-    } else {
-      updateActionButton(session, "clt_run", "Run simulation", icon = icon("play"))
-    }
-  }
-})
+## add a spinning refresh icon if the tabel needs to be (re)calculated
+run_refresh(clt_args, "clt", init = "dist", label = "Run simulation", relabel = "Re-run simulation", data = FALSE)
 
 output$ui_clt <- renderUI({
   tagList(

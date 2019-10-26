@@ -1,3 +1,8 @@
+# radiant.basics 1.2.0.0
+
+* Update action buttons that initiate calculations when one or more relevant inputs are changed. When, for example, a CLT simulation should be updated, a spinning "refresh" icon will be shown
+* Allow fractions as input for the `Goodness of fit` and `Probability calculator > Discrete` tools
+
 # radiant.basics 1.1.4.0
 
 * Summary statistics provided for _single_mean_, _single_prop_, _compare_means_, and _compare_props_ are now consistent
