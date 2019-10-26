@@ -576,8 +576,8 @@ observeEvent(input$prob_calc_report, {
   }
 
   if (input$pc_dist == "disc") {
-    inp$v <- radiant.basics::make_vec(inp$v)
-    inp$p <- radiant.basics::make_vec(inp$p)
+    inp$v <- radiant.data::make_vec(inp$v)
+    inp$p <- radiant.data::make_vec(inp$p)
   }
 
   outputs <- c("summary", "plot")

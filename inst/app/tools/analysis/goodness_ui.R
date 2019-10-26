@@ -143,7 +143,7 @@ observeEvent(input$goodness_report, {
   }
 
   gdi <- gd_inputs()
-  gdi$p <- radiant.basics::make_vec(gdi$p)
+  gdi$p <- radiant.data::make_vec(gdi$p)
 
   update_report(
     inp_main = clean_args(gdi, gd_args),
