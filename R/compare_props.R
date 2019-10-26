@@ -36,7 +36,7 @@ compare_props <- function(
 
   dataset <- dataset[!is.na(dataset[[1]]), , drop = FALSE]
   n_miss_df <- group_by_at(dataset, var1) %>%
-    summarize_at(n_missing, .vars = var2) %>%
+    summarise_at(n_missing, .vars = var2) %>%
     set_colnames(c(var1, "n_miss"))
   dataset <- na.omit(dataset)
 

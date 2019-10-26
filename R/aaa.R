@@ -5,7 +5,7 @@ globalVariables(c(
   "lb", "meanlog", "p_elb", "p_eub", "p_int", "p_lb", "p_lelb",
   "p_leub", "p_ub", "plb", "pub", "rate", "sdlog", "stdev",
   "ub", "v", "v_lb", "v_ub", "vlb", "vp_elb", "vp_eub", "vp_int",
-   "vp_lb", "vp_lelb", "vp_leub", "vp_ub", "vub"
+   "vp_lb", "vp_lelb", "vp_leub", "vp_ub", "vub", "n_miss"
 ))
 
 #' radiant.basics
@@ -13,7 +13,7 @@ globalVariables(c(
 #' @name radiant.basics
 #' @docType package
 #' @import radiant.data shiny ggplot2
-#' @importFrom dplyr mutate_all mutate_if summarise_all funs rename bind_cols select filter group_by_at summarise arrange mutate count
+#' @importFrom dplyr mutate_all mutate_if summarise_all summarise_at funs rename bind_cols select filter group_by_at summarise arrange mutate count left_join
 #' @importFrom tidyr gather spread
 #' @importFrom gridExtra grid.arrange
 #' @importFrom scales percent
