@@ -1,3 +1,7 @@
+# radiant.basics 1.2.1.0
+
+* Add dimension labels to all tables in _Basics > Cross-tabs_
+
 # radiant.basics 1.2.0.0
 
 * Update action buttons that initiate calculations when one or more relevant inputs are changed. When, for example, a CLT simulation should be updated, a spinning "refresh" icon will be shown
