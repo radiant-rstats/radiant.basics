@@ -33,11 +33,8 @@ cor_sum_inputs <- reactive({
 output$ui_cor_vars <- renderUI({
   withProgress(message = "Acquiring variable information", value = 1, {
     vars <- varnames()
-    isChar <- .get_class() %in% c("character", "factor") %>%
-      set_names(vars)
-    tlv <- two_level_vars()
-    if (length(tlv) > 0) isChar[tlv] <- FALSE
-    vars <- vars[!isChar]
+    toSelect <- .get_class() %in% c("numeric", "integer", "factor")
+    vars <- vars[toSelect]
   })
   if (length(vars) == 0) return()
   selectInput(
@@ -61,6 +58,11 @@ output$ui_cor_nrobs <- renderUI({
   )
 })
 
+output$ui_cor_name <- renderUI({
+  req(input$dataset)
+  textInput("cor_name", "Store as data.frame:", "", placeholder = "Provide a name")
+})
+
 output$ui_correlation <- renderUI({
   req(input$dataset)
   tagList(
@@ -74,6 +76,7 @@ output$ui_correlation <- renderUI({
       ),
       conditionalPanel(
         condition = "input.tabs_correlation == 'Summary'",
+        checkboxInput("cor_mcor", "Adjust for categorical variables", value = state_init("cor_mcor", FALSE)),
         numericInput(
           "cor_cutoff", "Correlation cutoff:",
           min = 0, max = 1, step = 0.05,
@@ -87,6 +90,15 @@ output$ui_correlation <- renderUI({
       conditionalPanel(
         condition = "input.tabs_correlation == 'Plot'",
         uiOutput("ui_cor_nrobs")
+      )
+    ),
+    conditionalPanel(
+      condition = "input.tabs_correlation == 'Summary'",
+      wellPanel(
+        tags$table(
+          tags$td(uiOutput("ui_cor_name")),
+          tags$td(actionButton("cor_store", "Store", icon = icon("plus")), style = "padding-top:30px;")
+        )
       )
     ),
     help_and_report(
@@ -180,12 +192,24 @@ observeEvent(input$correlation_report, {
   nrobs <- ifelse(is_empty(input$cor_nrobs), 1000, as_integer(input$cor_nrobs))
   inp_out[[1]] <- clean_args(cor_sum_inputs(), cor_sum_args[-1])
   inp_out[[2]] <- list(nrobs = nrobs)
+
+  if (!is_empty(input$cor_name)) {
+    dataset <- fix_names(input$cor_name)
+    if (input$cor_name != dataset) {
+      updateTextInput(session, inputId = "cor_name", value = dataset)
+    }
+    xcmd <- paste0(dataset, " <- cor2df(result)\nregister(\"", dataset, "\", descr = result$descr)")
+  } else {
+    xcmd <- ""
+  }
+
   update_report(
     inp_main = clean_args(cor_inputs(), cor_args),
     fun_name = "correlation",
     inp_out = inp_out,
     fig.width = cor_plot_width(),
-    fig.height = cor_plot_height()
+    fig.height = cor_plot_height(),
+    xcmd = xcmd
   )
 })
 
@@ -199,3 +223,31 @@ download_handler(
   width = cor_plot_width,
   height = cor_plot_height
 )
+
+observeEvent(input$cor_store, {
+  req(input$cor_name)
+  cmat <- try(.correlation(), silent = TRUE)
+  if (inherits(cmat, "try-error") || is.null(cmat)) return()
+
+  dataset <- fix_names(input$cor_name)
+  updateTextInput(session, inputId = "cor_name", value = dataset)
+  r_data[[dataset]] <- cor2df(cmat)
+  register(dataset, descr = cmat$descr)
+  updateSelectInput(session, "dataset", selected = input$dataset)
+
+  ## See https://shiny.rstudio.com/reference/shiny/latest/modalDialog.html
+  showModal(
+    modalDialog(
+      title = "Data Stored",
+      span(
+        paste0("Dataset '", dataset, "' was successfully added to the
+                datasets dropdown. Add code to Report > Rmd or
+                Report > R to (re)create the results by clicking the
+                report icon on the bottom left of your screen.")
+      ),
+      footer = modalButton("OK"),
+      size = "s",
+      easyClose = TRUE
+    )
+  )
+})

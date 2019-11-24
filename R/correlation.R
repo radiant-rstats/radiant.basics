@@ -5,6 +5,7 @@
 #' @param dataset Dataset
 #' @param vars Variables to include in the analysis. Default is all but character and factor variables with more than two unique values are removed
 #' @param method Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
+#' @param mcor Use psych::mixedCor to calculate the correlation matrix
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param envir Environment to extract data from
 #'
@@ -17,11 +18,11 @@
 #' @seealso \code{\link{summary.correlation}} to summarize results
 #' @seealso \code{\link{plot.correlation}} to plot results
 #'
-#' @importFrom psych corr.test
+#' @importFrom psych corr.test mixedCor
 #'
 #' @export
 correlation <- function(
-  dataset, vars = "", method = "pearson",
+  dataset, vars = "", method = "pearson", mcor = FALSE,
   data_filter = "", envir = parent.frame()
 ) {
 
@@ -29,8 +30,8 @@ correlation <- function(
 
   ## data.matrix as the last step in the chain is about 25% slower using
   ## system.time but results (using diamonds and mtcars) are identical
-  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir) %>%
-    mutate_all(as_numeric)
+  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir)
+  anyCategorical <- sapply(dataset, is.numeric) == FALSE
 
   not_vary <- colnames(dataset)[summarise_all(dataset, does_vary) == FALSE]
   if (length(not_vary) > 0) {
@@ -39,12 +40,38 @@ correlation <- function(
   }
 
   ## calculate the correlation matrix with p.values using the psych package
-  cmat <- sshhr(psych::corr.test(dataset, method = method))
+  if (mcor) {
+    mc <- radiant.basics::.mixedCor_cpd(dataset)
+    dataset <- mutate_all(dataset, radiant.data::as_numeric)
+    cmatr <- try(sshhr(psych::mixedCor(dataset, c = mc$c, p = mc$p, d = mc$d, ncat = Inf)$rho), silent = TRUE)
+    if (inherits(cmatr, "try-error")) {
+      message("Calculating the mixed correlation matrix produced an error.\nUsing standard correlation matrix instead")
+      mcor <- "Calculation failed"
+      cmat <- sshhr(psych::corr.test(dataset, method = method))
+    } else {
+      cmat <- sshhr(psych::corr.test(dataset, method = method))
+      cmat$r <- cmatr
+    }
+  } else {
+    dataset <- mutate_all(dataset, radiant.data::as_numeric)
+    cmat <- sshhr(psych::corr.test(dataset, method = method))
+  }
 
   ## calculate covariance matrix
   cvmat <- sshhr(cov(dataset, method = method))
 
   rm(envir)
+
+  if (sum(anyCategorical) > 0) {
+    if (isTRUE(mcor)) {
+      adj_text <- "\n\nNote: Categorical variables are assumed to be ordinal and were adjusted using psych::mixedCor\n\n"
+    } else {
+      adj_text <- "\n\nNote: Categorical variables were included without adjustment\n\n"
+    }
+  } else {
+    adj_text <- "\n\n"
+  }
+  descr <- paste0("## Correlation matrix\n\nCorrelations were calculated using the \"", df_name, "\" dataset", adj_text, "Variables used:\n\n* ", paste0(vars, collapse = "\n* "))
 
   as.list(environment()) %>% add_class("correlation") %>% add_class("rcorr")
 }
@@ -86,17 +113,33 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   cp[!ltmat] <- ""
 
   cat("Correlation\n")
-  cat("Data     :", object$df_name, "\n")
-  cat("Method   :", object$method, "\n")
+  cat("Data        :", object$df_name, "\n")
+  method <- paste0(toupper(substring(object$method, 1, 1)), substring(object$method, 2))
+  if (is.character(object$mcor)) {
+    cat(paste0("Method      : ", method, " (adjustment using psych::mixedCor failed)\n"))
+  } else if (isTRUE(object$mcor)) {
+    cat(paste0("Method      : ", method, " (adjusted using psych::mixedCor)\n"))
+  } else {
+    cat("Method      :", method, "\n")
+  }
   if (cutoff > 0) {
-    cat("Cutoff   :", cutoff, "\n")
+    cat("Cutoff      :", cutoff, "\n")
   }
   if (!is_empty(object$data_filter)) {
-    cat("Filter   :", gsub("\\n", "", object$data_filter), "\n")
+    cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
   }
-  cat("Variables:", paste0(object$vars, collapse = ", "), "\n")
-  cat("Null hyp.: variables x and y are not correlated\n")
-  cat("Alt. hyp.: variables x and y are correlated\n\n")
+  cat("Variables   :", paste0(object$vars, collapse = ", "), "\n")
+  cat("Null hyp.   : variables x and y are not correlated\n")
+  cat("Alt. hyp.   : variables x and y are correlated\n")
+  if (sum(object$anyCategorical) > 0) {
+    if (isTRUE(object$mcor)) {
+      cat("** Categorical variables are assumed to be ordinal **\n\n")
+    } else {
+      cat("** Categorical variables included without adjustment **\n\n")
+    }
+  } else {
+    cat("\n")
+  }
 
   cat("Correlation matrix:\n")
   cr[-1, -ncol(cr), drop = FALSE] %>%
@@ -120,6 +163,7 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
      format(justify = "right") %>%
      print(quote = FALSE)
   }
+
   return(invisible())
 }
 
@@ -193,4 +237,50 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
 
   {if (is.null(x$dataset)) x else x$dataset} %>%
     pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
+}
+
+#' Store a correlation matrix as a (long) data.frame
+#'
+#' @details Return the correlation matrix as a (long) data.frame. See \url{https://radiant-rstats.github.io/docs/basics/correlation.html} for an example in Radiant
+#'
+#' @param object Return value from \code{\link{correlation}}
+#' @param labels Column names for the correlation pairs
+#' @param ... further arguments passed to or from other methods
+#'
+#' @export
+cor2df <- function(object, labels = c("var1", "var2"), ...) {
+  cmat <- object$cmat$r
+  corr <- data.frame(correlation = cmat[lower.tri(cmat)])
+  labs <- as.data.frame(t(combn(colnames(cmat), 2)))
+  colnames(labs) <- labels
+  bind_cols(labs, corr)
+}
+
+#' @noRd
+#' @export
+.mixedCor_cpd <- function(dataset) {
+  cn <- colnames(dataset)
+  cnt <- dfct <- pfct <- NULL
+  isC <- sapply(dataset, is.numeric)
+  if (sum(isC) > 0) {
+    cnt <- which(isC)
+  }
+
+  isFct <- sapply(dataset, is.factor)
+  if (sum(isFct) > 0) {
+    dorp <- sapply(dataset[,isFct, drop = FALSE], function(x) length(levels(x)))
+    isD <- dorp == 2
+    if (sum(isD) > 0) {
+      dfct <- which(cn %in% names(isD[isD]))
+    }
+    isP <- dorp > 2
+    if (sum(isP) > 0) {
+      pfct <- which(cn %in% names(isP[isP]))
+    }
+  }
+
+  if ((length(cnt) + length(dfct) + length(pfct)) < length(dataset)) {
+    cnt <- dfct <- pfct <- NULL
+  }
+  list(c = cnt, p = pfct, d = dfct)
 }

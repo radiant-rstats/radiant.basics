@@ -26,9 +26,9 @@ options(
     tagList(
       navbarMenu(
         "Basics",
-        # tags$head(
-        #   tags$script(src = "www_basics/js/run_return.js")
-        # ),
+        tags$head(
+          tags$script(src = "www_basics/js/run_return.js")
+        ),
         "Probability",
         tabPanel("Probability calculator", uiOutput("prob_calc")),
         tabPanel("Central Limit Theorem", uiOutput("clt")),
