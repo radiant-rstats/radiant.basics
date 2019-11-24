@@ -75,7 +75,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">radiant.basics</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2.2</span>
       </span>
     </div>
 
@@ -168,8 +168,8 @@
     <p>Calculate correlations for two or more variables</p>
     </div>
 
-    <pre class="usage"><span class='fu'>correlation</span>(<span class='no'>dataset</span>, <span class='kw'>vars</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pearson"</span>, <span class='kw'>data_filter</span> <span class='kw'>=</span> <span class='st'>""</span>,
-  <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span>())</pre>
+    <pre class="usage"><span class='fu'>correlation</span>(<span class='no'>dataset</span>, <span class='kw'>vars</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"pearson"</span>, <span class='kw'>mcor</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>data_filter</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='kw'>envir</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span>())</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -185,6 +185,10 @@
     <tr>
       <th>method</th>
       <td><p>Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default</p></td>
+    </tr>
+    <tr>
+      <th>mcor</th>
+      <td><p>Use psych::mixedCor to calculate the correlation matrix</p></td>
     </tr>
     <tr>
       <th>data_filter</th>
@@ -208,12 +212,14 @@
 <p><code>plot.correlation</code> to plot results</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>correlation</span>(<span class='no'>diamonds</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"price"</span>, <span class='st'>"carat"</span>)) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>()</div><div class='output co'>#&gt; List of 8
-#&gt;  $ cvmat      : num [1:2, 1:2] 1.57e+07 1.74e+03 1.74e+03 2.25e-01
+    <pre class="examples"><div class='input'><span class='fu'>correlation</span>(<span class='no'>diamonds</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"price"</span>, <span class='st'>"carat"</span>)) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>()</div><div class='output co'>#&gt; List of 12
+#&gt;  $ descr         : chr "## Correlation matrix\n\nCorrelations were calculated using the \"diamonds\" dataset\n\nVariables used:\n\n* price\n* carat"
+#&gt;  $ adj_text      : chr "\n\n"
+#&gt;  $ cvmat         : num [1:2, 1:2] 1.57e+07 1.74e+03 1.74e+03 2.25e-01
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : chr [1:2] "price" "carat"
 #&gt;   .. ..$ : chr [1:2] "price" "carat"
-#&gt;  $ cmat       :List of 11
+#&gt;  $ cmat          :List of 11
 #&gt;   ..$ r     : num [1:2, 1:2] 1 0.927 0.927 1
 #&gt;   .. ..- attr(*, "dimnames")=List of 2
 #&gt;   .. .. ..$ : chr [1:2] "price" "carat"
@@ -244,20 +250,25 @@
 #&gt;   .. ..$ upper.adj: num 0.932
 #&gt;   ..$ Call  : language psych::corr.test(x = dataset, method = method)
 #&gt;   ..- attr(*, "class")= chr [1:2] "psych" "corr.test"
-#&gt;  $ not_vary   : chr(0) 
-#&gt;  $ df_name    : chr "diamonds"
-#&gt;  $ dataset    :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	3000 obs. of  2 variables:
+#&gt;  $ not_vary      : chr(0) 
+#&gt;  $ anyCategorical: Named logi [1:2] FALSE FALSE
+#&gt;   ..- attr(*, "names")= chr [1:2] "price" "carat"
+#&gt;  $ df_name       : chr "diamonds"
+#&gt;  $ dataset       :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	3000 obs. of  2 variables:
 #&gt;   ..$ price: num [1:3000] 580 650 630 706 1080 ...
 #&gt;   ..$ carat: num [1:3000] 0.32 0.34 0.3 0.35 0.4 0.6 0.88 0.93 0.51 1.01 ...
-#&gt;  $ vars       : chr [1:2] "price" "carat"
-#&gt;  $ method     : chr "pearson"
-#&gt;  $ data_filter: chr ""
-#&gt;  - attr(*, "class")= chr [1:3] "rcorr" "correlation" "list"</div><div class='input'><span class='fu'>correlation</span>(<span class='no'>diamonds</span>, <span class='st'>"x:z"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>()</div><div class='output co'>#&gt; List of 8
-#&gt;  $ cvmat      : num [1:3, 1:3] 1.263 1.251 0.773 1.251 1.242 ...
+#&gt;  $ vars          : chr [1:2] "price" "carat"
+#&gt;  $ method        : chr "pearson"
+#&gt;  $ mcor          : logi FALSE
+#&gt;  $ data_filter   : chr ""
+#&gt;  - attr(*, "class")= chr [1:3] "rcorr" "correlation" "list"</div><div class='input'><span class='fu'>correlation</span>(<span class='no'>diamonds</span>, <span class='st'>"x:z"</span>) <span class='kw'>%&gt;%</span> <span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span>()</div><div class='output co'>#&gt; List of 12
+#&gt;  $ descr         : chr "## Correlation matrix\n\nCorrelations were calculated using the \"diamonds\" dataset\n\nVariables used:\n\n* x:z"
+#&gt;  $ adj_text      : chr "\n\n"
+#&gt;  $ cvmat         : num [1:3, 1:3] 1.263 1.251 0.773 1.251 1.242 ...
 #&gt;   ..- attr(*, "dimnames")=List of 2
 #&gt;   .. ..$ : chr [1:3] "x" "y" "z"
 #&gt;   .. ..$ : chr [1:3] "x" "y" "z"
-#&gt;  $ cmat       :List of 11
+#&gt;  $ cmat          :List of 11
 #&gt;   ..$ r     : num [1:3, 1:3] 1 0.999 0.992 0.999 1 ...
 #&gt;   .. ..- attr(*, "dimnames")=List of 2
 #&gt;   .. .. ..$ : chr [1:3] "x" "y" "z"
@@ -288,15 +299,18 @@
 #&gt;   .. ..$ upper.adj: num [1:3] 0.999 0.992 0.992
 #&gt;   ..$ Call  : language psych::corr.test(x = dataset, method = method)
 #&gt;   ..- attr(*, "class")= chr [1:2] "psych" "corr.test"
-#&gt;  $ not_vary   : chr(0) 
-#&gt;  $ df_name    : chr "diamonds"
-#&gt;  $ dataset    :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	3000 obs. of  3 variables:
+#&gt;  $ not_vary      : chr(0) 
+#&gt;  $ anyCategorical: Named logi [1:3] FALSE FALSE FALSE
+#&gt;   ..- attr(*, "names")= chr [1:3] "x" "y" "z"
+#&gt;  $ df_name       : chr "diamonds"
+#&gt;  $ dataset       :Classes ‘tbl_df’, ‘tbl’ and 'data.frame':	3000 obs. of  3 variables:
 #&gt;   ..$ x: num [1:3000] 4.43 4.45 4.27 4.6 4.72 5.35 6.14 6.34 5.09 6.31 ...
 #&gt;   ..$ y: num [1:3000] 4.45 4.42 4.23 4.65 4.68 5.43 6.18 6.23 5.06 6.37 ...
 #&gt;   ..$ z: num [1:3000] 2.71 2.81 2.68 2.74 2.94 3.38 3.8 3.86 3.22 4.05 ...
-#&gt;  $ vars       : chr "x:z"
-#&gt;  $ method     : chr "pearson"
-#&gt;  $ data_filter: chr ""
+#&gt;  $ vars          : chr "x:z"
+#&gt;  $ method        : chr "pearson"
+#&gt;  $ mcor          : logi FALSE
+#&gt;  $ data_filter   : chr ""
 #&gt;  - attr(*, "class")= chr [1:3] "rcorr" "correlation" "list"</div><div class='input'>
 </div></pre>
   </div>
