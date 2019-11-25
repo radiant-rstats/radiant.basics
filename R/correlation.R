@@ -5,7 +5,7 @@
 #' @param dataset Dataset
 #' @param vars Variables to include in the analysis. Default is all but character and factor variables with more than two unique values are removed
 #' @param method Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
-#' @param mcor Use psych::mixedCor to calculate the correlation matrix
+#' @param hcor Use polycor::hetcor to calculate the correlation matrix
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param envir Environment to extract data from
 #'
@@ -25,7 +25,7 @@
 #'
 #' @export
 correlation <- function(
-  dataset, vars = "", method = "pearson", mcor = FALSE,
+  dataset, vars = "", method = "pearson", hcor = FALSE,
   data_filter = "", envir = parent.frame()
 ) {
 
@@ -43,13 +43,13 @@ correlation <- function(
   }
 
   ## calculate the correlation matrix with p.values using the psych package
-  if (mcor) {
+  if (hcor) {
     dataset <- mutate_if(dataset, is.Date, as_numeric)
     cmath <- try(sshhr(polycor::hetcor(dataset, method = method, ML = FALSE, std.err = TRUE)), silent = TRUE)
     dataset <- mutate_all(dataset, radiant.data::as_numeric)
     if (inherits(cmath, "try-error")) {
       message("Calculating the heterogeneous correlation matrix produced an error.\nUsing standard correlation matrix instead")
-      mcor <- "Calculation failed"
+      hcor <- "Calculation failed"
       cmat <- sshhr(psych::corr.test(dataset, method = method))
     } else {
       cmat <- list()
@@ -69,8 +69,8 @@ correlation <- function(
   rm(envir)
 
   if (sum(anyCategorical) > 0) {
-    if (isTRUE(mcor)) {
-      adj_text <- "\n\nNote: Categorical variables are assumed to be ordinal and were calculated using psych::mixedCor\n\n"
+    if (isTRUE(hcor)) {
+      adj_text <- "\n\nNote: Categorical variables are assumed to be ordinal and were calculated using polycor::hetcor\n\n"
     } else {
       adj_text <- "\n\nNote: Categorical variables were included without adjustment\n\n"
     }
@@ -121,9 +121,9 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   cat("Correlation\n")
   cat("Data        :", object$df_name, "\n")
   method <- paste0(toupper(substring(object$method, 1, 1)), substring(object$method, 2))
-  if (is.character(object$mcor)) {
+  if (is.character(object$hcor)) {
     cat(paste0("Method      : ", method, " (adjustment using polycor::hetcor failed)\n"))
-  } else if (isTRUE(object$mcor)) {
+  } else if (isTRUE(object$hcor)) {
     cat(paste0("Method      : Heterogeneous correlations using polycor::hetcor\n"))
   } else {
     cat("Method      :", method, "\n")
@@ -138,7 +138,7 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   cat("Null hyp.   : variables x and y are not correlated\n")
   cat("Alt. hyp.   : variables x and y are correlated\n")
   if (sum(object$anyCategorical) > 0) {
-    if (isTRUE(object$mcor)) {
+    if (isTRUE(object$hcor)) {
       cat("** Categorical variables are assumed to be ordinal **\n\n")
     } else {
       cat("** Categorical variables included without adjustment **\n\n")
@@ -261,34 +261,4 @@ cor2df <- function(object, labels = c("label1", "label2"), ...) {
   labs <- as.data.frame(t(combn(colnames(cmat), 2)))
   colnames(labs) <- labels
   cbind(labs, correlation, distance)
-}
-
-#' @noRd
-#' @importFrom lubridate is.Date
-#' @export
-.mixedCor_cpd <- function(dataset) {
-  cn <- colnames(dataset)
-  cnt <- dfct <- pfct <- NULL
-  isC <- sapply(dataset, function(x) is.numeric(x) || is.Date(x))
-  if (sum(isC) > 0) {
-    cnt <- which(isC)
-  }
-
-  isFct <- sapply(dataset, is.factor)
-  if (sum(isFct) > 0) {
-    dorp <- sapply(dataset[,isFct, drop = FALSE], function(x) length(levels(x)))
-    isD <- dorp == 2
-    if (sum(isD) > 0) {
-      dfct <- which(cn %in% names(isD[isD]))
-    }
-    isP <- dorp > 2
-    if (sum(isP) > 0) {
-      pfct <- which(cn %in% names(isP[isP]))
-    }
-  }
-
-  if ((length(cnt) + length(dfct) + length(pfct)) < length(dataset)) {
-    cnt <- dfct <- pfct <- NULL
-  }
-  list(c = cnt, p = pfct, d = dfct)
 }
