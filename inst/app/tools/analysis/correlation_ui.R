@@ -33,7 +33,7 @@ cor_sum_inputs <- reactive({
 output$ui_cor_vars <- renderUI({
   withProgress(message = "Acquiring variable information", value = 1, {
     vars <- varnames()
-    toSelect <- .get_class() %in% c("numeric", "integer", "factor")
+    toSelect <- .get_class() %in% c("numeric", "integer", "date", "factor")
     vars <- vars[toSelect]
   })
   if (length(vars) == 0) return()

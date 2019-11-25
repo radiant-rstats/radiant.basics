@@ -4,7 +4,7 @@
 \alias{cor2df}
 \title{Store a correlation matrix as a (long) data.frame}
 \usage{
-cor2df(object, labels = c("var1", "var2"), ...)
+cor2df(object, labels = c("label1", "label2"), ...)
 }
 \arguments{
 \item{object}{Return value from \code{\link{correlation}}}

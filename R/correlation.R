@@ -19,6 +19,7 @@
 #' @seealso \code{\link{plot.correlation}} to plot results
 #'
 #' @importFrom psych corr.test mixedCor
+#' @importFrom lubridate is.Date
 #'
 #' @export
 correlation <- function(
@@ -31,7 +32,7 @@ correlation <- function(
   ## data.matrix as the last step in the chain is about 25% slower using
   ## system.time but results (using diamonds and mtcars) are identical
   dataset <- get_data(dataset, vars, filt = data_filter, envir = envir)
-  anyCategorical <- sapply(dataset, is.numeric) == FALSE
+  anyCategorical <- sapply(dataset, function(x) is.numeric(x) || is.Date(x)) == FALSE
 
   not_vary <- colnames(dataset)[summarise_all(dataset, does_vary) == FALSE]
   if (length(not_vary) > 0) {
@@ -64,7 +65,7 @@ correlation <- function(
 
   if (sum(anyCategorical) > 0) {
     if (isTRUE(mcor)) {
-      adj_text <- "\n\nNote: Categorical variables are assumed to be ordinal and were adjusted using psych::mixedCor\n\n"
+      adj_text <- "\n\nNote: Categorical variables are assumed to be ordinal and were calculated using psych::mixedCor\n\n"
     } else {
       adj_text <- "\n\nNote: Categorical variables were included without adjustment\n\n"
     }
@@ -118,7 +119,7 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   if (is.character(object$mcor)) {
     cat(paste0("Method      : ", method, " (adjustment using psych::mixedCor failed)\n"))
   } else if (isTRUE(object$mcor)) {
-    cat(paste0("Method      : ", method, " (adjusted using psych::mixedCor)\n"))
+    cat(paste0("Method      : Mixed correlations using psych::mixedCor\n"))
   } else {
     cat("Method      :", method, "\n")
   }
@@ -133,7 +134,8 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   cat("Alt. hyp.   : variables x and y are correlated\n")
   if (sum(object$anyCategorical) > 0) {
     if (isTRUE(object$mcor)) {
-      cat("** Categorical variables are assumed to be ordinal **\n\n")
+      cat("** Categorical variables are assumed to be ordinal **\n")
+      cat("** Reported p.values apply to un-adjusted correlations **\n\n")
     } else {
       cat("** Categorical variables included without adjustment **\n\n")
     }
@@ -248,20 +250,22 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @export
-cor2df <- function(object, labels = c("var1", "var2"), ...) {
+cor2df <- function(object, labels = c("label1", "label2"), ...) {
   cmat <- object$cmat$r
-  corr <- data.frame(correlation = cmat[lower.tri(cmat)])
+  correlation <- cmat[lower.tri(cmat)]
+  distance <- 0.5 * (1 - correlation)
   labs <- as.data.frame(t(combn(colnames(cmat), 2)))
   colnames(labs) <- labels
-  bind_cols(labs, corr)
+  cbind(labs, correlation, distance)
 }
 
 #' @noRd
+#' @importFrom lubridate is.Date
 #' @export
 .mixedCor_cpd <- function(dataset) {
   cn <- colnames(dataset)
   cnt <- dfct <- pfct <- NULL
-  isC <- sapply(dataset, is.numeric)
+  isC <- sapply(dataset, function(x) is.numeric(x) || is.Date(x))
   if (sum(isC) > 0) {
     cnt <- which(isC)
   }
