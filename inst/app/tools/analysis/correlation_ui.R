@@ -63,10 +63,21 @@ output$ui_cor_name <- renderUI({
   textInput("cor_name", "Store as data.frame:", "", placeholder = "Provide a name")
 })
 
+## add a spinning refresh icon if correlations need to be (re)calculated
+run_refresh(cor_args, "cor", init = "vars", tabs = "tabs_correlation", label = "Calculate correlation", relabel = "Re-calculate correlations")
+
 output$ui_correlation <- renderUI({
   req(input$dataset)
   tagList(
+    conditionalPanel(
+      condition = "input.tabs_correlation == 'Summary'",
+      wellPanel(
+        actionButton("cor_run", "Calculate correlation", width = "100%", icon = icon("play"), class = "btn-success")
+      )
+    ),
     wellPanel(
+      conditionalPanel(
+        condition = "input.tabs_correlation == 'Summary'",
       uiOutput("ui_cor_vars"),
       selectInput(
         "cor_method", "Method:",
@@ -74,9 +85,7 @@ output$ui_correlation <- renderUI({
         selected = state_single("cor_method", cor_method, "pearson"),
         multiple = FALSE
       ),
-      conditionalPanel(
-        condition = "input.tabs_correlation == 'Summary'",
-        checkboxInput("cor_mcor", "Adjust for categorical variables", value = state_init("cor_mcor", FALSE)),
+       checkboxInput("cor_mcor", "Adjust for categorical variables", value = state_init("cor_mcor", FALSE)),
         numericInput(
           "cor_cutoff", "Correlation cutoff:",
           min = 0, max = 1, step = 0.05,
@@ -163,13 +172,8 @@ cor_available <- reactive({
   "available"
 })
 
-.correlation <- reactive({
-  validate(
-    need(
-      input$cor_cutoff >= 0 && input$cor_cutoff <= 1,
-      "Provide a correlation cutoff value in the range from 0 to 1"
-    )
-  )
+# .correlation <- reactive({
+.correlation <- eventReactive(input$cor_run, {
   cori <- cor_inputs()
   cori$envir <- r_data
   do.call(correlation, cori)
@@ -177,13 +181,25 @@ cor_available <- reactive({
 
 .summary_correlation <- reactive({
   if (cor_available() != "available") return(cor_available())
-  do.call(summary, c(list(object = .correlation()), cor_sum_inputs()))
+  if (not_pressed(input$cor_run)) return("** Press the Calculate correlation button to generate output **")
+  validate(
+    need(
+      input$cor_cutoff >= 0 && input$cor_cutoff <= 1,
+      "Provide a correlation cutoff value in the range from 0 to 1"
+    )
+  )
+  withProgress(message = "Calculating correlations", value = 0.5, {
+    do.call(summary, c(list(object = .correlation()), cor_sum_inputs()))
+  })
 })
 
 .plot_correlation <- reactive({
   if (cor_available() != "available") return(cor_available())
+  if (not_pressed(input$cor_run)) return("** Press the Calculate correlation button to generate output **")
   req(input$cor_nrobs)
-  capture_plot(plot(.correlation(), nrobs = input$cor_nrobs))
+  withProgress(message = "Generating correlation plot", value = 0.5, {
+    capture_plot(plot(.correlation(), nrobs = input$cor_nrobs))
+  })
 })
 
 observeEvent(input$correlation_report, {

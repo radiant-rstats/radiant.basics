@@ -18,8 +18,10 @@
 #' @seealso \code{\link{summary.correlation}} to summarize results
 #' @seealso \code{\link{plot.correlation}} to plot results
 #'
-#' @importFrom psych corr.test mixedCor
+#' @importFrom psych corr.test
 #' @importFrom lubridate is.Date
+#' @importFrom polycor hetcor
+#'
 #'
 #' @export
 correlation <- function(
@@ -42,16 +44,19 @@ correlation <- function(
 
   ## calculate the correlation matrix with p.values using the psych package
   if (mcor) {
-    mc <- radiant.basics::.mixedCor_cpd(dataset)
+    dataset <- mutate_if(dataset, is.Date, as_numeric)
+    cmath <- try(sshhr(polycor::hetcor(dataset, method = method, ML = FALSE, std.err = TRUE)), silent = TRUE)
     dataset <- mutate_all(dataset, radiant.data::as_numeric)
-    cmatr <- try(sshhr(psych::mixedCor(dataset, c = mc$c, p = mc$p, d = mc$d, ncat = Inf)$rho), silent = TRUE)
-    if (inherits(cmatr, "try-error")) {
-      message("Calculating the mixed correlation matrix produced an error.\nUsing standard correlation matrix instead")
+    if (inherits(cmath, "try-error")) {
+      message("Calculating the heterogeneous correlation matrix produced an error.\nUsing standard correlation matrix instead")
       mcor <- "Calculation failed"
       cmat <- sshhr(psych::corr.test(dataset, method = method))
     } else {
-      cmat <- sshhr(psych::corr.test(dataset, method = method))
-      cmat$r <- cmatr
+      cmat <- list()
+      cmat$r <- cmath$correlations
+      cmat_z <- cmath$correlations / cmath$std.errors
+      cmat$p <- cmath$std.errors * 0
+      cmat$p <- 2*pnorm(abs(cmat_z), lower.tail = FALSE)
     }
   } else {
     dataset <- mutate_all(dataset, radiant.data::as_numeric)
@@ -117,9 +122,9 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   cat("Data        :", object$df_name, "\n")
   method <- paste0(toupper(substring(object$method, 1, 1)), substring(object$method, 2))
   if (is.character(object$mcor)) {
-    cat(paste0("Method      : ", method, " (adjustment using psych::mixedCor failed)\n"))
+    cat(paste0("Method      : ", method, " (adjustment using polycor::hetcor failed)\n"))
   } else if (isTRUE(object$mcor)) {
-    cat(paste0("Method      : Mixed correlations using psych::mixedCor\n"))
+    cat(paste0("Method      : Heterogeneous correlations using polycor::hetcor\n"))
   } else {
     cat("Method      :", method, "\n")
   }
@@ -134,8 +139,7 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   cat("Alt. hyp.   : variables x and y are correlated\n")
   if (sum(object$anyCategorical) > 0) {
     if (isTRUE(object$mcor)) {
-      cat("** Categorical variables are assumed to be ordinal **\n")
-      cat("** Reported p.values apply to un-adjusted correlations **\n\n")
+      cat("** Categorical variables are assumed to be ordinal **\n\n")
     } else {
       cat("** Categorical variables included without adjustment **\n\n")
     }
