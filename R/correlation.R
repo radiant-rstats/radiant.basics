@@ -138,7 +138,11 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   if (is.character(object$hcor)) {
     cat(paste0("Method      : ", method, " (adjustment using polycor::hetcor failed)\n"))
   } else if (isTRUE(object$hcor)) {
-    cat(paste0("Method      : Heterogeneous correlations using polycor::hetcor\n"))
+    if (sum(object$anyCategorical) > 0) {
+      cat(paste0("Method      : Heterogeneous correlations using polycor::hetcor\n"))
+    } else {
+      cat(paste0("Method      : ", method, " (no adjustment applied)\n"))
+    }
   } else {
     cat("Method      :", method, "\n")
   }
@@ -157,6 +161,8 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
     } else {
       cat("** Categorical variables included without adjustment **\n\n")
     }
+  } else if (isTRUE(object$hcor)) {
+    cat("** No variables of type {factor} selected. No adjustment applied **\n\n")
   } else {
     cat("\n")
   }

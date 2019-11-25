@@ -85,7 +85,7 @@ output$ui_correlation <- renderUI({
         selected = state_single("cor_method", cor_method, "pearson"),
         multiple = FALSE
       ),
-        checkboxInput("cor_hcor", "Adjust for categorical variables", value = state_init("cor_hcor", FALSE)),
+        checkboxInput("cor_hcor", "Adjust for {factor} variables", value = state_init("cor_hcor", FALSE)),
         conditionalPanel(
           condition = "input.cor_hcor == true",
           checkboxInput("cor_hcor_se", "Calculate adjusted p.values", value = state_init("cor_hcor_se", FALSE))
@@ -95,10 +95,13 @@ output$ui_correlation <- renderUI({
           min = 0, max = 1, step = 0.05,
           value = state_init("cor_cutoff", 0)
         ),
-        checkboxInput(
-          "cor_covar", "Show covariance matrix",
-          value = state_init("cor_covar", FALSE)
-        )
+        conditionalPanel(
+          condition = "input.cor_hcor == false",
+          checkboxInput(
+            "cor_covar", "Show covariance matrix",
+            value = state_init("cor_covar", FALSE)
+          )
+        ),
       ),
       conditionalPanel(
         condition = "input.tabs_correlation == 'Plot'",
@@ -120,6 +123,14 @@ output$ui_correlation <- renderUI({
       help_file = inclMD(file.path(getOption("radiant.path.basics"), "app/tools/help/correlation.md"))
     )
   )
+})
+
+observeEvent(input$cor_hcor, {
+  if (input$cor_hcor == FALSE) {
+    updateCheckboxInput(session, "cor_hcor_se", value = FALSE)
+  } else {
+    updateCheckboxInput(session, "cor_covar", value = FALSE)
+  }
 })
 
 cor_plot <- reactive({
