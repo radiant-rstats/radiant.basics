@@ -34,8 +34,9 @@ correlation <- function(
 
   ## data.matrix as the last step in the chain is about 25% slower using
   ## system.time but results (using diamonds and mtcars) are identical
-  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir)
-  anyCategorical <- sapply(dataset, function(x) is.numeric(x) || is.Date(x)) == FALSE
+  dataset <- get_data(dataset, vars, filt = data_filter, envir = envir) %>%
+    mutate_if(is.Date, as_numeric)
+  anyCategorical <- sapply(dataset, is.numeric) == FALSE
 
   not_vary <- colnames(dataset)[summarise_all(dataset, does_vary) == FALSE]
   if (length(not_vary) > 0) {
@@ -43,15 +44,15 @@ correlation <- function(
       add_class("correlation"))
   }
 
+  num_dat <- mutate_all(dataset, radiant.data::as_numeric)
+
   ## calculate the correlation matrix with p.values using the psych package
   if (hcor) {
-    dataset <- mutate_if(dataset, is.Date, as_numeric)
     cmath <- try(sshhr(polycor::hetcor(dataset, method = method, ML = FALSE, std.err = hcor_se)), silent = TRUE)
-    dataset <- mutate_all(dataset, radiant.data::as_numeric)
     if (inherits(cmath, "try-error")) {
       message("Calculating the heterogeneous correlation matrix produced an error.\nUsing standard correlation matrix instead")
       hcor <- "Calculation failed"
-      cmat <- sshhr(psych::corr.test(dataset, method = method))
+      cmat <- sshhr(psych::corr.test(num_dat, method = method))
     } else {
       cmat <- list()
       cmat$r <- cmath$correlations
@@ -63,14 +64,12 @@ correlation <- function(
       }
     }
   } else {
-    dataset <- mutate_all(dataset, radiant.data::as_numeric)
-    cmat <- sshhr(psych::corr.test(dataset, method = method))
+    cmat <- sshhr(psych::corr.test(num_dat, method = method))
   }
 
   ## calculate covariance matrix
-  cvmat <- sshhr(cov(dataset, method = method))
-
-  rm(envir)
+  cvmat <- sshhr(cov(num_dat, method = method))
+  rm(num_dat, envir)
 
   if (sum(anyCategorical) > 0) {
     if (isTRUE(hcor)) {
@@ -157,9 +156,9 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   cat("Alt. hyp.   : variables x and y are correlated\n")
   if (sum(object$anyCategorical) > 0) {
     if (isTRUE(object$hcor)) {
-      cat("** Categorical variables are assumed to be ordinal **\n\n")
+      cat("** Variables of type {factor} are assumed to be ordinal **\n\n")
     } else {
-      cat("** Categorical variables included without adjustment **\n\n")
+      cat("** Variables of type {factor} included without adjustment **\n\n")
     }
   } else if (isTRUE(object$hcor)) {
     cat("** No variables of type {factor} selected. No adjustment applied **\n\n")
@@ -172,10 +171,12 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
    format(justify = "right") %>%
    print(quote = FALSE)
 
-  cat("\np.values:\n")
-  cp[-1, -ncol(cp), drop = FALSE] %>%
-   format(justify = "right") %>%
-   print(quote = FALSE)
+  if (!isTRUE(object$hcor) || isTRUE(object$hcor_se)) {
+    cat("\np.values:\n")
+    cp[-1, -ncol(cp), drop = FALSE] %>%
+     format(justify = "right") %>%
+     print(quote = FALSE)
+  }
 
   if (covar) {
     cvr <- apply(object$cvmat, 2, format_nr, dec = dec) %>%
@@ -224,15 +225,44 @@ print.rcorr <- function(x, ...) summary.correlation(x, ...)
 plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
 
   if (is.character(x)) return(NULL)
+  ind_scale <- 1000
+  if (is.null(x$dataset)) {
+    dataset <- x
+    method <- "pearson"
+    if (any(sapply(dataset, is.factor))) {
+      dataset <- mutate_if(dataset, is.Date, as_numeric)
+      hcor <- TRUE
+    } else {
+      hcor <- FALSE
+    }
+    hcor_se <- FALSE
+  } else {
+    dataset <- x$dataset
+    ## defined method to be use in panel.plot
+    method <- x$method
+    ## use heterogeneous correlations
+    hcor <- x$hcor
+    hcor_se <- x$hcor_se
+  }
 
-  ## defined method to be use in panel.plot
-  method <- x$method
   ## based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
   panel.plot <- function(x, y) {
     usr <- par("usr")
     on.exit(par(usr))
     par(usr = c(0, 1, 0, 1))
-    ct <- sshhr(cor.test(x, y, method = method))
+
+    if (isTRUE(hcor)) {
+      ind <- as.integer(round(c(ind_scale*(x[1] - x[2]), ind_scale*(y[1] - y[2])), 0))
+      ct <- sshhr(polycor::hetcor(dataset[,ind], ML = FALSE, std.err = hcor_se))
+      ct$estimate <- ct$correlations[2, 1]
+      if (isTRUE(hcor_se)) {
+        ct$p.value <- 2*pnorm(abs(ct$estimate / ct$std.errors[2, 1]), lower.tail = FALSE)
+      } else {
+        ct$p.value <- 1
+      }
+    } else {
+      ct <- sshhr(cor.test(x[-1:-2], y[-1:-2], method = method))
+    }
     sig <- symnum(
       ct$p.value, corr = FALSE, na = FALSE,
       cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
@@ -246,6 +276,8 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
     text(.8, .8, sig, cex = cex, col = "blue")
   }
   panel.smooth <- function(x, y) {
+    x <- x[-1:-2]
+    y <- y[-1:-2]
     if (nrobs > 0 & length(x) > nrobs) {
       ind <- sample(1:length(x), nrobs)
       x <- x[ind]
@@ -261,8 +293,14 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
     # lines(stats::lowess(y~x), col="blue")
   }
 
-  {if (is.null(x$dataset)) x else x$dataset} %>%
-    pairs(lower.panel = panel.smooth, upper.panel = panel.plot)
+  num_dat <- mutate_all(dataset, as_numeric)
+  ## hack so I can pass index information for the original
+  ## data (with factors) to panel.plot
+  ind_dat <- round(num_dat[c(1, 1),], 3)
+  ind_dat[1,] <- ind_dat[2, ] + (seq_len(ncol(num_dat)) / ind_scale)
+  num_dat <- bind_rows(ind_dat, num_dat)
+
+  pairs(num_dat, lower.panel = panel.smooth, upper.panel = panel.plot)
 }
 
 #' Store a correlation matrix as a (long) data.frame
