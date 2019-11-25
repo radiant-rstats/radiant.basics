@@ -6,6 +6,7 @@
 #' @param vars Variables to include in the analysis. Default is all but character and factor variables with more than two unique values are removed
 #' @param method Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default
 #' @param hcor Use polycor::hetcor to calculate the correlation matrix
+#' @param hcor_se Calculate standard errors when using polycor::hetcor
 #' @param data_filter Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")
 #' @param envir Environment to extract data from
 #'
@@ -25,7 +26,7 @@
 #'
 #' @export
 correlation <- function(
-  dataset, vars = "", method = "pearson", hcor = FALSE,
+  dataset, vars = "", method = "pearson", hcor = FALSE, hcor_se = FALSE,
   data_filter = "", envir = parent.frame()
 ) {
 
@@ -45,7 +46,7 @@ correlation <- function(
   ## calculate the correlation matrix with p.values using the psych package
   if (hcor) {
     dataset <- mutate_if(dataset, is.Date, as_numeric)
-    cmath <- try(sshhr(polycor::hetcor(dataset, method = method, ML = FALSE, std.err = TRUE)), silent = TRUE)
+    cmath <- try(sshhr(polycor::hetcor(dataset, method = method, ML = FALSE, std.err = hcor_se)), silent = TRUE)
     dataset <- mutate_all(dataset, radiant.data::as_numeric)
     if (inherits(cmath, "try-error")) {
       message("Calculating the heterogeneous correlation matrix produced an error.\nUsing standard correlation matrix instead")
@@ -54,9 +55,12 @@ correlation <- function(
     } else {
       cmat <- list()
       cmat$r <- cmath$correlations
-      cmat_z <- cmath$correlations / cmath$std.errors
-      cmat$p <- cmath$std.errors * 0
-      cmat$p <- 2*pnorm(abs(cmat_z), lower.tail = FALSE)
+      cmat$p <- matrix(NA, ncol(cmat$r), nrow(cmat$r))
+      rownames(cmat$p) <- colnames(cmat$p) <- colnames(cmat$r)
+      if (hcor_se) {
+        cmat_z <- cmat$r / cmath$std.errors
+        cmat$p <- 2*pnorm(abs(cmat_z), lower.tail = FALSE)
+      }
     }
   } else {
     dataset <- mutate_all(dataset, radiant.data::as_numeric)
@@ -105,15 +109,25 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   if (is.character(object)) return(object)
 
   ## calculate the correlation matrix with p.values using the psych package
-  cr <- apply(object$cmat$r, 2, format_nr, dec = dec) %>%
-    set_rownames(rownames(object$cmat$r))
+  cr <- object$cmat$r
+  crf <- try(format_nr(cr, dec = dec, na.rm = FALSE), silent = TRUE)
+  if (inherits(crf, "try-error")) {
+    cr <- round(cr, dec)
+  } else {
+    cr[1:nrow(cr), 1:ncol(cr)] <- crf
+  }
   cr[is.na(object$cmat$r)] <- "-"
   cr[abs(object$cmat$r) < cutoff] <- ""
   ltmat <- lower.tri(cr)
   cr[!ltmat] <- ""
 
-  cp <- apply(object$cmat$p, 2, format_nr, dec = dec) %>%
-    set_rownames(rownames(object$cmat$p))
+  cp <- object$cmat$p
+  cpf <- try(format_nr(cp, dec = dec, na.rm = FALSE), silent = TRUE)
+  if (inherits(cpf, "try-error")) {
+    cp <- round(cp, dec)
+  } else {
+    cp[1:nrow(cp), 1:ncol(cp)] <- cpf
+  }
   cp[is.na(object$cmat$p)] <- "-"
   cp[abs(object$cmat$r) < cutoff] <- ""
   cp[!ltmat] <- ""

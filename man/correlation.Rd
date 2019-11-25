@@ -5,7 +5,7 @@
 \title{Calculate correlations for two or more variables}
 \usage{
 correlation(dataset, vars = "", method = "pearson", hcor = FALSE,
-  data_filter = "", envir = parent.frame())
+  hcor_se = FALSE, data_filter = "", envir = parent.frame())
 }
 \arguments{
 \item{dataset}{Dataset}
@@ -15,6 +15,8 @@ correlation(dataset, vars = "", method = "pearson", hcor = FALSE,
 \item{method}{Type of correlations to calculate. Options are "pearson", "spearman", and "kendall". "pearson" is the default}
 
 \item{hcor}{Use polycor::hetcor to calculate the correlation matrix}
+
+\item{hcor_se}{Calculate standard errors when using polycor::hetcor}
 
 \item{data_filter}{Expression entered in, e.g., Data > View to filter the dataset in Radiant. The expression should be a string (e.g., "price > 10000")}
 

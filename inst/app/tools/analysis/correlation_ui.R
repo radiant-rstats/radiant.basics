@@ -85,7 +85,11 @@ output$ui_correlation <- renderUI({
         selected = state_single("cor_method", cor_method, "pearson"),
         multiple = FALSE
       ),
-       checkboxInput("cor_hcor", "Adjust for categorical variables", value = state_init("cor_hcor", FALSE)),
+        checkboxInput("cor_hcor", "Adjust for categorical variables", value = state_init("cor_hcor", FALSE)),
+        conditionalPanel(
+          condition = "input.cor_hcor == true",
+          checkboxInput("cor_hcor_se", "Calculate adjusted p.values", value = state_init("cor_hcor_se", FALSE))
+        ),
         numericInput(
           "cor_cutoff", "Correlation cutoff:",
           min = 0, max = 1, step = 0.05,
