@@ -48,7 +48,7 @@ correlation <- function(
 
   ## calculate the correlation matrix with p.values using the psych package
   if (hcor) {
-    cmath <- try(sshhr(polycor::hetcor(dataset, method = method, ML = FALSE, std.err = hcor_se)), silent = TRUE)
+    cmath <- try(sshhr(polycor::hetcor(dataset, ML = FALSE, std.err = hcor_se)), silent = TRUE)
     if (inherits(cmath, "try-error")) {
       message("Calculating the heterogeneous correlation matrix produced an error.\nUsing standard correlation matrix instead")
       hcor <- "Calculation failed"
@@ -229,13 +229,22 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
   if (is.null(x$dataset)) {
     dataset <- x
     method <- "pearson"
+    hcor_se <- FALSE
     if (any(sapply(dataset, is.factor))) {
       dataset <- mutate_if(dataset, is.Date, as_numeric)
       hcor <- TRUE
+      cmath <- try(sshhr(polycor::hetcor(dataset, ML = FALSE, std.err = hcor_se)), silent = TRUE)
+      if (inherits(cmath, "try-error")) {
+        message("Calculating the heterogeneous correlation matrix produced an error.\nUsing standard correlation matrix instead")
+        hcor <- FALSE
+      } else {
+        cmat <- list()
+        cmat$r <- cmath$correlations
+        cmat$p <- matrix(1, ncol(cmat$r), nrow(cmat$r))
+      }
     } else {
       hcor <- FALSE
     }
-    hcor_se <- FALSE
   } else {
     dataset <- x$dataset
     ## defined method to be use in panel.plot
@@ -243,6 +252,7 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
     ## use heterogeneous correlations
     hcor <- x$hcor
     hcor_se <- x$hcor_se
+    cmat <- x$cmat
   }
 
   ## based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
@@ -253,10 +263,10 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
 
     if (isTRUE(hcor)) {
       ind <- as.integer(round(c(ind_scale*(x[1] - x[2]), ind_scale*(y[1] - y[2])), 0))
-      ct <- sshhr(polycor::hetcor(dataset[,ind], ML = FALSE, std.err = hcor_se))
-      ct$estimate <- ct$correlations[2, 1]
+      ct <- c()
+      ct$estimate <- cmat$r[ind[1], ind[2]]
       if (isTRUE(hcor_se)) {
-        ct$p.value <- 2*pnorm(abs(ct$estimate / ct$std.errors[2, 1]), lower.tail = FALSE)
+        ct$p.value <- cmat$p[ind[1], ind[2]]
       } else {
         ct$p.value <- 1
       }
