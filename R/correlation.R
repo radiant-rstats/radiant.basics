@@ -220,6 +220,7 @@ print.rcorr <- function(x, ...) summary.correlation(x, ...)
 #' @seealso \code{\link{summary.correlation}} to summarize results
 #'
 #' @importFrom ggplot2 alpha
+#' @importFrom dplyr bind_rows
 #'
 #' @export
 plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {

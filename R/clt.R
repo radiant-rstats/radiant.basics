@@ -66,27 +66,23 @@ plot.clt <- function(x, stat = "sum", bins = 15, ...) {
   data1 <- data.frame(sample_1 = x$sim[, 1], stringsAsFactors = FALSE)
   datam <- data.frame(sample_m = x$sim[, m], stringsAsFactors = FALSE)
 
-  plots <- list()
-  plots[[1]] <- visualize(data1, xvar = "sample_1", bins = bins, custom = TRUE) +
+  plot_list <- list()
+  plot_list[[1]] <- visualize(data1, xvar = "sample_1", bins = bins, custom = TRUE) +
     labs(x = "Histogram of sample #1")
 
-  plots[[2]] <- visualize(datam, xvar = "sample_m", bins = bins, custom = TRUE) +
+  plot_list[[2]] <- visualize(datam, xvar = "sample_m", bins = bins, custom = TRUE) +
     labs(x = paste0("Histogram of sample #", m))
 
-  plots[[3]] <- visualize(sstat, xvar = "stat", bins = bins, custom = TRUE) +
+  plot_list[[3]] <- visualize(sstat, xvar = "stat", bins = bins, custom = TRUE) +
     labs(x = ifelse(stat == "Sum", "Histogram of sample sums", "Histogram of sample means"))
 
 
-  plots[[4]] <- visualize(sstat, xvar = "stat", type = "density", custom = TRUE) +
+  plot_list[[4]] <- visualize(sstat, xvar = "stat", type = "density", custom = TRUE) +
     stat_function(fun = dnorm, args = list(
       mean = mean(sstat[[1]]),
       sd = sd(sstat[[1]])
     ), color = "black", size = 1) +
     labs(x = ifelse(stat == "Sum", "Density of sample sums", "Density of sample means"))
 
-  gridExtra::grid.arrange(
-    grobs = plots,
-    top = paste0("CLT: ", x$dist, " distribution"),
-    ncol = 2
-  )
+  patchwork::wrap_plots(plot_list, ncol = 2) + patchwork::plot_annotation(title = glue("CLT: {x$dist} distribution"))
 }

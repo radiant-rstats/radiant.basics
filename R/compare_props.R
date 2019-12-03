@@ -268,14 +268,12 @@ plot.compare_props <- function(
       labs(y = paste0("Proportions per level of ", v1))
   }
 
-  if (custom) {
-    if (length(plot_list) == 1) {
-      return(plot_list[[1]])
+  if (length(plot_list) > 0) {
+    if (custom) {
+      if (length(plot_list) == 1) plot_list[[1]] else plot_list
     } else {
-      return(plot_list)
+      patchwork::wrap_plots(plot_list, ncol = 1) %>%
+        {if (shiny) . else print(.)}
     }
   }
-
-  sshhr(gridExtra::grid.arrange(grobs = plot_list, ncol = 1)) %>%
-    {if (shiny) . else print(.)}
 }

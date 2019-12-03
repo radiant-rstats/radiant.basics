@@ -13,7 +13,6 @@ Depends:
     radiant.data (>= 1.2.0)
 Imports:
     ggplot2 (>= 2.2.1),
-    gridExtra (>= 2.0.0),
     scales (>= 0.4.0),
     dplyr (>= 0.8.3),
     tidyr (>= 0.8.2),
@@ -22,7 +21,8 @@ Imports:
     psych (>= 1.8.3.3),
     import (>= 1.1.0),
     lubridate (>= 1.7.4),
-    polycor (>= 0.7.10)
+    polycor (>= 0.7.10),
+    patchwork (>= 1.0.0)
 Suggests:
     testthat (>= 2.0.0),
     pkgdown (>= 1.1.0)

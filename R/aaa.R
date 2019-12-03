@@ -15,10 +15,10 @@ globalVariables(c(
 #' @import radiant.data shiny ggplot2
 #' @importFrom dplyr mutate_all mutate_if summarise_all summarise_at funs rename bind_cols select filter group_by_at summarise arrange mutate count left_join
 #' @importFrom tidyr gather spread
-#' @importFrom gridExtra grid.arrange
 #' @importFrom scales percent
 #' @importFrom magrittr %>% %<>% set_rownames set_colnames set_names divide_by
 #' @importFrom graphics pairs par points strwidth text
+#' @importFrom patchwork wrap_plots  plot_annotation
 #' @importFrom stats na.omit binom.test chisq.test cor.test cov dbinom dchisq dexp df dnorm dpois dt dunif p.adjust pbinom pchisq pexp pf pnorm ppois prop.test pt punif qbinom qchisq qexp qf qpois qt qunif qnorm rbinom dlnorm plnorm qlnorm relevel sd setNames symnum t.test wilcox.test
 #' @importFrom utils combn
 #' @importFrom import from
