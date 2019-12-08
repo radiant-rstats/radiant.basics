@@ -235,8 +235,7 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
   }
 
   cor_text <- function(r, p, dec = 2) {
-
-    if (is_empty(p)) p <- 1
+    if (is.na(p)) p <- 1
     sig <- symnum(
       p, corr = FALSE, na = TRUE,
       cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
@@ -277,17 +276,13 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
   }
 
   cor_mat <- function(dataset, cmat, pmat = NULL, dec = 2, nobs = 1000) {
-
     nr <- ncol(dataset)
     ops <- par(mfrow = c(nr, nr), mar = rep(0.2, 4))
     on.exit(par(ops))
-
-    nr <- ncol(dataset)
     cn <- colnames(dataset)
-    sal <- seq_along(cn)
     longest <- names(sort(sapply(cn, nchar), decreasing = TRUE))[1]
-    for (i in sal) {
-      for (j in sal) {
+    for (i in seq_along(cn)) {
+      for (j in seq_along(cn)) {
         if (i == j) {
           cor_label(cn[i], longest)
         } else if (i > j) {
