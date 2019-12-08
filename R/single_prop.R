@@ -50,8 +50,6 @@ single_prop <- function(
   n <- nrow(dataset)
   ns <- sum(dataset == lev)
   p <- ns / n
-  se <- sqrt(p * (1 - p) / n)
-  me <- se * qnorm(conf_lev / 2 + .5, lower.tail = TRUE)
 
   dat_summary <- data.frame(
     diff = p - comp_value,
@@ -59,10 +57,11 @@ single_prop <- function(
     ns = ns,
     n = n,
     n_missing = n_miss,
-    sd = sqrt(n * p * (1 - p)),
-    se = se,
-    me = me,
     stringsAsFactors = FALSE
+  ) %>% mutate(
+    sd = sqrt(p * (1 - p)),
+    se = sqrt(p * (1 - p) / n),
+    me = se * qnorm(conf_lev / 2 + .5, lower.tail = TRUE)
   )
 
   if (test == "z") {
@@ -70,8 +69,8 @@ single_prop <- function(
     res <- sshhr(prop.test(
       ns, n, p = comp_value, alternative = alternative,
       conf.level = conf_lev, correct = FALSE
-    )) %>%
-      tidy()
+    ))
+    res <- tidy(res)
     ## convert chi-square stat to a z-score
     res$statistic <- sqrt(res$statistic) * ifelse(res$estimate < comp_value, -1, 1)
   } else {
@@ -79,8 +78,8 @@ single_prop <- function(
     res <- binom.test(
       ns, n, p = comp_value, alternative = alternative,
       conf.level = conf_lev
-    ) %>%
-      tidy()
+    )
+    res <- tidy(res)
   }
 
   # removing unneeded arguments

@@ -1,7 +1,7 @@
 ######### tests ########
 trim <- function(x) gsub("^\\s+|\\s+$", "", x)
-library(radiant.basics)
-library(testthat)
+# library(radiant.basics)
+# library(testthat)
 
 context("Compare means")
 
@@ -31,7 +31,7 @@ test_that("compare_props 1", {
   result <- compare_props(titanic, "pclass", "survived")
   res1 <- capture.output(summary(result))[9] %>% trim()
   # cat(paste0(res1, "\n"))
-  res2 <- "1st 179 103 0.635 282         0 8.086 0.029 0.056"
+  res2 <- "1st 179 103 0.635 282         0 0.481 0.029 0.056"
   expect_equal(res1, res2)
 })
 
@@ -39,7 +39,7 @@ test_that("compare_props 2", {
   result <- compare_props(titanic, "pclass", "survived")
   res1 <- capture_output(summary(result, show = TRUE))
   # dput(res1)
-  res2 <- "Pairwise proportion comparisons\nData      : titanic \nVariables : pclass, survived \nLevel     :  in survived \nConfidence: 0.95 \nAdjustment: None \n\n pclass Yes  No     p   n n_missing    sd    se    me\n    1st 179 103 0.635 282         0 8.086 0.029 0.056\n    2nd 115 146 0.441 261         0 8.021 0.031 0.060\n    3rd 131 369 0.262 500         0 9.832 0.020 0.039\n\n Null hyp.   Alt. hyp.              diff  p.value chisq.value df 2.5%  97.5%\n 1st = 2nd   1st not equal to 2nd   0.194 < .001  20.576      1  0.112 0.277\n 1st = 3rd   1st not equal to 3rd   0.373 < .001  104.704     1  0.305 0.441\n 2nd = 3rd   2nd not equal to 3rd   0.179 < .001  25.008      1  0.107 0.250\n    \n ***\n ***\n ***\n\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
+  res2 <- "Pairwise proportion comparisons\nData      : titanic \nVariables : pclass, survived \nLevel     :  in survived \nConfidence: 0.95 \nAdjustment: None \n\n pclass Yes  No     p   n n_missing    sd    se    me\n    1st 179 103 0.635 282         0 0.481 0.029 0.056\n    2nd 115 146 0.441 261         0 0.496 0.031 0.060\n    3rd 131 369 0.262 500         0 0.440 0.020 0.039\n\n Null hyp.   Alt. hyp.              diff  p.value chisq.value df 2.5%  97.5%\n 1st = 2nd   1st not equal to 2nd   0.194 < .001  20.576      1  0.112 0.277\n 1st = 3rd   1st not equal to 3rd   0.373 < .001  104.704     1  0.305 0.441\n 2nd = 3rd   2nd not equal to 3rd   0.179 < .001  25.008      1  0.107 0.250\n    \n ***\n ***\n ***\n\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
   expect_equal(res1, res2)
 })
 
@@ -50,7 +50,7 @@ test_that("single_prop 1", {
   expect_equal(result$lev, "D")
   res1 <- capture_output(summary(result))
   # dput(res1)
-  res2 <- "Single proportion test (binomial exact)\nData      : diamonds \nVariable  : color \nLevel     : D in color \nConfidence: 0.95 \nNull hyp. : the proportion of D in color = 0.5 \nAlt. hyp. : the proportion of D in color not equal to 0.5 \n\n     p  ns     n n_missing     sd    se    me\n 0.127 382 3,000         0 18.258 0.006 0.012\n\n   diff  ns p.value  2.5% 97.5%    \n -0.373 382  < .001 0.116 0.140 ***\n\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
+  res2 <- "Single proportion test (binomial exact)\nData      : diamonds \nVariable  : color \nLevel     : D in color \nConfidence: 0.95 \nNull hyp. : the proportion of D in color = 0.5 \nAlt. hyp. : the proportion of D in color not equal to 0.5 \n\n     p  ns     n n_missing    sd    se    me\n 0.127 382 3,000         0 0.333 0.006 0.012\n\n   diff  ns p.value  2.5% 97.5%    \n -0.373 382  < .001 0.116 0.140 ***\n\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
   expect_equal(res1, res2)
 })
 
@@ -59,7 +59,7 @@ test_that("single_prop 2", {
   expect_equal(result$lev, "IF")
   res1 <- capture_output(summary(result))
   # dput(res1)
-  res2 <- "Single proportion test (binomial exact)\nData      : diamonds \nVariable  : clarity \nLevel     : IF in clarity \nConfidence: 0.95 \nNull hyp. : the proportion of IF in clarity = 0.05 \nAlt. hyp. : the proportion of IF in clarity not equal to 0.05 \n\n     p ns     n n_missing    sd    se    me\n 0.033 99 3,000         0 9.784 0.003 0.006\n\n   diff ns p.value  2.5% 97.5%    \n -0.017 99  < .001 0.027 0.040 ***\n\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
+  res2 <- "Single proportion test (binomial exact)\nData      : diamonds \nVariable  : clarity \nLevel     : IF in clarity \nConfidence: 0.95 \nNull hyp. : the proportion of IF in clarity = 0.05 \nAlt. hyp. : the proportion of IF in clarity not equal to 0.05 \n\n     p ns     n n_missing    sd    se    me\n 0.033 99 3,000         0 0.179 0.003 0.006\n\n   diff ns p.value  2.5% 97.5%    \n -0.017 99  < .001 0.027 0.040 ***\n\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1"
   expect_equal(res1, res2)
 })
 

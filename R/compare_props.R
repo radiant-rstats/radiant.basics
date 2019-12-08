@@ -31,7 +31,7 @@ compare_props <- function(
 
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   vars <- c(var1, var2)
-  dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE, envir = envir) %>% 
+  dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE, envir = envir) %>%
     mutate_all(as.factor)
 
   dataset <- dataset[!is.na(dataset[[1]]), , drop = FALSE]
@@ -127,8 +127,8 @@ compare_props <- function(
       p = .[[1]] / as.integer(rowSums(.[, 1:2])),
       n = as.integer(rowSums(.[, 1:2])),
       n_missing = 0,
-      sd = sqrt(n * p * (1 - p)),
-      se = sqrt((p * (1 - p) / n)),
+      sd = sqrt(p * (1 - p)),
+      se = sqrt(p * (1 - p) / n),
       me = me_calc(se, conf_lev)
     ) %>%
       set_rownames(rownames(prop_input)) %>%
