@@ -12,7 +12,7 @@
 
 \item{nrobs}{Number of data points to show in scatter plots (-1 for all)}
 
-\item{jit}{A numeric vector that determines the amount of jittering to apply to scatter plot. Default is 0. Use, e.g., 0.3 to add some jittering}
+\item{jit}{A numeric vector that determines the amount of jittering to apply to the x and y variables in a scatter plot. Default is 0. Use, e.g., 0.3 to add some jittering}
 
 \item{dec}{Number of decimals to show}
 

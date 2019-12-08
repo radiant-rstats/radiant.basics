@@ -63,6 +63,7 @@ correlation <- function(
         cmat$p <- 2*pnorm(abs(cmat_z), lower.tail = FALSE)
       }
     }
+    rm(cmath)
   } else {
     cmat <- sshhr(psych::corr.test(num_dat, method = method))
   }
@@ -208,7 +209,7 @@ print.rcorr <- function(x, ...) summary.correlation(x, ...)
 #'
 #' @param x Return value from \code{\link{correlation}}
 #' @param nrobs Number of data points to show in scatter plots (-1 for all)
-#' @param jit A numeric vector that determines the amount of jittering to apply to scatter plot. Default is 0. Use, e.g., 0.3 to add some jittering
+#' @param jit A numeric vector that determines the amount of jittering to apply to the x and y variables in a scatter plot. Default is 0. Use, e.g., 0.3 to add some jittering
 #' @param dec Number of decimals to show
 #' @param ... further arguments passed to or from other methods.
 #'
@@ -219,99 +220,86 @@ print.rcorr <- function(x, ...) summary.correlation(x, ...)
 #' @seealso \code{\link{correlation}} to calculate results
 #' @seealso \code{\link{summary.correlation}} to summarize results
 #'
-#' @importFrom ggplot2 alpha
-#' @importFrom dplyr bind_rows
+#' @importFrom graphics plot
 #'
 #' @export
 plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
 
   if (is.character(x)) return(NULL)
-  ind_scale <- 1000
   if (is.null(x$dataset)) {
-    dataset <- x
-    method <- "pearson"
-    hcor_se <- FALSE
-    if (any(sapply(dataset, is.factor))) {
-      dataset <- mutate_if(dataset, is.Date, as_numeric)
-      hcor <- TRUE
-      cmath <- try(sshhr(polycor::hetcor(dataset, ML = FALSE, std.err = hcor_se)), silent = TRUE)
-      if (inherits(cmath, "try-error")) {
-        message("Calculating the heterogeneous correlation matrix produced an error.\nUsing standard correlation matrix instead")
-        hcor <- FALSE
-      } else {
-        cmat <- list()
-        cmat$r <- cmath$correlations
-        cmat$p <- matrix(1, ncol(cmat$r), nrow(cmat$r))
-      }
+    if (any(sapply(x, is.factor))) {
+      x <- correlation(x, hcor = TRUE, hcor_se = FALSE)
     } else {
-      hcor <- FALSE
+      x <- correlation(x, hcor = FALSE)
     }
-  } else {
-    dataset <- x$dataset
-    ## defined method to be use in panel.plot
-    method <- x$method
-    ## use heterogeneous correlations
-    hcor <- x$hcor
-    hcor_se <- x$hcor_se
-    cmat <- x$cmat
   }
 
-  ## based mostly on http://gallery.r-enthusiasts.com/RGraphGallery.php?graph=137
-  panel.plot <- function(x, y) {
-    usr <- par("usr")
-    on.exit(par(usr))
-    par(usr = c(0, 1, 0, 1))
+  cor_text <- function(r, p, dec = 2) {
 
-    if (isTRUE(hcor)) {
-      ind <- as.integer(round(c(ind_scale*(x[1] - x[2]), ind_scale*(y[1] - y[2])), 0))
-      ct <- c()
-      ct$estimate <- cmat$r[ind[1], ind[2]]
-      if (isTRUE(hcor_se)) {
-        ct$p.value <- cmat$p[ind[1], ind[2]]
-      } else {
-        ct$p.value <- 1
-      }
-    } else {
-      ct <- sshhr(cor.test(x[-1:-2], y[-1:-2], method = method))
-    }
+    if (is_empty(p)) p <- 1
     sig <- symnum(
-      ct$p.value, corr = FALSE, na = FALSE,
+      p, corr = FALSE, na = TRUE,
       cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
       symbols = c("***", "**", "*", ".", " ")
     )
-    r <- ct$estimate
-    rt <- format(r, digits = dec)[1]
-    cex <- 0.5 / strwidth(rt)
 
+    rt <- format(r, digits = dec)
+    cex <- 0.5 / strwidth(rt)
+    plot(c(0, 1), c(0, 1), ann = FALSE, type = "n", xaxt = "n", yaxt = "n")
     text(.5, .5, rt, cex = cex * abs(r))
     text(.8, .8, sig, cex = cex, col = "blue")
   }
-  panel.smooth <- function(x, y) {
-    x <- x[-1:-2]
-    y <- y[-1:-2]
-    if (nrobs > 0 & length(x) > nrobs) {
-      ind <- sample(1:length(x), nrobs)
+
+  cor_label <- function(label, longest) {
+    plot(c(0, 1), c(0, 1), ann = FALSE, type = "n", xaxt = "n", yaxt = "n")
+    cex <- 0.5 / strwidth(longest)
+    text(.5, .5, label, cex = cex)
+  }
+
+  cor_plot <- function(x, y, nobs = 1000) {
+    if (nobs != Inf && nobs != -1) {
+      ind <- sample(seq_len(length(y)), min(nobs, length(y)))
       x <- x[ind]
       y <- y[ind]
     }
-    points(
-      jitter(x, jit[1]), jitter(y, jit[length(jit)]), pch = 16,
-      col = ggplot2::alpha("black", 0.5)
-    )
-    ## uncomment the lines below if you want linear and loess lines
-    ## in the scatter plot matrix
-    # abline(lm(y~x), col="red")
-    # lines(stats::lowess(y~x), col="blue")
+    if (is.factor(y) && is.factor(x)) {
+      # plot(x, y, col = y, axes = FALSE, xlab = "", ylab = "")
+      plot(x, y, axes = FALSE, xlab = "", ylab = "")
+    } else if (is.factor(y) & is.numeric(x)) {
+      plot(y, x, ann = FALSE, xaxt = "n", yaxt = "n", horizontal=TRUE)
+    } else if (is.numeric(y) & is.factor(x)) {
+      plot(x, y, ann = FALSE, xaxt = "n", yaxt = "n")
+    } else {
+      y = as.numeric(y)
+      x = as.numeric(x)
+      plot(jitter(x, jit[1]), jitter(y, jit[2]), ann = FALSE, xaxt = "n", yaxt = "n")
+    }
   }
 
-  num_dat <- mutate_all(dataset, as_numeric)
-  ## hack so I can pass index information for the original
-  ## data (with factors) to panel.plot
-  ind_dat <- round(num_dat[c(1, 1),], 3)
-  ind_dat[1,] <- ind_dat[2, ] + (seq_len(ncol(num_dat)) / ind_scale)
-  num_dat <- bind_rows(ind_dat, num_dat)
+  cor_mat <- function(dataset, cmat, pmat = NULL, dec = 2, nobs = 1000) {
 
-  pairs(num_dat, lower.panel = panel.smooth, upper.panel = panel.plot)
+    nr <- ncol(dataset)
+    ops <- par(mfrow = c(nr, nr), mar = rep(0.2, 4))
+    on.exit(par(ops))
+
+    nr <- ncol(dataset)
+    cn <- colnames(dataset)
+    sal <- seq_along(cn)
+    longest <- names(sort(sapply(cn, nchar), decreasing = TRUE))[1]
+    for (i in sal) {
+      for (j in sal) {
+        if (i == j) {
+          cor_label(cn[i], longest)
+        } else if (i > j) {
+          cor_plot(dataset[[i]], dataset[[j]], nobs = nobs)
+        } else {
+          cor_text(cmat[i, j], pmat[i, j], dec = 2)
+        }
+      }
+    }
+  }
+
+  cor_mat(x$dataset, cmat = x$cmat$r, pmat = x$cmat$p, dec = dec, nobs = nrobs)
 }
 
 #' Store a correlation matrix as a (long) data.frame
