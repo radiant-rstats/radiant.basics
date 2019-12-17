@@ -1,5 +1,10 @@
-# radiant.basics 1.2.1.0
+# radiant.basics 1.3.0.0
 
+* Documentation updates to link to new video tutorials
+* Use `patchwork` for grouping multiple plots together
+* Use `polycor::hetcor` to calculate correlations for a mix of numeric and categorical variables
+* Updated correlation plot that accommodates a mix of numeric and categorical variables
+* Fix for sd estimate in `single_prop` and `compare_prop` functions
 * Add dimension labels to all tables in _Basics > Cross-tabs_
 
 # radiant.basics 1.2.0.0
