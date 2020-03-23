@@ -135,7 +135,7 @@
 <p>Note: Correlations can be calculated for variables of type <code>numeric</code>, <code>integer</code>, <code>date</code>, and <code>factor</code>. When variables of type factor are included the <code>Adjust for {factor} variables</code> box should be checked. When correlations are estimated with adjustment, variables that are of type <code>factor</code> will be treated as (ordinal) categorical variables and all other variables will be treated as continuous.</p>
 <p align="center">
 <img src="https://radiant-rstats.github.io/docs/basics/figures_basics//correlation_summary.png"></p>
-<p>A visual representation of the correlation matrix is provided in the <em>Plot</em> tab. Note that scatter plots in the graph at most 1,000 data points by default. To generate scatter plots that use all observations use <code><a href="https://rdrr.io/r/base/plot.html">plot(result, n = -1)</a></code> in <em>Report &gt; Rmd</em>.</p>
+<p>A visual representation of the correlation matrix is provided in the <em>Plot</em> tab. Note that scatter plots in the graph at most 1,000 data points by default. To generate scatter plots that use all observations use <code><a href="https://rdrr.io/r/graphics/plot.html">plot(result, n = -1)</a></code> in <em>Report &gt; Rmd</em>.</p>
 <p>Stars shown in the <em>Plot</em> tab are interpreted as:</p>
 <ul>
 <li>p.value between 0 and 0.001: ***</li>
@@ -179,7 +179,7 @@
 <h3 class="hasAnchor">
 <a href="#report-rmd" class="anchor"></a>Report &gt; Rmd</h3>
 <p>Add code to <a href="https://radiant-rstats.github.io/docs/data/report_rmd.html" target="_blank"><em>Report &gt; Rmd</em></a> to (re)create the analysis by clicking the <i title="report results" class="fa fa-edit"></i> icon on the bottom left of your screen or by pressing <code>ALT-enter</code> on your keyboard.</p>
-<p>By default the correlation plot samples 1,000 data points. To include all data points use <code><a href="https://rdrr.io/r/base/plot.html">plot(result, n = -1)</a></code> To add, for example, a title to the plot use <code><a href="https://rdrr.io/r/graphics/title.html">title(main = "Correlation plot\n\n")</a></code>. See the <a href="https://cran.r-project.org/doc/manuals/R-intro.html#Low_002dlevel-plotting-commands" target="_blank">R graphics</a> documentation for additional information.</p>
+<p>By default the correlation plot samples 1,000 data points. To include all data points use <code><a href="https://rdrr.io/r/graphics/plot.html">plot(result, n = -1)</a></code> To add, for example, a title to the plot use <code><a href="https://rdrr.io/r/graphics/title.html">title(main = "Correlation plot\n\n")</a></code>. See the <a href="https://cran.r-project.org/doc/manuals/R-intro.html#Low_002dlevel-plotting-commands" target="_blank">R graphics</a> documentation for additional information.</p>
 </div>
 <div id="r-functions" class="section level3">
 <h3 class="hasAnchor">
