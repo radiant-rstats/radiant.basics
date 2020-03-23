@@ -4,7 +4,9 @@
 \name{demand_uk}
 \alias{demand_uk}
 \title{Demand in the UK}
-\format{A data frame with 1000 rows and 2 variables}
+\format{
+A data frame with 1000 rows and 2 variables
+}
 \usage{
 data(demand_uk)
 }

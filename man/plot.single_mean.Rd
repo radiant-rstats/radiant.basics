@@ -4,8 +4,7 @@
 \alias{plot.single_mean}
 \title{Plot method for the single_mean function}
 \usage{
-\method{plot}{single_mean}(x, plots = "hist", shiny = FALSE,
-  custom = FALSE, ...)
+\method{plot}{single_mean}(x, plots = "hist", shiny = FALSE, custom = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{single_mean}}}

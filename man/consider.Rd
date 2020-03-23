@@ -4,7 +4,9 @@
 \name{consider}
 \alias{consider}
 \title{Car brand consideration}
-\format{A data frame with 1000 rows and 2 variables}
+\format{
+A data frame with 1000 rows and 2 variables
+}
 \usage{
 data(consider)
 }

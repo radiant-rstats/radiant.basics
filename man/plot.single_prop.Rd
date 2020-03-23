@@ -4,8 +4,7 @@
 \alias{plot.single_prop}
 \title{Plot method for the single_prop function}
 \usage{
-\method{plot}{single_prop}(x, plots = "bar", shiny = FALSE,
-  custom = FALSE, ...)
+\method{plot}{single_prop}(x, plots = "bar", shiny = FALSE, custom = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{single_prop}}}

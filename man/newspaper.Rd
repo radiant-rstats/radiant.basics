@@ -4,7 +4,9 @@
 \name{newspaper}
 \alias{newspaper}
 \title{Newspaper readership}
-\format{A data frame with 580 rows and 2 variables}
+\format{
+A data frame with 580 rows and 2 variables
+}
 \usage{
 data(newspaper)
 }

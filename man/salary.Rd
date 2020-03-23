@@ -4,7 +4,9 @@
 \name{salary}
 \alias{salary}
 \title{Salaries for Professors}
-\format{A data frame with 397 rows and 6 variables}
+\format{
+A data frame with 397 rows and 6 variables
+}
 \usage{
 data(salary)
 }

@@ -4,8 +4,15 @@
 \alias{correlation}
 \title{Calculate correlations for two or more variables}
 \usage{
-correlation(dataset, vars = "", method = "pearson", hcor = FALSE,
-  hcor_se = FALSE, data_filter = "", envir = parent.frame())
+correlation(
+  dataset,
+  vars = "",
+  method = "pearson",
+  hcor = FALSE,
+  hcor_se = FALSE,
+  data_filter = "",
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{dataset}{Dataset}

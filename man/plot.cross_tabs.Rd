@@ -4,8 +4,7 @@
 \alias{plot.cross_tabs}
 \title{Plot method for the cross_tabs function}
 \usage{
-\method{plot}{cross_tabs}(x, check = "", shiny = FALSE,
-  custom = FALSE, ...)
+\method{plot}{cross_tabs}(x, check = "", shiny = FALSE, custom = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{cross_tabs}}}

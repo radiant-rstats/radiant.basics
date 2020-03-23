@@ -4,9 +4,17 @@
 \alias{single_prop}
 \title{Compare a sample proportion to a population proportion}
 \usage{
-single_prop(dataset, var, lev = "", comp_value = 0.5,
-  alternative = "two.sided", conf_lev = 0.95, test = "binom",
-  data_filter = "", envir = parent.frame())
+single_prop(
+  dataset,
+  var,
+  lev = "",
+  comp_value = 0.5,
+  alternative = "two.sided",
+  conf_lev = 0.95,
+  test = "binom",
+  data_filter = "",
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{dataset}{Dataset}

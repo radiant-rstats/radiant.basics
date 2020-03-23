@@ -4,8 +4,15 @@
 \alias{single_mean}
 \title{Compare a sample mean to a population mean}
 \usage{
-single_mean(dataset, var, comp_value = 0, alternative = "two.sided",
-  conf_lev = 0.95, data_filter = "", envir = parent.frame())
+single_mean(
+  dataset,
+  var,
+  comp_value = 0,
+  alternative = "two.sided",
+  conf_lev = 0.95,
+  data_filter = "",
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{dataset}{Dataset}

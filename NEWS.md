@@ -1,3 +1,7 @@
+# radiant.basics 1.3.4.0
+
+* Minor adjustments in anticipation of dplyr 1.0.0
+
 # radiant.basics 1.3.0.0
 
 * Documentation updates to link to new video tutorials

@@ -3,7 +3,6 @@
 \docType{package}
 \name{radiant.basics}
 \alias{radiant.basics}
-\alias{radiant.basics-package}
 \title{radiant.basics}
 \usage{
 radiant.basics(state, ...)
@@ -14,9 +13,7 @@ radiant.basics(state, ...)
 \item{...}{additional arguments to pass to shiny::runApp (e.g, port = 8080)}
 }
 \description{
-radiant.basics
-
-Launch radiant.basics in the default browser
+Launch radiant.basics in the default web browser
 }
 \details{
 See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials

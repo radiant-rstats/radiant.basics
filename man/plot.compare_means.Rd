@@ -4,8 +4,7 @@
 \alias{plot.compare_means}
 \title{Plot method for the compare_means function}
 \usage{
-\method{plot}{compare_means}(x, plots = "scatter", shiny = FALSE,
-  custom = FALSE, ...)
+\method{plot}{compare_means}(x, plots = "scatter", shiny = FALSE, custom = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{compare_means}}}

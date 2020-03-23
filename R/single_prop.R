@@ -153,7 +153,7 @@ summary.single_prop <- function(object, dec = 3, ...) {
   if (res$p.value < .001) res$p.value <- "< .001"
 
   ## print statistics
-  print(res, row.names = FALSE)
+  print(as.data.frame(res, stringsAsFactors = FALSE), row.names = FALSE)
   cat("\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n")
 }
 

@@ -4,8 +4,7 @@
 \alias{plot.compare_props}
 \title{Plot method for the compare_props function}
 \usage{
-\method{plot}{compare_props}(x, plots = "bar", shiny = FALSE,
-  custom = FALSE, ...)
+\method{plot}{compare_props}(x, plots = "bar", shiny = FALSE, custom = FALSE, ...)
 }
 \arguments{
 \item{x}{Return value from \code{\link{compare_props}}}

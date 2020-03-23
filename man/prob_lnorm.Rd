@@ -4,8 +4,7 @@
 \alias{prob_lnorm}
 \title{Probability calculator for the log normal distribution}
 \usage{
-prob_lnorm(meanlog, sdlog, lb = NA, ub = NA, plb = NA, pub = NA,
-  dec = 3)
+prob_lnorm(meanlog, sdlog, lb = NA, ub = NA, plb = NA, pub = NA, dec = 3)
 }
 \arguments{
 \item{meanlog}{Mean of the distribution on the log scale}

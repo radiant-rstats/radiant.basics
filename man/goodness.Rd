@@ -4,8 +4,14 @@
 \alias{goodness}
 \title{Evaluate if sample data for a categorical variable is consistent with a hypothesized distribution}
 \usage{
-goodness(dataset, var, p = NULL, tab = NULL, data_filter = "",
-  envir = parent.frame())
+goodness(
+  dataset,
+  var,
+  p = NULL,
+  tab = NULL,
+  data_filter = "",
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{dataset}{Dataset}

@@ -4,9 +4,18 @@
 \alias{clt}
 \title{Central Limit Theorem simulation}
 \usage{
-clt(dist, n = 100, m = 100, norm_mean = 0, norm_sd = 1,
-  binom_size = 10, binom_prob = 0.2, unif_min = 0, unif_max = 1,
-  expo_rate = 1)
+clt(
+  dist,
+  n = 100,
+  m = 100,
+  norm_mean = 0,
+  norm_sd = 1,
+  binom_size = 10,
+  binom_prob = 0.2,
+  unif_min = 0,
+  unif_max = 1,
+  expo_rate = 1
+)
 }
 \arguments{
 \item{dist}{Distribution to simulate}

@@ -4,8 +4,14 @@
 \alias{cross_tabs}
 \title{Evaluate associations between categorical variables}
 \usage{
-cross_tabs(dataset, var1, var2, tab = NULL, data_filter = "",
-  envir = parent.frame())
+cross_tabs(
+  dataset,
+  var1,
+  var2,
+  tab = NULL,
+  data_filter = "",
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{dataset}{Dataset (i.e., a data.frame or table)}

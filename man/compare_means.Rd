@@ -4,10 +4,19 @@
 \alias{compare_means}
 \title{Compare sample means}
 \usage{
-compare_means(dataset, var1, var2, samples = "independent",
-  alternative = "two.sided", conf_lev = 0.95, comb = "",
-  adjust = "none", test = "t", data_filter = "",
-  envir = parent.frame())
+compare_means(
+  dataset,
+  var1,
+  var2,
+  samples = "independent",
+  alternative = "two.sided",
+  conf_lev = 0.95,
+  comb = "",
+  adjust = "none",
+  test = "t",
+  data_filter = "",
+  envir = parent.frame()
+)
 }
 \arguments{
 \item{dataset}{Dataset}

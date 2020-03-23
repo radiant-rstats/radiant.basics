@@ -1,7 +1,7 @@
-######### tests ########
-trim <- function(x) gsub("^\\s+|\\s+$", "", x)
 # library(radiant.basics)
 # library(testthat)
+
+trim <- function(x) gsub("^\\s+|\\s+$", "", x)
 
 context("Compare means")
 
