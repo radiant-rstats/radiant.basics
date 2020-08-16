@@ -115,7 +115,7 @@ plot.prob_norm <- function(x, type = "values", ...) {
   dnorm_lines <- c(ub, lb) %>% na.omit()
   if (length(dnorm_lines) == 0) dnorm_lines <- c(-Inf, Inf)
 
-  ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
     stat_function(fun = stats::dnorm, args = list(mean = mean, sd = stdev)) +
@@ -325,7 +325,7 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
   dlnorm_lines <- c(ub, lb) %>% na.omit()
   if (length(dlnorm_lines) == 0) dlnorm_lines <- c(-Inf, Inf)
 
-  ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
     stat_function(fun = stats::dlnorm, args = list(meanlog = meanlog, sdlog = sdlog)) +
@@ -534,7 +534,7 @@ plot.prob_tdist <- function(x, type = "values", ...) {
   dt_lines <- c(ub, lb) %>% na.omit()
   if (length(dt_lines) == 0) dt_lines <- c(-Inf, Inf)
 
-  ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
     stat_function(fun = stats::dt, args = list(df = df)) +
@@ -764,7 +764,7 @@ plot.prob_fdist <- function(x, type = "values", ...) {
   vlines <- c(ub, lb) %>% na.omit()
   if (length(vlines) == 0) vlines <- c(-Inf, Inf)
 
-  ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x")) +
     stat_function(fun = df_line, geom = "line") +
@@ -997,7 +997,7 @@ plot.prob_chisq <- function(x, type = "values", ...) {
   vlines <- c(ub, lb) %>% na.omit()
   if (length(vlines) == 0) vlines <- c(-Inf, Inf)
 
-  ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x")) +
     stat_function(fun = stats::dchisq, args = list(df = df)) +
@@ -1215,7 +1215,7 @@ plot.prob_unif <- function(x, type = "values", ...) {
   dunif_lines <- c(ub, lb) %>% na.omit() %>% base::setdiff(c(min, max))
   if (length(dunif_lines) == 0) dunif_lines <- c(-Inf, Inf)
 
-  ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- data.frame(x = limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub) %>%
     ggplot(aes_string(x = "x")) +
@@ -1499,7 +1499,7 @@ plot.prob_binom <- function(x, type = "values", ...) {
 
   cols <- c(below = "red", equal = "blue", above = "black")
 
-  ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
     geom_bar(stat = "identity", alpha = 0.5) +
@@ -1835,7 +1835,7 @@ plot.prob_disc <- function(x, type = "values", ...) {
 
   cols <- c(below = "red", equal = "blue", above = "black")
 
-  ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
     geom_bar(stat = "identity", alpha = 0.5) +
@@ -2087,7 +2087,7 @@ plot.prob_expo <- function(x, type = "values", ...) {
   vlines <- c(ub, lb) %>% na.omit()
   if (length(vlines) == 0) vlines <- c(-Inf, Inf)
 
-  ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   # plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
   plt <- ggplot(dat, aes_string(x = "x")) +
@@ -2364,7 +2364,7 @@ plot.prob_pois <- function(x, type = "values", ...) {
 
   cols <- c(below = "red", equal = "blue", above = "black")
 
-  ## based on http://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
+  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
     geom_bar(stat = "identity", alpha = 0.5) +
