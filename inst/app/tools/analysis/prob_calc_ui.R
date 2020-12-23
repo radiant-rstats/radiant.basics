@@ -1,6 +1,6 @@
 pc_dist <- c(
   "Binomial" = "binom", "Chi-squared" = "chisq", "Discrete" = "disc",
-  "Exponential" = "expo", "F" = "fdist", "Log normal" = "lnorm", 
+  "Exponential" = "expo", "F" = "fdist", "Log normal" = "lnorm",
   "Normal" = "norm", "Poisson" = "pois", "t" = "tdist", "Uniform" = "unif"
 )
 
@@ -12,11 +12,11 @@ make_pc_values_input <- function(lb, lb_init = NA, ub, ub_init = 0) {
   div(
     class = "row",
     div(
-      class = "col-xs-6",
+      class = "col-6 col-xs-6",
       numericInput(lb, "Lower bound:", value = state_init(lb, lb_init))
     ),
     div(
-      class = "col-xs-6",
+      class = "col-6 col-xs-6",
       numericInput(ub, "Upper bound:", value = state_init(ub, ub_init))
     )
   )
@@ -28,15 +28,15 @@ make_pc_prob_input <- function(lb, lb_init = NA, ub, ub_init = 0.95) {
   div(
     class = "row",
     div(
-      class = "col-xs-6",
+      class = "col-6 col-xs-6",
       numericInput(
         lb, "Lower bound:", value = state_init(lb, lb_init),
         min = 0, max = 1, step = .005
       )
     ),
     div(
-      class = "col-xs-6",
-      numericInput( 
+      class = "col-6 col-xs-6",
+      numericInput(
         ub, "Upper bound:", value = state_init(ub, ub_init),
         min = 0, max = 1, step = .005
       )
@@ -144,9 +144,9 @@ output$ui_pc_tdist <- renderUI({
       min = 3
     )
     # , div(class = "row",
-    #     div(class = "col-xs-6", numericInput("pct_mean", label = "Mean:",
+    #     div(class = "col-6 col-xs-6", numericInput("pct_mean", label = "Mean:",
     #                           value = state_init("pct_mean", 0))),
-    #     div(class = "col-xs-6",numericInput("pct_stdev", label = "St. dev:", min = 0,
+    #     div(class = "col-6 col-xs-6",numericInput("pct_stdev", label = "St. dev:", min = 0,
     #                          value = state_init("pct_stdev", 1)))
     # )
   )
@@ -165,14 +165,14 @@ output$ui_pc_norm <- renderUI({
     div(
       class = "row",
       div(
-        class = "col-xs-6",
+        class = "col-6 col-xs-6",
         numericInput(
           "pc_mean", "Mean:",
           value = state_init("pc_mean", 0)
         )
       ),
       div(
-        class = "col-xs-6",
+        class = "col-6 col-xs-6",
         numericInput(
           "pc_stdev", "St. dev:",
           min = 0,
@@ -196,14 +196,14 @@ output$ui_pc_lnorm <- renderUI({
     div(
       class = "row",
       div(
-        class = "col-xs-6",
+        class = "col-6 col-xs-6",
         numericInput(
           "pcln_meanlog", "Mean log:",
           value = state_init("pcln_meanlog", 0)
         )
       ),
       div(
-        class = "col-xs-6",
+        class = "col-6 col-xs-6",
         numericInput(
           "pcln_sdlog", "St. dev log:",
           min = 0,
@@ -227,14 +227,14 @@ output$ui_pc_binom <- renderUI({
     div(
       class = "row",
       div(
-        class = "col-xs-6",
+        class = "col-6 col-xs-6",
         numericInput(
           "pcb_n", label = "n:",
           value = state_init("pcb_n", 10), min = 0
         )
       ),
       div(
-        class = "col-xs-6",
+        class = "col-6 col-xs-6",
         numericInput(
           "pcb_p", "p:",
           min = 0, max = 1, step = .005,
@@ -258,14 +258,14 @@ output$ui_pc_unif <- renderUI({
     div(
       class = "row",
       div(
-        class = "col-xs-6",
+        class = "col-6 col-xs-6",
         numericInput(
           "pcu_min", "Min:",
           value = state_init("pcu_min", 0)
         )
       ),
       div(
-        class = "col-xs-6",
+        class = "col-6 col-xs-6",
         numericInput(
           "pcu_max", "Max:",
           value = state_init("pcu_max", 1)
@@ -593,8 +593,8 @@ observeEvent(input$prob_calc_report, {
 })
 
 download_handler(
-  id = "dlp_prob_calc", 
-  fun = download_handler_plot, 
+  id = "dlp_prob_calc",
+  fun = download_handler_plot,
   fn = function() paste0(input$pc_dist, "_prob_calc"),
   type = "png",
   caption = "Save probability calculator plot",
