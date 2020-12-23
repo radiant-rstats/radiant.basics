@@ -2,9 +2,9 @@
 # Central Limit Theorem
 ###############################
 clt_dist <- c(
-  "Normal" = "Normal", 
-  "Binomial" = "Binomial", 
-  "Uniform" = "Uniform", 
+  "Normal" = "Normal",
+  "Binomial" = "Binomial",
+  "Uniform" = "Uniform",
   "Exponential" = "Exponential"
 )
 clt_stat <- c("Sum" = "sum", "Mean" = "mean")
@@ -36,14 +36,14 @@ output$ui_clt <- renderUI({
         div(
           class = "row",
           div(
-            class = "col-xs-6",
+            class = "col-6 col-xs-6",
             numericInput(
               "clt_unif_min", "Min:",
               value = state_init("clt_unif_min", 0)
             )
           ),
           div(
-            class = "col-xs-6",
+            class = "col-6 col-xs-6",
             numericInput(
               "clt_unif_max", "Max:",
               value = state_init("clt_unif_max", 1)
@@ -56,14 +56,14 @@ output$ui_clt <- renderUI({
         div(
           class = "row",
           div(
-            class = "col-xs-6",
+            class = "col-6 col-xs-6",
             numericInput(
               "clt_norm_mean", "Mean:",
               value = state_init("clt_norm_mean", 0)
             )
           ),
           div(
-            class = "col-xs-6",
+            class = "col-6 col-xs-6",
             numericInput(
               "clt_norm_sd", "SD:",
               value = state_init("clt_norm_sd", 1),
@@ -85,7 +85,7 @@ output$ui_clt <- renderUI({
         div(
           class = "row",
           div(
-            class = "col-xs-6",
+            class = "col-6 col-xs-6",
             numericInput(
               "clt_binom_size", "Size:",
               value = state_init("clt_binom_size", 10),
@@ -93,7 +93,7 @@ output$ui_clt <- renderUI({
             )
           ),
           div(
-            class = "col-xs-6",
+            class = "col-6 col-xs-6",
             numericInput(
               "clt_binom_prob", "Prob:",
               value = state_init("clt_binom_prob", 0.2),
@@ -105,7 +105,7 @@ output$ui_clt <- renderUI({
       div(
         class = "row",
         div(
-          class = "col-xs-6",
+          class = "col-6 col-xs-6",
           numericInput(
             "clt_n", "Sample size:",
             value = state_init("clt_n", 100),
@@ -113,7 +113,7 @@ output$ui_clt <- renderUI({
           )
         ),
         div(
-          class = "col-xs-6",
+          class = "col-6 col-xs-6",
           numericInput(
             "clt_m", "# of samples:",
             value = state_init("clt_m", 100),
@@ -220,7 +220,7 @@ output$clt <- renderUI({
 observeEvent(input$clt_report, {
   outputs <- c("plot")
   inp_out <- list(list(stat = input$clt_stat, bins = input$clt_bins))
-  inp <- clt_inputs() 
+  inp <- clt_inputs()
   inp3 <- inp[!grepl("_", names(inp))]
   if (input$clt_dist == "Normal") {
     inp <- c(inp3, inp[grepl("norm_", names(inp))])
@@ -234,9 +234,9 @@ observeEvent(input$clt_report, {
 
   update_report(
     inp_main = clean_args(inp, clt_args),
-    fun_name = "clt", 
+    fun_name = "clt",
     inp_out = inp_out,
-    outputs = outputs, 
+    outputs = outputs,
     figs = TRUE,
     fig.width = clt_plot_width(),
     fig.height = clt_plot_height()
@@ -244,8 +244,8 @@ observeEvent(input$clt_report, {
 })
 
 download_handler(
-  id = "dlp_clt", 
-  fun = download_handler_plot, 
+  id = "dlp_clt",
+  fun = download_handler_plot,
   fn = function() paste0(tolower(input$clt_dist), "_clt"),
   type = "png",
   caption = "Save central limit theorem plot",
