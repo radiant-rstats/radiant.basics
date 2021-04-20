@@ -16,6 +16,16 @@ cor_inputs <- reactive({
   cor_args
 })
 
+output$ui_cor_method <- renderUI({
+  if (isTRUE(input$cor_hcor)) cor_method <-  c("Pearson" = "pearson")
+  selectInput(
+    "cor_method", "Method:",
+    choices = cor_method,
+    selected = state_single("cor_method", cor_method, "pearson"),
+    multiple = FALSE
+  )
+})
+
 cor_sum_args <- as.list(if (exists("summary.correlation")) {
   formals(summary.correlation)
 } else {
@@ -78,13 +88,8 @@ output$ui_correlation <- renderUI({
     wellPanel(
       conditionalPanel(
         condition = "input.tabs_correlation == 'Summary'",
-      uiOutput("ui_cor_vars"),
-      selectInput(
-        "cor_method", "Method:",
-        choices = cor_method,
-        selected = state_single("cor_method", cor_method, "pearson"),
-        multiple = FALSE
-      ),
+        uiOutput("ui_cor_vars"),
+        uiOutput("ui_cor_method"),
         checkboxInput("cor_hcor", "Adjust for {factor} variables", value = state_init("cor_hcor", FALSE)),
         conditionalPanel(
           condition = "input.cor_hcor == true",
