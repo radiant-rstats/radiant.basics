@@ -22,11 +22,11 @@ Imports:
     import (>= 1.1.0),
     lubridate (>= 1.7.4),
     polycor (>= 0.7.10),
-    patchwork (>= 1.0.0),
-    rmarkdown (>= 2.0.0)
+    patchwork (>= 1.0.0)
 Suggests:
     testthat (>= 2.0.0),
     pkgdown (>= 1.1.0),
+    markdown
 URL: https://github.com/radiant-rstats/radiant.basics, 
   https://radiant-rstats.github.io/radiant.basics,
   https://radiant-rstats.github.io/docs
