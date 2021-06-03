@@ -222,7 +222,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 #' @param x Return value from \code{\link{compare_props}}
 #' @param plots One or more plots of proportions ("bar" or "dodge")
 #' @param shiny Did the function call originate inside a shiny app
-#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{http://docs.ggplot2.org} for options.
+#' @param custom Logical (TRUE, FALSE) to indicate if ggplot object (or list of ggplot objects) should be returned. This option can be used to customize plots (e.g., add a title, change x and y labels, etc.). See examples and \url{https://ggplot2.tidyverse.org/} for options.
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples

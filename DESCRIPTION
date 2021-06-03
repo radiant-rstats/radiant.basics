@@ -27,10 +27,10 @@ Suggests:
     testthat (>= 2.0.0),
     pkgdown (>= 1.1.0),
     markdown
-URL: https://github.com/radiant-rstats/radiant.basics, 
-  https://radiant-rstats.github.io/radiant.basics,
-  https://radiant-rstats.github.io/docs
-BugReports: https://github.com/radiant-rstats/radiant.basics/issues
+URL: https://github.com/radiant-rstats/radiant.basics/, 
+  https://radiant-rstats.github.io/radiant.basics/,
+  https://radiant-rstats.github.io/docs/
+BugReports: https://github.com/radiant-rstats/radiant.basics/issues/
 License: AGPL-3 | file LICENSE
 LazyData: true
 Encoding: UTF-8

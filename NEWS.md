@@ -1,3 +1,8 @@
+# radiant.basics 1.4.0.0
+
+Adjusted DESCRIPTION file by adding 'markdown' to the Suggests section. This addresses an issue in radiant.basics, similar to the issue linked below  
+https://github.com/radiant-rstats/radiant/issues/157. This is issue originated with https://github.com/yihui/knitr/issues/1864
+
 # radiant.basics 1.3.4.0
 
 * Minor adjustments in anticipation of dplyr 1.0.0

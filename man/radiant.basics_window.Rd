@@ -15,7 +15,7 @@ radiant.basics_window(state, ...)
 Launch radiant.basics in an Rstudio window
 }
 \details{
-See \url{https://radiant-rstats.github.io/docs} for documentation and tutorials
+See \url{https://radiant-rstats.github.io/docs/} for documentation and tutorials
 }
 \examples{
 \dontrun{
