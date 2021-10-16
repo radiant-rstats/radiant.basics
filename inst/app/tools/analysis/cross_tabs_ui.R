@@ -134,7 +134,7 @@ ct_available <- reactive({
 })
 
 observeEvent(input$cross_tabs_report, {
-  if (is_empty(input$ct_var1) || is_empty(input$ct_var2)) return(invisible())
+  if (radiant.data::is_empty(input$ct_var1) || radiant.data::is_empty(input$ct_var2)) return(invisible())
   inp_out <- list("", "")
   if (length(input$ct_check) > 0) {
     outputs <- c("summary", "plot")

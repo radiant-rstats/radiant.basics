@@ -77,7 +77,7 @@ compare_means <- function(
     apply(1, paste, collapse = ":")
   colnames(cmb) <- c("group1", "group2")
 
-  if (!is_empty(comb)) {
+  if (!radiant.data::is_empty(comb)) {
     if (all(comb %in% rownames(cmb))) {
       cmb <- cmb[comb, ]
     } else {
@@ -172,7 +172,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
 
   cat(paste0("Pairwise mean comparisons (", object$test, "-test)\n"))
   cat("Data      :", object$df_name, "\n")
-  if (!is_empty(object$data_filter)) {
+  if (!radiant.data::is_empty(object$data_filter)) {
     cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
   }
   cat("Variables :", object$vars, "\n")
@@ -246,7 +246,7 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
   v2 <- cn[-1]
 
   ## cname is equal to " " when the xvar is numeric
-  if (is_empty(x$cname)) {
+  if (radiant.data::is_empty(x$cname)) {
     var1 <- v1
     var2 <- v2
   } else {

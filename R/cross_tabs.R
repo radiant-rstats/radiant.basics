@@ -33,7 +33,7 @@ cross_tabs <- function(
       var2 <- nm[2]
     }
 
-    if (is_empty(var1) || is_empty(var2)) {
+    if (radiant.data::is_empty(var1) || radiant.data::is_empty(var2)) {
       return("The provided table does not have dimension names. See ?cross_tabs for an example" %>%
         add_class("cross_tabs"))
     }
@@ -102,7 +102,7 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
   if (is.character(object)) return(object)
   cat("Cross-tabs\n")
   cat("Data     :", object$df_name, "\n")
-  if (!is_empty(object$data_filter)) {
+  if (!radiant.data::is_empty(object$data_filter)) {
     cat("Filter   :", gsub("\\n", "", object$data_filter), "\n")
   }
   cat("Variables:", paste0(c(object$var1, object$var2), collapse = ", "), "\n")
@@ -239,7 +239,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
   }
 
   plot_list <- list()
-  if (is_empty(check)) check <- "observed"
+  if (radiant.data::is_empty(check)) check <- "observed"
 
   if ("observed" %in% check) {
     fact_names <- x$cst$observed %>% dimnames() %>% as.list()

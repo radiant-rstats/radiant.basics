@@ -149,7 +149,7 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
   if (cutoff > 0) {
     cat("Cutoff      :", cutoff, "\n")
   }
-  if (!is_empty(object$data_filter)) {
+  if (!radiant.data::is_empty(object$data_filter)) {
     cat("Filter      :", gsub("\\n", "", object$data_filter), "\n")
   }
   cat("Variables   :", paste0(object$vars, collapse = ", "), "\n")

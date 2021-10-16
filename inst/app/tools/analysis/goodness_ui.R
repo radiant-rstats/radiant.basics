@@ -130,7 +130,7 @@ gd_available <- reactive({
 })
 
 observeEvent(input$goodness_report, {
-  if (is_empty(input$gd_var)) return(invisible())
+  if (radiant.data::is_empty(input$gd_var)) return(invisible())
   inp_out <- list("", "")
   if (length(input$gd_check) > 0) {
     outputs <- c("summary", "plot")

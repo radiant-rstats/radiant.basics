@@ -136,7 +136,7 @@ sm_available <- reactive({
 })
 
 observeEvent(input$single_mean_report, {
-  if (is_empty(input$sm_var)) return(invisible())
+  if (radiant.data::is_empty(input$sm_var)) return(invisible())
   if (length(input$sm_plots) == 0) {
     figs <- FALSE
     outputs <- c("summary")

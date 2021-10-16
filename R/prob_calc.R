@@ -1805,14 +1805,14 @@ plot.prob_disc <- function(x, type = "values", ...) {
   limits <- v
 
   k <- factor(rep("below", length(v)), levels = c("below", "equal", "above"))
-  if (!is_empty(ub)) {
+  if (!radiant.data::is_empty(ub)) {
     if (!is.na(lb)) {
       k[v >= lb & v <= ub] <- "equal"
     } else if (ub %in% v) {
       k[v == ub] <- "equal"
     }
     k[v > ub] <- "above"
-  } else if (!is_empty(lb)) {
+  } else if (!radiant.data::is_empty(lb)) {
     if (lb %in% v) k[v == lb] <- "equal"
     k[v > lb] <- "above"
   } else {

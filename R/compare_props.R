@@ -82,7 +82,7 @@ compare_props <- function(
   rownames(cmb) <- cmb %>% apply(1, paste, collapse = ":")
   colnames(cmb) <- c("group1", "group2")
 
-  if (!is_empty(comb)) {
+  if (!radiant.data::is_empty(comb)) {
     if (all(comb %in% rownames(cmb))) {
       cmb <- cmb[comb, ]
     } else {
@@ -165,7 +165,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 
   cat("Pairwise proportion comparisons\n")
   cat("Data      :", object$df_name, "\n")
-  if (!is_empty(object$data_filter)) {
+  if (!radiant.data::is_empty(object$data_filter)) {
     cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
   }
   cat("Variables :", object$vars, "\n")

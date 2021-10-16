@@ -201,7 +201,7 @@ cp_available <- reactive({
 })
 
 observeEvent(input$compare_props_report, {
-  if (is_empty(input$cp_var1) || is_empty(input$cp_var2)) return(invisible())
+  if (radiant.data::is_empty(input$cp_var1) || radiant.data::is_empty(input$cp_var2)) return(invisible())
   figs <- FALSE
   outputs <- c("summary")
   inp_out <- list(list(show = input$cp_show), "")

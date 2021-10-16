@@ -41,7 +41,7 @@ goodness <- function(
   ## dataset not needed in summary or plot
   rm(dataset)
 
-  if (is_empty(p)) {
+  if (radiant.data::is_empty(p)) {
     p <- rep(1 / length(tab), length(tab))
   } else if (is.numeric(p)) {
     if (length(p) == 1) p <- rep(p, length(tab))
@@ -109,7 +109,7 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 
   cat("Goodness of fit test\n")
   cat("Data     :", object$df_name, "\n")
-  if (!is_empty(object$data_filter)) {
+  if (!radiant.data::is_empty(object$data_filter)) {
     cat("Filter   :", gsub("\\n", "", object$data_filter), "\n")
   }
   if (length(object$var) > 0) {
@@ -185,7 +185,7 @@ plot.goodness <- function(
 
   if (is.character(x)) return(x)
   plot_list <- list()
-  if (is_empty(check)) check <- "observed"
+  if (radiant.data::is_empty(check)) check <- "observed"
 
   if ("observed" %in% check) {
     fact_names <- names(x$cst$observed)

@@ -214,7 +214,7 @@ cm_available <- reactive({
 })
 
 observeEvent(input$compare_means_report, {
-  if (is_empty(input$cm_var1)) return(invisible())
+  if (radiant.data::is_empty(input$cm_var1)) return(invisible())
   figs <- FALSE
   outputs <- c("summary")
   inp_out <- list(list(show = input$cm_show), "")
