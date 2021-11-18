@@ -118,7 +118,7 @@ output$ui_correlation <- renderUI({
       wellPanel(
         tags$table(
           tags$td(uiOutput("ui_cor_name")),
-          tags$td(actionButton("cor_store", "Store", icon = icon("plus")), style = "padding-top:30px;")
+          tags$td(actionButton("cor_store", "Store", icon = icon("plus")), class = "top")
         )
       )
     ),

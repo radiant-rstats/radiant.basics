@@ -1,6 +1,6 @@
 ## Resubmission
 
-This is a resubmission. In this version I have address a problems caused upstream by https://github.com/yihui/knitr/issues/1864
+This is a resubmission. In this version is addressed a function clash with `rlang` (i.e., `is_empty`) and made adjustments to work with the latest version of `shiny` and `bootstrap4`
 
 ## Test environments
 
@@ -15,6 +15,21 @@ There were no ERRORs, WARNINGs, or NOTEs.
 # Previous cran-comments
 
 ## Resubmission
+
+This is a resubmission. In this version I have address a problems caused upstream by https://github.com/yihui/knitr/issues/1864
+
+## Test environments
+
+* local Ubuntu 20.04 install, R 4.1.0
+* local Ubuntu 20.04 through WSL2, R 4.0.5
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs, WARNINGs, or NOTEs. 
+
+# Previous cran-comments
+
 
 This is a resubmission. In this version I have fixed several bugs and added several new features (see NEWS.md for details).
 

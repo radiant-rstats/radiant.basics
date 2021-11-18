@@ -214,7 +214,7 @@ cm_available <- reactive({
 })
 
 observeEvent(input$compare_means_report, {
-  if (radiant.data::is_empty(input$cm_var1)) return(invisible())
+  if (radiant.data::is_empty(input$cm_var1) || radiant.data::is_empty(input$cm_var2)) return(invisible())
   figs <- FALSE
   outputs <- c("summary")
   inp_out <- list(list(show = input$cm_show), "")
@@ -226,8 +226,8 @@ observeEvent(input$compare_means_report, {
   update_report(
     inp_main = clean_args(cm_inputs(), cm_args),
     fun_name = "compare_means",
-    inp_out = inp_out, 
-    outputs = outputs, 
+    inp_out = inp_out,
+    outputs = outputs,
     figs = figs,
     fig.width = cm_plot_width(),
     fig.height = cm_plot_height()
@@ -235,8 +235,8 @@ observeEvent(input$compare_means_report, {
 })
 
 download_handler(
-  id = "dlp_compare_means", 
-  fun = download_handler_plot, 
+  id = "dlp_compare_means",
+  fun = download_handler_plot,
   fn = function() paste0(input$dataset, "_compare_means"),
   type = "png",
   caption = "Save compare means plot",

@@ -1,3 +1,8 @@
+# radiant.basics 1.4.1.0
+
+* Fixed `is_empty` function clash with `rlang`
+* Adjustments to work with the latest version of `shiny` and `bootstrap4`
+
 # radiant.basics 1.4.0.0
 
 Adjusted DESCRIPTION file by adding 'markdown' to the Suggests section. This addresses an issue in radiant.basics, similar to the issue linked below  

@@ -33,42 +33,28 @@ output$ui_clt <- renderUI({
       ),
       conditionalPanel(
         condition = "input.clt_dist == 'Uniform'",
-        div(
-          class = "row",
-          div(
-            class = "col-xs-6",
-            numericInput(
-              "clt_unif_min", "Min:",
-              value = state_init("clt_unif_min", 0)
-            )
+        make_side_by_side(
+          numericInput(
+            "clt_unif_min", "Min:",
+            value = state_init("clt_unif_min", 0)
           ),
-          div(
-            class = "col-xs-6",
-            numericInput(
-              "clt_unif_max", "Max:",
-              value = state_init("clt_unif_max", 1)
-            )
+          numericInput(
+            "clt_unif_max", "Max:",
+            value = state_init("clt_unif_max", 1)
           )
         )
       ),
       conditionalPanel(
         condition = "input.clt_dist == 'Normal'",
-        div(
-          class = "row",
-          div(
-            class = "col-xs-6",
-            numericInput(
-              "clt_norm_mean", "Mean:",
-              value = state_init("clt_norm_mean", 0)
-            )
+        make_side_by_side(
+          numericInput(
+            "clt_norm_mean", "Mean:",
+            value = state_init("clt_norm_mean", 0)
           ),
-          div(
-            class = "col-xs-6",
-            numericInput(
-              "clt_norm_sd", "SD:",
-              value = state_init("clt_norm_sd", 1),
-              min = 0.1, step = 0.1
-            )
+          numericInput(
+            "clt_norm_sd", "SD:",
+            value = state_init("clt_norm_sd", 1),
+            min = 0.1, step = 0.1
           )
         )
       ),
@@ -82,43 +68,29 @@ output$ui_clt <- renderUI({
       ),
       conditionalPanel(
         condition = "input.clt_dist == 'Binomial'",
-        div(
-          class = "row",
-          div(
-            class = "col-xs-6",
-            numericInput(
-              "clt_binom_size", "Size:",
-              value = state_init("clt_binom_size", 10),
-              min = 1, step = 1
-            )
+        make_side_by_side(
+          numericInput(
+            "clt_binom_size", "Size:",
+            value = state_init("clt_binom_size", 10),
+            min = 1, step = 1
           ),
-          div(
-            class = "col-xs-6",
-            numericInput(
-              "clt_binom_prob", "Prob:",
-              value = state_init("clt_binom_prob", 0.2),
-              min = 0, max = 1, step = .1
-            )
+          numericInput(
+            "clt_binom_prob", "Prob:",
+            value = state_init("clt_binom_prob", 0.2),
+            min = 0, max = 1, step = .1
           )
         )
       ),
-      div(
-        class = "row",
-        div(
-          class = "col-xs-6",
-          numericInput(
-            "clt_n", "Sample size:",
-            value = state_init("clt_n", 100),
-            min = 2, step = 1
-          )
+      make_side_by_side(
+        numericInput(
+          "clt_n", "Sample size:",
+          value = state_init("clt_n", 100),
+          min = 2, step = 1
         ),
-        div(
-          class = "col-xs-6",
-          numericInput(
-            "clt_m", "# of samples:",
-            value = state_init("clt_m", 100),
-            min = 2, step = 1
-          )
+        numericInput(
+          "clt_m", "# of samples:",
+          value = state_init("clt_m", 100),
+          min = 2, step = 1
         )
       ),
       sliderInput(
