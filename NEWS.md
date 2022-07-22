@@ -1,3 +1,7 @@
+# radiant.basics 1.4.4.0
+
+* Added option to create screenshots of settings on a page. Approach is inspired by the snapper package by @yonicd
+
 # radiant.basics 1.4.1.0
 
 * Fixed `is_empty` function clash with `rlang`

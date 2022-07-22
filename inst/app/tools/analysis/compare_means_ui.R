@@ -12,8 +12,9 @@ cm_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   cm_args$data_filter <- if (input$show_filter) input$data_filter else ""
   cm_args$dataset <- input$dataset
-  for (i in r_drop(names(cm_args)))
+  for (i in r_drop(names(cm_args))) {
     cm_args[[i]] <- input[[paste0("cm_", i)]]
+  }
   cm_args
 })
 
@@ -37,14 +38,18 @@ output$ui_cm_var1 <- renderUI({
 })
 
 output$ui_cm_var2 <- renderUI({
-  if (not_available(input$cm_var1)) return()
+  if (not_available(input$cm_var1)) {
+    return()
+  }
   isNum <- .get_class() %in% c("integer", "numeric", "ts")
   vars <- varnames()[isNum]
 
   if (input$cm_var1 %in% vars) {
     ## when cm_var1 is numeric comparisons for multiple variables are possible
     vars <- vars[-which(vars == input$cm_var1)]
-    if (length(vars) == 0) return()
+    if (length(vars) == 0) {
+      return()
+    }
 
     selectizeInput(
       inputId = "cm_var2", label = "Numeric variable(s):",
@@ -65,7 +70,9 @@ output$ui_cm_var2 <- renderUI({
 })
 
 output$ui_cm_comb <- renderUI({
-  if (not_available(input$cm_var1)) return()
+  if (not_available(input$cm_var1)) {
+    return()
+  }
 
   if (.get_class()[[input$cm_var1]] == "factor") {
     levs <- .get_data()[[input$cm_var1]] %>% levels()
@@ -80,7 +87,8 @@ output$ui_cm_comb <- renderUI({
   }
 
   selectizeInput(
-    "cm_comb", label = "Choose combinations:",
+    "cm_comb",
+    label = "Choose combinations:",
     choices = cmb,
     selected = state_multiple("cm_comb", cmb, cmb[1]),
     multiple = TRUE,
@@ -149,11 +157,19 @@ cm_plot <- reactive({
   list(plot_width = 650, plot_height = 400 * max(length(input$cm_plots), 1))
 })
 
-cm_plot_width <- function()
-  cm_plot() %>% {if (is.list(.)) .$plot_width else 650}
+cm_plot_width <- function() {
+  cm_plot() %>%
+    {
+      if (is.list(.)) .$plot_width else 650
+    }
+}
 
-cm_plot_height <- function()
-  cm_plot() %>% {if (is.list(.)) .$plot_height else 400}
+cm_plot_height <- function() {
+  cm_plot() %>%
+    {
+      if (is.list(.)) .$plot_height else 400
+    }
+}
 
 # output is called from the main radiant ui.R
 output$compare_means <- renderUI({
@@ -201,20 +217,26 @@ cm_available <- reactive({
 })
 
 .summary_compare_means <- reactive({
-  if (cm_available() != "available") return(cm_available())
+  if (cm_available() != "available") {
+    return(cm_available())
+  }
   if (input$cm_show) summary(.compare_means(), show = TRUE) else summary(.compare_means())
 })
 
 .plot_compare_means <- reactive({
-  if (cm_available() != "available") return(cm_available())
+  if (cm_available() != "available") {
+    return(cm_available())
+  }
   validate(need(input$cm_plots, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.compare_means(), plots = input$cm_plots, shiny = TRUE)
   })
 })
 
-observeEvent(input$compare_means_report, {
-  if (radiant.data::is_empty(input$cm_var1) || radiant.data::is_empty(input$cm_var2)) return(invisible())
+compare_means_report <- function() {
+  if (radiant.data::is_empty(input$cm_var1) || radiant.data::is_empty(input$cm_var2)) {
+    return(invisible())
+  }
   figs <- FALSE
   outputs <- c("summary")
   inp_out <- list(list(show = input$cm_show), "")
@@ -232,7 +254,7 @@ observeEvent(input$compare_means_report, {
     fig.width = cm_plot_width(),
     fig.height = cm_plot_height()
   )
-})
+}
 
 download_handler(
   id = "dlp_compare_means",
@@ -244,3 +266,18 @@ download_handler(
   width = cm_plot_width,
   height = cm_plot_height
 )
+
+observeEvent(input$compare_means_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  compare_means_report()
+})
+
+observeEvent(input$compare_means_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_compare_means_screenshot")
+})
+
+observeEvent(input$modal_compare_means_screenshot, {
+  compare_means_report()
+  removeModal() ## remove shiny modal after save
+})

@@ -133,7 +133,7 @@ ct_available <- reactive({
   })
 })
 
-observeEvent(input$cross_tabs_report, {
+cross_tabs_report <- function() {
   if (radiant.data::is_empty(input$ct_var1) || radiant.data::is_empty(input$ct_var2)) return(invisible())
   inp_out <- list("", "")
   if (length(input$ct_check) > 0) {
@@ -156,7 +156,7 @@ observeEvent(input$cross_tabs_report, {
     fig.width = ct_plot_width(),
     fig.height = ct_plot_height()
   )
-})
+}
 
 download_handler(
   id = "dlp_cross_tabs", 
@@ -168,3 +168,18 @@ download_handler(
   width = ct_plot_width,
   height = ct_plot_height
 )
+
+observeEvent(input$cross_tabs_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  cross_tabs_report()
+})
+
+observeEvent(input$cross_tabs_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_cross_tabs_screenshot")
+})
+
+observeEvent(input$modal_cross_tabs_screenshot, {
+  cross_tabs_report()
+  removeModal() ## remove shiny modal after save
+})

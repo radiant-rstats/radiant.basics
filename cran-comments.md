@@ -1,5 +1,20 @@
 ## Resubmission
 
+This is a resubmission. In this version is have added a feature to the shiny interface to create screenshots of application settings. See NEWS.md. 
+
+## Test environments
+
+* macOS, R 4.2.1
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs, WARNINGs, or NOTEs. 
+
+# Previous cran-comments
+
+## Resubmission
+
 This is a resubmission. In this version is addressed a function clash with `rlang` (i.e., `is_empty`) and made adjustments to work with the latest version of `shiny` and `bootstrap4`
 
 ## Test environments
@@ -12,7 +27,6 @@ This is a resubmission. In this version is addressed a function clash with `rlan
 
 There were no ERRORs, WARNINGs, or NOTEs. 
 
-# Previous cran-comments
 
 ## Resubmission
 
