@@ -513,7 +513,7 @@ pc_available <- reactive({
   plot(.prob_calc(), type = type)
 })
 
-observeEvent(input$prob_calc_report, {
+prob_calc_report <- function() {
   req(input$pc_dist)
   type <- input$pc_type
   inp <- pc_inputs()
@@ -540,7 +540,7 @@ observeEvent(input$prob_calc_report, {
     fig.width = pc_plot_width(),
     fig.height = pc_plot_height()
   )
-})
+}
 
 download_handler(
   id = "dlp_prob_calc", 
@@ -552,3 +552,18 @@ download_handler(
   width = pc_plot_width,
   height = pc_plot_height
 )
+
+observeEvent(input$prob_calc_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  prob_calc_report()
+})
+
+observeEvent(input$prob_calc_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_prob_calc_screenshot")
+})
+
+observeEvent(input$modal_prob_calc_screenshot, {
+  prob_calc_report()
+  removeModal() ## remove shiny modal after save
+})

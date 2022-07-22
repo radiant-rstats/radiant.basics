@@ -11,13 +11,14 @@ cor_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   cor_args$data_filter <- if (input$show_filter) input$data_filter else ""
   cor_args$dataset <- input$dataset
-  for (i in r_drop(names(cor_args)))
+  for (i in r_drop(names(cor_args))) {
     cor_args[[i]] <- input[[paste0("cor_", i)]]
+  }
   cor_args
 })
 
 output$ui_cor_method <- renderUI({
-  if (isTRUE(input$cor_hcor)) cor_method <-  c("Pearson" = "pearson")
+  if (isTRUE(input$cor_hcor)) cor_method <- c("Pearson" = "pearson")
   selectInput(
     "cor_method", "Method:",
     choices = cor_method,
@@ -35,8 +36,9 @@ cor_sum_args <- as.list(if (exists("summary.correlation")) {
 ## list of function inputs selected by user
 cor_sum_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
-  for (i in names(cor_sum_args))
+  for (i in names(cor_sum_args)) {
     cor_sum_args[[i]] <- input[[paste0("cor_", i)]]
+  }
   cor_sum_args
 })
 
@@ -46,7 +48,9 @@ output$ui_cor_vars <- renderUI({
     toSelect <- .get_class() %in% c("numeric", "integer", "date", "factor")
     vars <- vars[toSelect]
   })
-  if (length(vars) == 0) return()
+  if (length(vars) == 0) {
+    return()
+  }
   selectInput(
     inputId = "cor_vars", label = "Select variables:",
     choices = vars,
@@ -82,7 +86,7 @@ output$ui_correlation <- renderUI({
     conditionalPanel(
       condition = "input.tabs_correlation == 'Summary'",
       wellPanel(
-        actionButton("cor_run", "Calculate correlation", width = "100%", icon = icon("play"), class = "btn-success")
+        actionButton("cor_run", "Calculate correlation", width = "100%", icon = icon("play", verify_fa = FALSE), class = "btn-success")
       )
     ),
     wellPanel(
@@ -118,7 +122,7 @@ output$ui_correlation <- renderUI({
       wellPanel(
         tags$table(
           tags$td(uiOutput("ui_cor_name")),
-          tags$td(actionButton("cor_store", "Store", icon = icon("plus")), class = "top")
+          tags$td(actionButton("cor_store", "Store", icon = icon("plus", verify_fa = FALSE)), class = "top")
         )
       )
     ),
@@ -139,20 +143,25 @@ observeEvent(input$cor_hcor, {
 })
 
 cor_plot <- reactive({
-  max(2, length(input$cor_vars)) %>% {
-    list(plot_width = 400 + 75 * ., plot_height = 400 + 75 * .)
-  }
+  max(2, length(input$cor_vars)) %>%
+    {
+      list(plot_width = 400 + 75 * ., plot_height = 400 + 75 * .)
+    }
 })
 
-cor_plot_width <- function()
-  cor_plot() %>% {
-    if (is.list(.)) .$plot_width else 650
-  }
+cor_plot_width <- function() {
+  cor_plot() %>%
+    {
+      if (is.list(.)) .$plot_width else 650
+    }
+}
 
-cor_plot_height <- function()
-  cor_plot() %>% {
-    if (is.list(.)) .$plot_height else 650
-  }
+cor_plot_height <- function() {
+  cor_plot() %>%
+    {
+      if (is.list(.)) .$plot_height else 650
+    }
+}
 
 ## output is called from the main radiant ui.R
 output$correlation <- renderUI({
@@ -167,7 +176,8 @@ output$correlation <- renderUI({
   cor_output_panels <- tabsetPanel(
     id = "tabs_correlation",
     tabPanel("Summary", verbatimTextOutput("summary_correlation")),
-    tabPanel("Plot",
+    tabPanel(
+      "Plot",
       download_link("dlp_correlation"),
       plotOutput(
         "plot_correlation",
@@ -200,8 +210,12 @@ cor_available <- reactive({
 })
 
 .summary_correlation <- reactive({
-  if (cor_available() != "available") return(cor_available())
-  if (not_pressed(input$cor_run)) return("** Press the Calculate correlation button to generate output **")
+  if (cor_available() != "available") {
+    return(cor_available())
+  }
+  if (not_pressed(input$cor_run)) {
+    return("** Press the Calculate correlation button to generate output **")
+  }
   validate(
     need(
       input$cor_cutoff >= 0 && input$cor_cutoff <= 1,
@@ -214,16 +228,22 @@ cor_available <- reactive({
 })
 
 .plot_correlation <- reactive({
-  if (cor_available() != "available") return(cor_available())
-  if (not_pressed(input$cor_run)) return("** Press the Calculate correlation button to generate output **")
+  if (cor_available() != "available") {
+    return(cor_available())
+  }
+  if (not_pressed(input$cor_run)) {
+    return("** Press the Calculate correlation button to generate output **")
+  }
   req(input$cor_nrobs)
   withProgress(message = "Generating correlation plot", value = 0.5, {
     capture_plot(plot(.correlation(), nrobs = input$cor_nrobs))
   })
 })
 
-observeEvent(input$correlation_report, {
-  if (length(input$cor_vars) < 2) return(invisible())
+correlation_report <- function() {
+  if (length(input$cor_vars) < 2) {
+    return(invisible())
+  }
   inp_out <- list("", "")
   nrobs <- ifelse(radiant.data::is_empty(input$cor_nrobs), 1000, as_integer(input$cor_nrobs))
   inp_out[[1]] <- clean_args(cor_sum_inputs(), cor_sum_args[-1])
@@ -247,7 +267,7 @@ observeEvent(input$correlation_report, {
     fig.height = cor_plot_height(),
     xcmd = xcmd
   )
-})
+}
 
 download_handler(
   id = "dlp_correlation",
@@ -263,7 +283,9 @@ download_handler(
 observeEvent(input$cor_store, {
   req(input$cor_name)
   cmat <- try(.correlation(), silent = TRUE)
-  if (inherits(cmat, "try-error") || is.null(cmat)) return()
+  if (inherits(cmat, "try-error") || is.null(cmat)) {
+    return()
+  }
 
   dataset <- fix_names(input$cor_name)
   updateTextInput(session, inputId = "cor_name", value = dataset)
@@ -286,4 +308,19 @@ observeEvent(input$cor_store, {
       easyClose = TRUE
     )
   )
+})
+
+observeEvent(input$correlation_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  correlation_report()
+})
+
+observeEvent(input$correlation_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_correlation_screenshot")
+})
+
+observeEvent(input$modal_correlation_screenshot, {
+  correlation_report()
+  removeModal() ## remove shiny modal after save
 })

@@ -2,17 +2,18 @@
 # Central Limit Theorem
 ###############################
 clt_dist <- c(
-  "Normal" = "Normal", 
-  "Binomial" = "Binomial", 
-  "Uniform" = "Uniform", 
+  "Normal" = "Normal",
+  "Binomial" = "Binomial",
+  "Uniform" = "Uniform",
   "Exponential" = "Exponential"
 )
 clt_stat <- c("Sum" = "sum", "Mean" = "mean")
 clt_args <- as.list(formals(clt))
 
 clt_inputs <- reactive({
-  for (i in names(clt_args))
+  for (i in names(clt_args)) {
     clt_args[[i]] <- input[[paste0("clt_", i)]]
+  }
   clt_args
 })
 
@@ -22,7 +23,7 @@ run_refresh(clt_args, "clt", init = "dist", label = "Run simulation", relabel = 
 output$ui_clt <- renderUI({
   tagList(
     wellPanel(
-      actionButton("clt_run", "Run simulation", width = "100%", icon = icon("play"), class = "btn-success")
+      actionButton("clt_run", "Run simulation", width = "100%", icon = icon("play", verify_fa = FALSE), class = "btn-success")
     ),
     wellPanel(
       selectInput(
@@ -94,7 +95,8 @@ output$ui_clt <- renderUI({
         )
       ),
       sliderInput(
-        "clt_bins", label = "Number of bins:",
+        "clt_bins",
+        label = "Number of bins:",
         min = 1, max = 50, step = 1,
         value = state_init("clt_bins", 15),
       ),
@@ -181,7 +183,9 @@ output$clt <- renderUI({
 })
 
 .plot_clt <- reactive({
-  if (not_pressed(input$clt_run)) return("** Press the Run simulation button to simulate data **")
+  if (not_pressed(input$clt_run)) {
+    return("** Press the Run simulation button to simulate data **")
+  }
   clt <- .clt()
   validate(need(!is.character(clt), paste0("\n\n\n         ", clt)))
   withProgress(message = "Generating plots", value = 1, {
@@ -189,10 +193,10 @@ output$clt <- renderUI({
   })
 })
 
-observeEvent(input$clt_report, {
+clt_report <- function() {
   outputs <- c("plot")
   inp_out <- list(list(stat = input$clt_stat, bins = input$clt_bins))
-  inp <- clt_inputs() 
+  inp <- clt_inputs()
   inp3 <- inp[!grepl("_", names(inp))]
   if (input$clt_dist == "Normal") {
     inp <- c(inp3, inp[grepl("norm_", names(inp))])
@@ -206,18 +210,18 @@ observeEvent(input$clt_report, {
 
   update_report(
     inp_main = clean_args(inp, clt_args),
-    fun_name = "clt", 
+    fun_name = "clt",
     inp_out = inp_out,
-    outputs = outputs, 
+    outputs = outputs,
     figs = TRUE,
     fig.width = clt_plot_width(),
     fig.height = clt_plot_height()
   )
-})
+}
 
 download_handler(
-  id = "dlp_clt", 
-  fun = download_handler_plot, 
+  id = "dlp_clt",
+  fun = download_handler_plot,
   fn = function() paste0(tolower(input$clt_dist), "_clt"),
   type = "png",
   caption = "Save central limit theorem plot",
@@ -225,3 +229,18 @@ download_handler(
   width = clt_plot_width,
   height = clt_plot_height
 )
+
+observeEvent(input$clt_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  clt_report()
+})
+
+observeEvent(input$clt_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_clt_screenshot")
+})
+
+observeEvent(input$modal_clt_screenshot, {
+  clt_report()
+  removeModal() ## remove shiny modal after save
+})

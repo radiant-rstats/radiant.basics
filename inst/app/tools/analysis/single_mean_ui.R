@@ -135,7 +135,7 @@ sm_available <- reactive({
   })
 })
 
-observeEvent(input$single_mean_report, {
+single_mean_report <- function() {
   if (radiant.data::is_empty(input$sm_var)) return(invisible())
   if (length(input$sm_plots) == 0) {
     figs <- FALSE
@@ -153,7 +153,7 @@ observeEvent(input$single_mean_report, {
     fig.width = sm_plot_width(),
     fig.height = sm_plot_height()
   )
-})
+}
 
 download_handler(
   id = "dlp_single_mean", 
@@ -165,3 +165,18 @@ download_handler(
   width = sm_plot_width,
   height = sm_plot_height
 )
+
+observeEvent(input$single_mean_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  single_mean_report()
+})
+
+observeEvent(input$single_mean_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_single_mean_screenshot")
+})
+
+observeEvent(input$modal_single_mean_screenshot, {
+  single_mean_report()
+  removeModal() ## remove shiny modal after save
+})

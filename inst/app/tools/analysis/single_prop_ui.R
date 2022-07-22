@@ -156,7 +156,7 @@ sp_available <- reactive({
   })
 })
 
-observeEvent(input$single_prop_report, {
+single_prop_report <- function() {
   if (radiant.data::is_empty(input$sp_var)) return(invisible())
   if (length(input$sp_plots) == 0) {
     figs <- FALSE
@@ -174,7 +174,7 @@ observeEvent(input$single_prop_report, {
     fig.width = sp_plot_width(),
     fig.height = sp_plot_height()
   )
-})
+}
 
 download_handler(
   id = "dlp_single_prop", 
@@ -186,3 +186,18 @@ download_handler(
   width = sp_plot_width,
   height = sp_plot_height
 )
+
+observeEvent(input$single_prop_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  single_prop_report()
+})
+
+observeEvent(input$single_prop_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_single_prop_screenshot")
+})
+
+observeEvent(input$modal_single_prop_screenshot, {
+  single_prop_report()
+  removeModal() ## remove shiny modal after save
+})

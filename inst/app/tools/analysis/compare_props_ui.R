@@ -12,8 +12,9 @@ cp_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   cp_args$data_filter <- if (input$show_filter) input$data_filter else ""
   cp_args$dataset <- input$dataset
-  for (i in r_drop(names(cp_args)))
+  for (i in r_drop(names(cp_args))) {
     cp_args[[i]] <- input[[paste0("cp_", i)]]
+  }
   cp_args
 })
 
@@ -32,7 +33,9 @@ output$ui_cp_var1 <- renderUI({
 
 output$ui_cp_var2 <- renderUI({
   vars <- two_level_vars()
-  if (not_available(input$cp_var1)) return()
+  if (not_available(input$cp_var1)) {
+    return()
+  }
   if (input$cp_var1 %in% vars) vars <- vars[-which(vars == input$cp_var1)]
 
   vars <- c("None" = "", vars)
@@ -48,7 +51,9 @@ output$ui_cp_levs <- renderUI({
   if (not_available(input$cp_var2)) {
     return()
   } else {
-    levs <- .get_data()[[input$cp_var2]] %>% as.factor() %>% levels()
+    levs <- .get_data()[[input$cp_var2]] %>%
+      as.factor() %>%
+      levels()
   }
 
   selectInput(
@@ -60,7 +65,9 @@ output$ui_cp_levs <- renderUI({
 })
 
 output$ui_cp_comb <- renderUI({
-  if (not_available(input$cp_var1)) return()
+  if (not_available(input$cp_var1)) {
+    return()
+  }
 
   dat <- .get_data()[[input$cp_var1]] %>% as.factor()
   levs <- levels(dat)
@@ -138,11 +145,19 @@ cp_plot <- reactive({
   list(plot_width = 650, plot_height = 400 * max(length(input$cp_plots), 1))
 })
 
-cp_plot_width <- function()
-  cp_plot() %>% {if (is.list(.)) .$plot_width else 650}
+cp_plot_width <- function() {
+  cp_plot() %>%
+    {
+      if (is.list(.)) .$plot_width else 650
+    }
+}
 
-cp_plot_height <- function()
-  cp_plot() %>% {if (is.list(.)) .$plot_height else 400}
+cp_plot_height <- function() {
+  cp_plot() %>%
+    {
+      if (is.list(.)) .$plot_height else 400
+    }
+}
 
 # output is called from the main radiant ui.R
 output$compare_props <- renderUI({
@@ -188,20 +203,26 @@ cp_available <- reactive({
 })
 
 .summary_compare_props <- reactive({
-  if (cp_available() != "available") return(cp_available())
+  if (cp_available() != "available") {
+    return(cp_available())
+  }
   if (input$cp_show) summary(.compare_props(), show = TRUE) else summary(.compare_props())
 })
 
 .plot_compare_props <- reactive({
-  if (cp_available() != "available") return(cp_available())
+  if (cp_available() != "available") {
+    return(cp_available())
+  }
   validate(need(input$cp_plots, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.compare_props(), plots = input$cp_plots, shiny = TRUE)
   })
 })
 
-observeEvent(input$compare_props_report, {
-  if (radiant.data::is_empty(input$cp_var1) || radiant.data::is_empty(input$cp_var2)) return(invisible())
+compare_props_report <- function() {
+  if (radiant.data::is_empty(input$cp_var1) || radiant.data::is_empty(input$cp_var2)) {
+    return(invisible())
+  }
   figs <- FALSE
   outputs <- c("summary")
   inp_out <- list(list(show = input$cp_show), "")
@@ -220,7 +241,7 @@ observeEvent(input$compare_props_report, {
     fig.width = cp_plot_width(),
     fig.height = cp_plot_height()
   )
-})
+}
 
 download_handler(
   id = "dlp_compare_props",
@@ -232,3 +253,18 @@ download_handler(
   width = cp_plot_width,
   height = cp_plot_height
 )
+
+observeEvent(input$compare_props_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  compare_props_report()
+})
+
+observeEvent(input$compare_props_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_compare_props_screenshot")
+})
+
+observeEvent(input$modal_compare_props_screenshot, {
+  compare_props_report()
+  removeModal() ## remove shiny modal after save
+})

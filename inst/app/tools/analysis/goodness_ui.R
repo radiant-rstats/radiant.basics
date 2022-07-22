@@ -12,8 +12,9 @@ gd_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   gd_args$data_filter <- if (input$show_filter) input$data_filter else ""
   gd_args$dataset <- input$dataset
-  for (i in r_drop(names(gd_args)))
+  for (i in r_drop(names(gd_args))) {
     gd_args[[i]] <- input[[paste0("gd_", i)]]
+  }
   gd_args
 })
 
@@ -68,11 +69,19 @@ gd_plot <- reactive({
   list(plot_width = 650, plot_height = 400 * max(length(input$gd_check), 1))
 })
 
-gd_plot_width <- function()
-  gd_plot() %>% {if (is.list(.)) .$plot_width else 650}
+gd_plot_width <- function() {
+  gd_plot() %>%
+    {
+      if (is.list(.)) .$plot_width else 650
+    }
+}
 
-gd_plot_height <- function()
-  gd_plot() %>% {if (is.list(.)) .$plot_height else 400}
+gd_plot_height <- function() {
+  gd_plot() %>%
+    {
+      if (is.list(.)) .$plot_height else 400
+    }
+}
 
 ## output is called from the main radiant ui.R
 output$goodness <- renderUI({
@@ -117,20 +126,26 @@ gd_available <- reactive({
 })
 
 .summary_goodness <- reactive({
-  if (gd_available() != "available") return(gd_available())
+  if (gd_available() != "available") {
+    return(gd_available())
+  }
   summary(.goodness(), check = input$gd_check)
 })
 
 .plot_goodness <- reactive({
-  if (gd_available() != "available") return(gd_available())
+  if (gd_available() != "available") {
+    return(gd_available())
+  }
   validate(need(input$gd_check, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.goodness(), check = input$gd_check, shiny = TRUE)
   })
 })
 
-observeEvent(input$goodness_report, {
-  if (radiant.data::is_empty(input$gd_var)) return(invisible())
+goodness_report <- function() {
+  if (radiant.data::is_empty(input$gd_var)) {
+    return(invisible())
+  }
   inp_out <- list("", "")
   if (length(input$gd_check) > 0) {
     outputs <- c("summary", "plot")
@@ -154,11 +169,11 @@ observeEvent(input$goodness_report, {
     fig.width = gd_plot_width(),
     fig.height = gd_plot_height()
   )
-})
+}
 
 download_handler(
-  id = "dlp_goodness", 
-  fun = download_handler_plot, 
+  id = "dlp_goodness",
+  fun = download_handler_plot,
   fn = function() paste0(input$dataset, "_goodness"),
   type = "png",
   caption = "Save goodness of fit plot",
@@ -166,3 +181,18 @@ download_handler(
   width = gd_plot_width,
   height = gd_plot_height
 )
+
+observeEvent(input$goodness_report, {
+  r_info[["latest_screenshot"]] <- NULL
+  goodness_report()
+})
+
+observeEvent(input$goodness_screenshot, {
+  r_info[["latest_screenshot"]] <- NULL
+  radiant_screenshot_modal("modal_goodness_screenshot")
+})
+
+observeEvent(input$modal_goodness_screenshot, {
+  goodness_report()
+  removeModal() ## remove shiny modal after save
+})
