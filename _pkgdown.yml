@@ -106,6 +106,7 @@ reference:
     - summary.correlation
     - plot.correlation
     - print.rcorr
+    - cor2df
 - title: Data sets
   desc: Data sets bundled with radiant.basics
   contents:
