@@ -166,19 +166,19 @@ plot.single_mean <- function(x, plots = "hist",
         xintercept = x$comp_value,
         color = "red",
         linetype = "solid",
-        size = 1
+        linewidth = 1
       ) +
       geom_vline(
         xintercept = x$res$estimate,
         color = "black",
         linetype = "solid",
-        size = 1
+        linewidth = 1
       ) +
       geom_vline(
         xintercept = c(x$res$conf.low, x$res$conf.high),
         color = "black",
         linetype = "longdash",
-        size = 0.5
+        linewidth = 0.5
       )
   }
   if ("simulate" %in% plots) {
@@ -208,19 +208,19 @@ plot.single_mean <- function(x, plots = "hist",
         xintercept = x$comp_value,
         color = "red",
         linetype = "solid",
-        size = 1
+        linewidth = 1
       ) +
       geom_vline(
         xintercept = x$res$estimate,
         color = "black",
         linetype = "solid",
-        size = 1
+        linewidth = 1
       ) +
       geom_vline(
         xintercept = cip,
         color = "red",
         linetype = "longdash",
-        size = 0.5
+        linewidth = 0.5
       ) +
       labs(title = paste0("Simulated means if null hyp. is true (", x$var, ")"))
   }

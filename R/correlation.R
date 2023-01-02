@@ -25,11 +25,8 @@
 #'
 #'
 #' @export
-correlation <- function(
-  dataset, vars = "", method = "pearson", hcor = FALSE, hcor_se = FALSE,
-  data_filter = "", envir = parent.frame()
-) {
-
+correlation <- function(dataset, vars = "", method = "pearson", hcor = FALSE, hcor_se = FALSE,
+                        data_filter = "", envir = parent.frame()) {
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
 
   ## data.matrix as the last step in the chain is about 25% slower using
@@ -61,7 +58,7 @@ correlation <- function(
       rownames(cmat$p) <- colnames(cmat$p) <- colnames(cmat$r)
       if (hcor_se) {
         cmat_z <- cmat$r / cmath$std.errors
-        cmat$p <- 2*pnorm(abs(cmat_z), lower.tail = FALSE)
+        cmat$p <- 2 * pnorm(abs(cmat_z), lower.tail = FALSE)
       }
     }
     rm(cmath)
@@ -84,7 +81,9 @@ correlation <- function(
   }
   descr <- paste0("## Correlation matrix\n\nCorrelations were calculated using the \"", df_name, "\" dataset", adj_text, "Variables used:\n\n* ", paste0(vars, collapse = "\n* "))
 
-  as.list(environment()) %>% add_class("correlation") %>% add_class("rcorr")
+  as.list(environment()) %>%
+    add_class("correlation") %>%
+    add_class("rcorr")
 }
 
 #' Summary method for the correlation function
@@ -106,8 +105,9 @@ correlation <- function(
 #'
 #' @export
 summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...) {
-
-  if (is.character(object)) return(object)
+  if (is.character(object)) {
+    return(object)
+  }
 
   ## calculate the correlation matrix with p.values using the psych package
   cr <- object$cmat$r
@@ -170,14 +170,14 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
 
   cat("Correlation matrix:\n")
   cr[-1, -ncol(cr), drop = FALSE] %>%
-   format(justify = "right") %>%
-   print(quote = FALSE)
+    format(justify = "right") %>%
+    print(quote = FALSE)
 
   if (!isTRUE(object$hcor) || isTRUE(object$hcor_se)) {
     cat("\np.values:\n")
     cp[-1, -ncol(cp), drop = FALSE] %>%
-     format(justify = "right") %>%
-     print(quote = FALSE)
+      format(justify = "right") %>%
+      print(quote = FALSE)
   }
 
   if (covar) {
@@ -189,8 +189,8 @@ summary.correlation <- function(object, cutoff = 0, covar = FALSE, dec = 2, ...)
 
     cat("\nCovariance matrix:\n")
     cvr[-1, -ncol(cvr), drop = FALSE] %>%
-     format(justify = "right") %>%
-     print(quote = FALSE)
+      format(justify = "right") %>%
+      print(quote = FALSE)
   }
 
   return(invisible())
@@ -225,8 +225,9 @@ print.rcorr <- function(x, ...) summary.correlation(x, ...)
 #'
 #' @export
 plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
-
-  if (is.character(x)) return(NULL)
+  if (is.character(x)) {
+    return(NULL)
+  }
   if (is.null(x[["dataset"]])) {
     if (any(sapply(x, is.factor))) {
       x <- correlation(x, hcor = TRUE, hcor_se = FALSE)
@@ -238,7 +239,8 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
   cor_text <- function(r, p, dec = 2) {
     if (is.na(p)) p <- 1
     sig <- symnum(
-      p, corr = FALSE, na = TRUE,
+      p,
+      corr = FALSE, na = TRUE,
       cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
       symbols = c("***", "**", "*", ".", " ")
     )
@@ -265,12 +267,12 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
     if (is.factor(y) && is.factor(x)) {
       plot(x, y, axes = FALSE, xlab = "", ylab = "")
     } else if (is.factor(y) & is.numeric(x)) {
-      plot(y, x, ann = FALSE, xaxt = "n", yaxt = "n", horizontal=TRUE)
+      plot(y, x, ann = FALSE, xaxt = "n", yaxt = "n", horizontal = TRUE)
     } else if (is.numeric(y) & is.factor(x)) {
       plot(x, y, ann = FALSE, xaxt = "n", yaxt = "n")
     } else {
-      y = as.numeric(y)
-      x = as.numeric(x)
+      y <- as.numeric(y)
+      x <- as.numeric(x)
       plot(jitter(x, jit[1]), jitter(y, jit[2]), ann = FALSE, xaxt = "n", yaxt = "n")
     }
   }

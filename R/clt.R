@@ -21,13 +21,11 @@
 #' clt("Uniform", 10, 10, unif_min = 10, unif_max = 20)
 #'
 #' @export
-clt <- function(
-  dist, n = 100, m = 100,
-  norm_mean = 0, norm_sd = 1,
-  binom_size = 10, binom_prob = 0.2,
-  unif_min = 0, unif_max = 1,
-  expo_rate = 1
-) {
+clt <- function(dist, n = 100, m = 100,
+                norm_mean = 0, norm_sd = 1,
+                binom_size = 10, binom_prob = 0.2,
+                unif_min = 0, unif_max = 1,
+                expo_rate = 1) {
   if (dist == "Uniform") {
     sim <- matrix(runif(n * m, min = unif_min, max = unif_max), n, m)
   } else if (dist == "Normal") {
@@ -55,7 +53,6 @@ clt <- function(
 #'
 #' @export
 plot.clt <- function(x, stat = "sum", bins = 15, ...) {
-
   if (stat == "sum") {
     sstat <- data.frame(stat = colSums(x$sim), stringsAsFactors = FALSE)
   } else {
