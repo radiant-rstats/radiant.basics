@@ -48,7 +48,8 @@ correlation <- function(
 
   ## calculate the correlation matrix with p.values using the psych package
   if (hcor) {
-    cmath <- try(sshhr(polycor::hetcor(dataset, ML = FALSE, std.err = hcor_se)), silent = TRUE)
+    ## added as.data.frame due to hetcor throwing errors when using tibbles
+    cmath <- try(sshhr(polycor::hetcor(as.data.frame(dataset), ML = FALSE, std.err = hcor_se)), silent = TRUE)
     if (inherits(cmath, "try-error")) {
       message("Calculating the heterogeneous correlation matrix produced an error.\nUsing standard correlation matrix instead")
       hcor <- "Calculation failed"
@@ -226,7 +227,7 @@ print.rcorr <- function(x, ...) summary.correlation(x, ...)
 plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
 
   if (is.character(x)) return(NULL)
-  if (is.null(x$dataset)) {
+  if (is.null(x[["dataset"]])) {
     if (any(sapply(x, is.factor))) {
       x <- correlation(x, hcor = TRUE, hcor_se = FALSE)
     } else {
@@ -262,7 +263,6 @@ plot.correlation <- function(x, nrobs = -1, jit = c(0, 0), dec = 2, ...) {
       y <- y[ind]
     }
     if (is.factor(y) && is.factor(x)) {
-      # plot(x, y, col = y, axes = FALSE, xlab = "", ylab = "")
       plot(x, y, axes = FALSE, xlab = "", ylab = "")
     } else if (is.factor(y) & is.numeric(x)) {
       plot(y, x, ann = FALSE, xaxt = "n", yaxt = "n", horizontal=TRUE)
