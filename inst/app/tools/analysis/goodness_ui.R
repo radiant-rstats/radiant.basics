@@ -71,16 +71,12 @@ gd_plot <- reactive({
 
 gd_plot_width <- function() {
   gd_plot() %>%
-    {
-      if (is.list(.)) .$plot_width else 650
-    }
+    (function(x) if (is.list(x)) x$plot_width else 650)
 }
 
 gd_plot_height <- function() {
   gd_plot() %>%
-    {
-      if (is.list(.)) .$plot_height else 400
-    }
+    (function(x) if (is.list(x)) x$plot_height else 400)
 }
 
 ## output is called from the main radiant ui.R

@@ -19,11 +19,8 @@
 #' @seealso \code{\link{plot.cross_tabs}} to plot results
 #'
 #' @export
-cross_tabs <- function(
-  dataset, var1, var2,  tab = NULL,
-  data_filter = "", envir = parent.frame()
-) {
-
+cross_tabs <- function(dataset, var1, var2, tab = NULL,
+                       data_filter = "", envir = parent.frame()) {
   if (is.table(tab)) {
     df_name <- deparse(substitute(tab))
 
@@ -49,13 +46,13 @@ cross_tabs <- function(
     not_vary <- colnames(dataset)[summarise_all(dataset, does_vary) == FALSE]
     if (length(not_vary) > 0) {
       return(paste0("The following variable(s) show no variation. Please select other variables.\n\n** ", paste0(not_vary, collapse = ", "), " **") %>%
-               add_class("cross_tabs"))
+        add_class("cross_tabs"))
     }
 
     tab <- table(dataset[[var1]], dataset[[var2]])
     tab[is.na(tab)] <- 0
     tab <- tab[, colSums(tab) > 0] %>%
-      {.[rowSums(.) > 0, ]} %>%
+      (function(x) x[rowSums(x) > 0, ]) %>%
       as.table()
     ## dataset not needed in summary or plot
     rm(dataset)
@@ -64,14 +61,16 @@ cross_tabs <- function(
   cst <- sshhr(chisq.test(tab, correct = FALSE))
 
   ## adding the % deviation table
-  cst$chi_sq <- with(cst, (observed - expected) ^ 2 / expected)
+  cst$chi_sq <- with(cst, (observed - expected)^2 / expected)
 
   res <- tidy(cst) %>%
     mutate(parameter = as.integer(parameter))
   elow <- sum(cst$expected < 5)
 
   if (elow > 0) {
-    res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy() %>% .$p.value
+    res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>%
+      tidy() %>%
+      .$p.value
     res$parameter <- paste0("*", res$parameter, "*")
   }
 
@@ -98,8 +97,9 @@ cross_tabs <- function(
 #'
 #' @export
 summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
-
-  if (is.character(object)) return(object)
+  if (is.character(object)) {
+    return(object)
+  }
   cat("Cross-tabs\n")
   cat("Data     :", object$df_name, "\n")
   if (!radiant.data::is_empty(object$data_filter)) {
@@ -109,8 +109,12 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
   cat("Null hyp.: there is no association between", object$var1, "and", object$var2, "\n")
   cat("Alt. hyp.: there is an association between", object$var1, "and", object$var2, "\n")
 
-  rnames <- object$cst$observed %>% rownames() %>% c(., "Total")
-  cnames <- object$cst$observed %>% colnames() %>% c(., "Total")
+  rnames <- object$cst$observed %>%
+    rownames() %>%
+    c(., "Total")
+  cnames <- object$cst$observed %>%
+    colnames() %>%
+    c(., "Total")
 
   if ("observed" %in% check) {
     cat("\nObserved:\n")
@@ -121,8 +125,8 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
       set_colnames(cnames) %>%
       format(big.mark = ",", scientific = FALSE)
 
-   names(attributes(observed)$dimnames) <- c(object$var1, object$var2)
-   print(observed, quote = FALSE)
+    names(attributes(observed)$dimnames) <- c(object$var1, object$var2)
+    print(observed, quote = FALSE)
   }
 
   if ("expected" %in% check) {
@@ -135,8 +139,8 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
       round(dec) %>%
       format(big.mark = ",", scientific = FALSE)
 
-   names(attributes(expected)$dimnames) <- c(object$var1, object$var2)
-   print(expected, quote = FALSE)
+    names(attributes(expected)$dimnames) <- c(object$var1, object$var2)
+    print(expected, quote = FALSE)
   }
 
   if ("chi_sq" %in% check) {
@@ -149,15 +153,15 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
       round(dec) %>%
       format(big.mark = ",", scientific = FALSE)
 
-   names(attributes(chi_sq)$dimnames) <- c(object$var1, object$var2)
-   print(chi_sq, quote = FALSE)
+    names(attributes(chi_sq)$dimnames) <- c(object$var1, object$var2)
+    print(chi_sq, quote = FALSE)
   }
 
   if ("dev_std" %in% check) {
     cat("\nDeviation standardized: (o - e) / sqrt(e)\n")
-   resid <- round(object$cst$residuals, dec) ## standardized residuals
-   names(attributes(resid)$dimnames) <- c(object$var1, object$var2)
-   print(resid)
+    resid <- round(object$cst$residuals, dec) ## standardized residuals
+    names(attributes(resid)$dimnames) <- c(object$var1, object$var2)
+    print(resid)
   }
 
   if ("row_perc" %in% check) {
@@ -167,11 +171,11 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
       set_rownames(rnames) %>%
       cbind(rowSums(.)) %>%
       set_colnames(cnames) %>%
-      {. / .[, "Total"]} %>%
+      (function(x) x / x[, "Total"]) %>%
       round(dec)
 
-   names(attributes(row_perc)$dimnames) <- c(object$var1, object$var2)
-   print(row_perc)
+    names(attributes(row_perc)$dimnames) <- c(object$var1, object$var2)
+    print(row_perc)
   }
 
   if ("col_perc" %in% check) {
@@ -181,12 +185,12 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
       set_rownames(rnames) %>%
       cbind(rowSums(.)) %>%
       set_colnames(cnames) %>%
-      {t(.) / .["Total", ]} %>%
+      (function(x) t(x) / x["Total", ]) %>%
       t() %>%
       round(dec)
 
-   names(attributes(col_perc)$dimnames) <- c(object$var1, object$var2)
-   print(col_perc)
+    names(attributes(col_perc)$dimnames) <- c(object$var1, object$var2)
+    print(col_perc)
   }
 
   if ("perc" %in% check) {
@@ -196,7 +200,7 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
       set_rownames(rnames) %>%
       cbind(rowSums(.)) %>%
       set_colnames(cnames) %>%
-      {. / .["Total", "Total"]} %>%
+      (function(x) x / x["Total", "Total"]) %>%
       round(dec)
 
     names(attributes(perc)$dimnames) <- c(object$var1, object$var2)
@@ -223,33 +227,38 @@ summary.cross_tabs <- function(object, check = "", dec = 2, ...) {
 #'
 #' @examples
 #' result <- cross_tabs(newspaper, "Income", "Newspaper")
-#' plot(result, check = c("observed","expected","chi_sq"))
+#' plot(result, check = c("observed", "expected", "chi_sq"))
 #'
 #' @seealso \code{\link{cross_tabs}} to calculate results
 #' @seealso \code{\link{summary.cross_tabs}} to summarize results
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
-
-  if (is.character(x)) return(x)
+  if (is.character(x)) {
+    return(x)
+  }
   gather_table <- function(tab) {
     data.frame(tab, check.names = FALSE, stringsAsFactors = FALSE) %>%
       mutate(rnames = rownames(.)) %>%
-      {sshhr(gather(., "variable", "values", !! base::setdiff(colnames(.), "rnames")))}
+      (function(x) sshhr(gather(x, "variable", "values", !!base::setdiff(colnames(x), "rnames"))))
   }
 
   plot_list <- list()
   if (radiant.data::is_empty(check)) check <- "observed"
 
   if ("observed" %in% check) {
-    fact_names <- x$cst$observed %>% dimnames() %>% as.list()
+    fact_names <- x$cst$observed %>%
+      dimnames() %>%
+      as.list()
     tab <- as.data.frame(x$cst$observed, check.names = FALSE, stringsAsFactors = FALSE)
     colnames(tab)[1:2] <- c(x$var1, x$var2)
     tab[[1]] %<>% factor(levels = fact_names[[1]])
     tab[[2]] %<>% factor(levels = fact_names[[2]])
 
     plot_list[["observed"]] <-
-      ggplot(tab, aes_string(x = x$var2, y = "Freq", fill = x$var1)) +
+      ggplot(tab, aes(x = .data[[x$var2]], y = .data$Freq, fill = .data[[x$var1]])) +
       geom_bar(stat = "identity", position = "fill", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(
@@ -268,7 +277,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
     tab$rnames %<>% factor(levels = fact_names[[1]])
     tab$variable %<>% factor(levels = fact_names[[2]])
     plot_list[["expected"]] <-
-      ggplot(tab, aes_string(x = "variable", y = "values", fill = "rnames")) +
+      ggplot(tab, aes(x = .data$variable, y = .data$values, fill = .data$rnames)) +
       geom_bar(stat = "identity", position = "fill", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(
@@ -283,7 +292,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
     tab <- as.data.frame(x$cst$chi_sq, check.names = FALSE, stringsAsFactors = FALSE)
     colnames(tab)[1:2] <- c(x$var1, x$var2)
     plot_list[["chi_sq"]] <-
-      ggplot(tab, aes_string(x = x$var2, y = "Freq", fill = x$var1)) +
+      ggplot(tab, aes(x = .data[[x$var2]], y = .data$Freq, fill = .data[[x$var1]])) +
       geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       labs(
         title = paste("Contribution to chi-squared for ", x$var2, " versus ", x$var1, sep = ""),
@@ -296,9 +305,9 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
     tab <- as.data.frame(x$cst$residuals, check.names = FALSE, stringsAsFactors = FALSE)
     colnames(tab)[1:2] <- c(x$var1, x$var2)
     plot_list[["dev_std"]] <-
-      ggplot(tab, aes_string(x = x$var2, y = "Freq", fill = x$var1)) +
+      ggplot(tab, aes(x = .data[[x$var2]], y = .data$Freq, fill = .data[[x$var1]])) +
       geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
-      geom_hline(yintercept = c(-1.96, 1.96, -1.64, 1.64), color = "black", linetype = "longdash", size = .5) +
+      geom_hline(yintercept = c(-1.96, 1.96, -1.64, 1.64), color = "black", linetype = "longdash", linewidth = .5) +
       geom_text(x = 1, y = 2.11, label = "95%", vjust = 0) +
       geom_text(x = 1, y = 1.49, label = "90%", vjust = 1) +
       labs(
@@ -312,7 +321,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
     plot_list[["row_perc"]] <- as.data.frame(x$cst$observed, check.names = FALSE, stringsAsFactors = FALSE) %>%
       group_by_at(.vars = "Var1") %>%
       mutate(perc = Freq / sum(Freq)) %>%
-      ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
+      ggplot(aes(x = .data$Var2, y = .data$perc, fill = .data$Var1)) +
       geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(
@@ -327,7 +336,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
     plot_list[["col_perc"]] <- as.data.frame(x$cst$observed, check.names = FALSE, stringsAsFactors = FALSE) %>%
       group_by_at(.vars = "Var2") %>%
       mutate(perc = Freq / sum(Freq)) %>%
-      ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
+      ggplot(aes(x = .data$Var2, y = .data$perc, fill = .data$Var1)) +
       geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(
@@ -341,7 +350,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
   if ("perc" %in% check) {
     plot_list[["perc"]] <- as.data.frame(x$cst$observed, check.names = FALSE, stringsAsFactors = FALSE) %>%
       mutate(perc = Freq / sum(Freq)) %>%
-      ggplot(aes_string(x = "Var2", y = "perc", fill = "Var1")) +
+      ggplot(aes(x = .data$Var2, y = .data$perc, fill = .data$Var1)) +
       geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(
@@ -357,7 +366,7 @@ plot.cross_tabs <- function(x, check = "", shiny = FALSE, custom = FALSE, ...) {
       if (length(plot_list) == 1) plot_list[[1]] else plot_list
     } else {
       patchwork::wrap_plots(plot_list, ncol = 1) %>%
-        {if (shiny) . else print(.)}
+        (function(x) if (isTRUE(shiny)) x else print(x))
     }
   }
 }

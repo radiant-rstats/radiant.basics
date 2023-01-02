@@ -1,3 +1,13 @@
+# radiant.basics 1.5.0.0
+
+* Improvements to screenshot feature. Navigation bar is omitted and the image is adjusted to the length of the UI.
+* Removed all references to `aes_string` which is being deprecated in ggplot soon
+* Code cleanup
+
+# radiant.basics 1.4.5.0
+
+* Fixed plot titles for _Basics > Central Limit Theorem_
+
 # radiant.basics 1.4.4.0
 
 * Added option to create screenshots of settings on a page. Approach is inspired by the snapper package by @yonicd

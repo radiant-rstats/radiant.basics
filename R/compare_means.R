@@ -23,13 +23,10 @@
 #' @seealso \code{\link{plot.compare_means}} to plot results
 #'
 #' @export
-compare_means <- function(
-  dataset, var1, var2, samples = "independent",
-  alternative = "two.sided", conf_lev = .95,
-  comb = "", adjust = "none", test = "t",
-  data_filter = "", envir = parent.frame()
-) {
-
+compare_means <- function(dataset, var1, var2, samples = "independent",
+                          alternative = "two.sided", conf_lev = .95,
+                          comb = "", adjust = "none", test = "t",
+                          data_filter = "", envir = parent.frame()) {
   vars <- c(var1, var2)
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE, envir = envir)
@@ -38,7 +35,7 @@ compare_means <- function(
   vars <- colnames(dataset)
 
   if (is.numeric(dataset[[var1]])) {
-    dataset %<>% gather("variable", "values", !! vars)
+    dataset %<>% gather("variable", "values", !!vars)
     dataset[["variable"]] %<>% factor(levels = vars)
     cname <- " "
   } else {
@@ -57,13 +54,13 @@ compare_means <- function(
   not_vary <- vars[summarise_all(dataset, does_vary) == FALSE]
   if (length(not_vary) > 0) {
     return(paste0("The following variable(s) show no variation. Please select other variables.\n\n** ", paste0(not_vary, collapse = ", "), " **") %>%
-             add_class("compare_means"))
+      add_class("compare_means"))
   }
 
   ## resetting option to independent if the number of observations is unequal
   ## summary on factor gives counts
   if (samples == "paired") {
-    if (summary(dataset[["variable"]]) %>% {max(.) != min(.)}) {
+    if (summary(dataset[["variable"]]) %>% (function(x) max(x) != min(x))) {
       samples <- "independent (obs. per level unequal)"
     }
   }
@@ -101,7 +98,8 @@ compare_means <- function(
     if (test != "t") {
       res[i, "p.value"] <-
         wilcox.test(
-          x, y, paired = samples == "paired", alternative = alternative,
+          x, y,
+          paired = samples == "paired", alternative = alternative,
           conf.int = FALSE, conf.level = conf_lev
         ) %>%
         tidy() %>%
@@ -129,8 +127,9 @@ compare_means <- function(
   res$sig_star <- sig_stars(res$p.value)
 
   ## from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
-  me_calc <- function(se, n, conf.lev = .95)
+  me_calc <- function(se, n, conf.lev = .95) {
     se * qt(conf.lev / 2 + .5, n - 1)
+  }
 
   dat_summary <- group_by_at(dataset, .vars = "variable") %>%
     summarise_all(
@@ -143,7 +142,7 @@ compare_means <- function(
         me = ~ me_calc(se, n, conf_lev)
       )
     ) %>%
-    rename(!!! setNames("variable", cname))
+    rename(!!!setNames("variable", cname))
 
   vars <- paste0(vars, collapse = ", ")
   rm(x, y, sel, i, me_calc, envir)
@@ -168,7 +167,9 @@ compare_means <- function(
 #'
 #' @export
 summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
-  if (is.character(object)) return(object)
+  if (is.character(object)) {
+    return(object)
+  }
 
   cat(paste0("Pairwise mean comparisons (", object$test, "-test)\n"))
   cat("Data      :", object$df_name, "\n")
@@ -201,7 +202,8 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
   mod <- object$res
   mod$`Alt. hyp.` <- paste(mod$group1, hyp_symbol, mod$group2, " ")
   mod$`Null hyp.` <- paste(mod$group1, "=", mod$group2, " ")
-  mod$diff <- {means[mod$group1 %>% as.character()] - means[mod$group2 %>% as.character()]} %>%
+  mod$diff <-
+    (means[as.character(mod$group1)] - means[as.character(mod$group2)]) %>%
     round(dec)
 
   if (show) {
@@ -209,7 +211,7 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
     mod <- mod[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "se", "t.value", "df", "ci_low", "ci_high", "sig_star")]
     if (!is.integer(mod[["df"]])) mod[["df"]] %<>% round(dec)
     mod[, c("t.value", "ci_low", "ci_high")] %<>% round(dec)
-    mod <- rename(mod, !!! setNames(c("ci_low", "ci_high"), ci_perc))
+    mod <- rename(mod, !!!setNames(c("ci_low", "ci_high"), ci_perc))
   } else {
     mod <- mod[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "sig_star")]
   }
@@ -238,9 +240,13 @@ summary.compare_means <- function(object, show = FALSE, dec = 3, ...) {
 #' @seealso \code{\link{compare_means}} to calculate results
 #' @seealso \code{\link{summary.compare_means}} to summarize results
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FALSE, ...) {
-  if (is.character(x)) return(x)
+  if (is.character(x)) {
+    return(x)
+  }
   cn <- colnames(x$dataset)
   v1 <- cn[1]
   v2 <- cn[-1]
@@ -262,7 +268,7 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
     plot_list[[which("bar" == plots)]] <-
       ggplot(
         x$dat_summary,
-        aes_string(x = "variable", y = "mean", fill = "variable")
+        aes(x = .data$variable, y = .data$mean, fill = .data$variable)
       ) +
       geom_bar(stat = "identity") +
       geom_errorbar(width = .1, aes(ymin = mean - me, ymax = mean + me)) +
@@ -297,7 +303,7 @@ plot.compare_means <- function(x, plots = "scatter", shiny = FALSE, custom = FAL
       if (length(plot_list) == 1) plot_list[[1]] else plot_list
     } else {
       patchwork::wrap_plots(plot_list, ncol = 1) %>%
-        {if (shiny) . else print(.)}
+        (function(x) if (isTRUE(shiny)) x else print(x))
     }
   }
 }

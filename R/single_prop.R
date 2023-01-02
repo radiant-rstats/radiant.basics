@@ -16,19 +16,16 @@
 #'
 #' @examples
 #' single_prop(titanic, "survived") %>% str()
-#' single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5,  alternative = "less") %>% str()
+#' single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5, alternative = "less") %>% str()
 #'
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
 #' @seealso \code{\link{plot.single_prop}} to plot the results
 #'
 #' @export
-single_prop <- function(
-  dataset, var, lev = "", comp_value = 0.5,
-  alternative = "two.sided", conf_lev = .95,
-  test = "binom", data_filter = "",
-  envir = parent.frame()
-) {
-
+single_prop <- function(dataset, var, lev = "", comp_value = 0.5,
+                        alternative = "two.sided", conf_lev = .95,
+                        test = "binom", data_filter = "",
+                        envir = parent.frame()) {
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE, envir = envir) %>%
     mutate_all(as.factor)
@@ -40,7 +37,9 @@ single_prop <- function(
   levs <- levels(dataset[[var]])
   if (lev != "") {
     if (lev %in% levs && levs[1] != lev) {
-      dataset[[var]] %<>% as.character %>% as.factor() %>% relevel(lev)
+      dataset[[var]] %<>% as.character %>%
+        as.factor() %>%
+        relevel(lev)
       levs <- levels(dataset[[var]])
     }
   } else {
@@ -67,7 +66,8 @@ single_prop <- function(
   if (test == "z") {
     ## use z-test
     res <- sshhr(prop.test(
-      ns, n, p = comp_value, alternative = alternative,
+      ns, n,
+      p = comp_value, alternative = alternative,
       conf.level = conf_lev, correct = FALSE
     ))
     res <- tidy(res)
@@ -76,7 +76,8 @@ single_prop <- function(
   } else {
     ## use binom.test for exact
     res <- binom.test(
-      ns, n, p = comp_value, alternative = alternative,
+      ns, n,
+      p = comp_value, alternative = alternative,
       conf.level = conf_lev
     )
     res <- tidy(res)
@@ -97,7 +98,7 @@ single_prop <- function(
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5,  alternative = "less")
+#' result <- single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5, alternative = "less")
 #' summary(result)
 #'
 #' @seealso \code{\link{single_prop}} to generate the results
@@ -105,7 +106,6 @@ single_prop <- function(
 #'
 #' @export
 summary.single_prop <- function(object, dec = 3, ...) {
-
   if (object$test == "z") {
     cat("Single proportion test (z-test)\n")
   } else {
@@ -168,18 +168,17 @@ summary.single_prop <- function(object, dec = 3, ...) {
 #' @param ... further arguments passed to or from other methods
 #'
 #' @examples
-#' result <- single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5,  alternative = "less")
+#' result <- single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5, alternative = "less")
 #' plot(result, plots = c("bar", "simulate"))
 #'
 #' @seealso \code{\link{single_prop}} to generate the result
 #' @seealso \code{\link{summary.single_prop}} to summarize the results
 #'
+#' @importFrom rlang .data
+#'
 #' @export
-plot.single_prop <- function(
-  x, plots = "bar",
-  shiny = FALSE, custom = FALSE, ...
-) {
-
+plot.single_prop <- function(x, plots = "bar",
+                             shiny = FALSE, custom = FALSE, ...) {
   if (any(!plots %in% c("bar", "simulate"))) {
     stop("Available plot types for 'single_prop' are \"bar\" and \"simulate\"")
   }
@@ -188,8 +187,8 @@ plot.single_prop <- function(
   plot_list <- list()
   if ("bar" %in% plots) {
     plot_list[[which("bar" == plots)]] <-
-      ggplot(x$dataset, aes_string(x = x$var, fill = x$var)) +
-      geom_bar(aes(y = (..count..) / sum(..count..)), alpha = 0.5) +
+      ggplot(x$dataset, aes(x = .data[[x$var]], fill = .data[[x$var]])) +
+      geom_bar(aes(y = after_stat(count) / sum(after_stat(count))), alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       theme(legend.position = "none") +
       labs(
@@ -219,13 +218,13 @@ plot.single_prop <- function(
       geom_histogram(fill = "blue", binwidth = bw, alpha = 0.5) +
       geom_vline(
         xintercept = x$comp_value, color = "red",
-        linetype = "solid", size = 1
+        linetype = "solid", linewidth = 1
       ) +
       geom_vline(
         xintercept = x$res$estimate, color = "black",
-        linetype = "solid", size = 1
+        linetype = "solid", linewidth = 1
       ) +
-      geom_vline(xintercept = cip, color = "red", linetype = "longdash", size = .5) +
+      geom_vline(xintercept = cip, color = "red", linetype = "longdash", linewidth = .5) +
       labs(
         title = paste0("Simulated proportions if null hyp. is true (", lev_name, " in ", x$var, ")"),
         x = paste0("Level ", lev_name, " in variable ", x$var)
@@ -237,7 +236,7 @@ plot.single_prop <- function(
       if (length(plot_list) == 1) plot_list[[1]] else plot_list
     } else {
       patchwork::wrap_plots(plot_list, ncol = 1) %>%
-        {if (shiny) . else print(.)}
+        (function(x) if (shiny) x else print(x))
     }
   }
 }

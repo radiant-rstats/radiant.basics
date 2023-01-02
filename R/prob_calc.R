@@ -17,11 +17,8 @@
 #' @seealso \code{\link{plot.prob_norm}} to plot results
 #'
 #' @export
-prob_norm <- function(
-  mean, stdev, lb = NA, ub = NA,
-  plb = NA, pub = NA, dec = 3
-) {
-
+prob_norm <- function(mean, stdev, lb = NA, ub = NA,
+                      plb = NA, pub = NA, dec = 3) {
   p_ub <- pnorm(ub, mean, stdev)
   p_lb <- pnorm(lb, mean, stdev)
   p_int <- max(p_ub - p_lb, 0) %>% round(dec)
@@ -74,10 +71,14 @@ prob_norm <- function(
 #' @seealso \code{\link{prob_norm}} to calculate results
 #' @seealso \code{\link{summary.prob_norm}} to summarize results
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.prob_norm <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(" ")
+  if (!is.null(x[[mess]])) {
+    return(" ")
+  }
 
   if (type == "values") {
     lb <- x$lb
@@ -99,14 +100,18 @@ plot.prob_norm <- function(x, type = "values", ...) {
   }
 
   dnorm_lb <- function(x) {
-    if (is.na(lb)) return(0)
+    if (is.na(lb)) {
+      return(0)
+    }
     y <- dnorm(x, mean = mean, sd = stdev)
     y[x > lb] <- 0
     y
   }
 
   dnorm_ub <- function(x) {
-    if (is.na(ub)) return(0)
+    if (is.na(ub)) {
+      return(0)
+    }
     y <- dnorm(x, mean = mean, sd = stdev)
     y[x < ub] <- 0
     y
@@ -117,12 +122,12 @@ plot.prob_norm <- function(x, type = "values", ...) {
 
   ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
+  plt <- ggplot(data.frame(x = limits), aes(x = .data$x)) +
     stat_function(fun = stats::dnorm, args = list(mean = mean, sd = stdev)) +
     stat_function(fun = dnorm_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dnorm_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dnorm_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
-    geom_vline(xintercept = dnorm_lines, color = "black", linetype = "dashed", size = .5) +
+    geom_vline(xintercept = dnorm_lines, color = "black", linetype = "dashed", linewidth = .5) +
     labs(x = "", y = "")
 
   sshhr(plt)
@@ -145,12 +150,13 @@ plot.prob_norm <- function(x, type = "values", ...) {
 #'
 #' @export
 summary.prob_norm <- function(object, type = "values", ...) {
-
   cat("Probability calculator\n")
   cat("Distribution: Normal\n")
 
   mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
+  if (!is.null(mess)) {
+    return(mess)
+  }
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
@@ -218,7 +224,7 @@ summary.prob_norm <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
-#' 
+#'
 #' @seealso \code{\link{summary.prob_lnorm}} to summarize results
 #' @seealso \code{\link{plot.prob_lnorm}} to plot results
 #'
@@ -226,11 +232,8 @@ summary.prob_norm <- function(object, type = "values", ...) {
 #' prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
 #'
 #' @export
-prob_lnorm <- function(
-  meanlog, sdlog, lb = NA, ub = NA,
-  plb = NA, pub = NA, dec = 3
-) {
-
+prob_lnorm <- function(meanlog, sdlog, lb = NA, ub = NA,
+                       plb = NA, pub = NA, dec = 3) {
   p_ub <- plnorm(ub, meanlog, sdlog)
   p_lb <- plnorm(lb, meanlog, sdlog)
   p_int <- max(p_ub - p_lb, 0) %>% round(dec)
@@ -278,15 +281,19 @@ prob_lnorm <- function(
 #'
 #' @seealso \code{\link{prob_lnorm}} to calculate results
 #' @seealso \code{\link{plot.prob_lnorm}} to plot results
-#' 
+#'
 #' @examples
 #' result <- prob_lnorm(meanlog = 0, sdlog = 1, lb = 0, ub = 1)
 #' plot(result, type = "values")
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.prob_lnorm <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(" ")
+  if (!is.null(x[[mess]])) {
+    return(" ")
+  }
 
   if (type == "values") {
     lb <- x$lb
@@ -309,14 +316,18 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
   }
 
   dlnorm_lb <- function(x) {
-    if (is.na(lb)) return(0)
+    if (is.na(lb)) {
+      return(0)
+    }
     y <- dlnorm(x, meanlog = meanlog, sdlog = sdlog)
     y[x > lb] <- 0
     y
   }
 
   dlnorm_ub <- function(x) {
-    if (is.na(ub)) return(0)
+    if (is.na(ub)) {
+      return(0)
+    }
     y <- dlnorm(x, meanlog = meanlog, sdlog = sdlog)
     y[x < ub] <- 0
     y
@@ -327,12 +338,12 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
 
   ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
+  plt <- ggplot(data.frame(x = limits), aes(x = .data$x)) +
     stat_function(fun = stats::dlnorm, args = list(meanlog = meanlog, sdlog = sdlog)) +
     stat_function(fun = dlnorm_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dlnorm_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dlnorm_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
-    geom_vline(xintercept = dlnorm_lines, color = "black", linetype = "dashed", size = .5) +
+    geom_vline(xintercept = dlnorm_lines, color = "black", linetype = "dashed", linewidth = .5) +
     labs(x = "", y = "")
 
   sshhr(plt)
@@ -345,7 +356,7 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_norm}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_lnorm}} to calculate results
 #' @seealso \code{\link{plot.prob_lnorm}} to summarize results
 #'
@@ -359,7 +370,9 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
   cat("Distribution: Log normal\n")
 
   mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
+  if (!is.null(mess)) {
+    return(mess)
+  }
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
@@ -426,7 +439,7 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
-#' 
+#'
 #' @seealso \code{\link{summary.prob_tdist}} to summarize results
 #' @seealso \code{\link{plot.prob_tdist}} to plot results
 #'
@@ -434,11 +447,8 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
 #' prob_tdist(df = 10, ub = 2.228)
 #'
 #' @export
-prob_tdist <- function(
-  df, lb = NA, ub = NA,
-  plb = NA, pub = NA, dec = 3
-) {
-
+prob_tdist <- function(df, lb = NA, ub = NA,
+                       plb = NA, pub = NA, dec = 3) {
   p_ub <- pt(ub, df)
   p_lb <- pt(lb, df)
   p_int <- max(p_ub - p_lb, 0)
@@ -487,7 +497,7 @@ prob_tdist <- function(
 #' @param x Return value from \code{\link{prob_tdist}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_tdist}} to calculate results
 #' @seealso \code{\link{summary.prob_tdist}} to summarize results
 #'
@@ -495,11 +505,14 @@ prob_tdist <- function(
 #' result <- prob_tdist(df = 10, ub = 2.228)
 #' plot(result, type = "values")
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.prob_tdist <- function(x, type = "values", ...) {
-
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(" ")
+  if (!is.null(x[[mess]])) {
+    return(" ")
+  }
   if (type == "values") {
     lb <- x$lb
     ub <- x$ub
@@ -518,14 +531,18 @@ plot.prob_tdist <- function(x, type = "values", ...) {
   }
 
   dt_lb <- function(x) {
-    if (is.na(lb)) return(0)
+    if (is.na(lb)) {
+      return(0)
+    }
     y <- dt(x, df = df)
     y[x > lb] <- 0
     y
   }
 
   dt_ub <- function(x) {
-    if (is.na(ub)) return(0)
+    if (is.na(ub)) {
+      return(0)
+    }
     y <- dt(x, df = df)
     y[x < ub] <- 0
     y
@@ -536,12 +553,12 @@ plot.prob_tdist <- function(x, type = "values", ...) {
 
   ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(data.frame(x = limits), aes_string(x = "x")) +
+  plt <- ggplot(data.frame(x = limits), aes(x = .data$x)) +
     stat_function(fun = stats::dt, args = list(df = df)) +
     stat_function(fun = dt_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dt_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dt_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
-    geom_vline(xintercept = dt_lines, color = "black", linetype = "dashed", size = .5) +
+    geom_vline(xintercept = dt_lines, color = "black", linetype = "dashed", linewidth = .5) +
     labs(x = "", y = "")
 
   sshhr(plt)
@@ -554,7 +571,7 @@ plot.prob_tdist <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_tdist}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_tdist}} to calculate results
 #' @seealso \code{\link{plot.prob_tdist}} to plot results
 #'
@@ -568,7 +585,9 @@ summary.prob_tdist <- function(object, type = "values", ...) {
   cat("Distribution: t\n")
 
   mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
+  if (!is.null(mess)) {
+    return(mess)
+  }
 
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
@@ -576,7 +595,7 @@ summary.prob_tdist <- function(object, type = "values", ...) {
 
   cat("Df          :", df, "\n")
   cat("Mean        :", 0, "\n")
-  cat("St. dev     :", {if (n > 2) round(n / (n - 2), dec) else "NA"}, "\n")
+  cat("St. dev     :", ifelse(n > 2, round(n / (n - 2), dec), "NA"), "\n")
 
   if (type == "values") {
     cat("Lower bound :", if (is.na(lb)) "-Inf" else lb, "\n")
@@ -642,16 +661,13 @@ summary.prob_tdist <- function(object, type = "values", ...) {
 #'
 #' @seealso \code{\link{summary.prob_fdist}} to summarize results
 #' @seealso \code{\link{plot.prob_fdist}} to plot results
-#' 
+#'
 #' @examples
 #' prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
 #'
 #' @export
-prob_fdist <- function(
-  df1, df2, lb = NA, ub = NA,
-  plb = NA, pub = NA, dec = 3
-) {
-
+prob_fdist <- function(df1, df2, lb = NA, ub = NA,
+                       plb = NA, pub = NA, dec = 3) {
   if (!is_not(lb) && lb < 0) lb <- 0
   if (!is_not(ub) && ub < 0) ub <- 0
 
@@ -706,15 +722,19 @@ prob_fdist <- function(
 #'
 #' @seealso \code{\link{prob_fdist}} to calculate results
 #' @seealso \code{\link{summary.prob_fdist}} to summarize results
-#' 
+#'
 #' @examples
 #' result <- prob_fdist(df1 = 10, df2 = 10, ub = 2.978)
 #' plot(result, type = "values")
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.prob_fdist <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(" ")
+  if (!is.null(x[[mess]])) {
+    return(" ")
+  }
   if (type == "values") {
     lb <- x$lb
     ub <- x$ub
@@ -748,14 +768,18 @@ plot.prob_fdist <- function(x, type = "values", ...) {
   }
 
   df_lb <- function(x) {
-    if (is.na(lb)) return(0)
+    if (is.na(lb)) {
+      return(0)
+    }
     y <- df(x, df1 = df1, df2 = df2)
     y[x > lb] <- 0
     y
   }
 
   df_ub <- function(x) {
-    if (is.na(ub)) return(0)
+    if (is.na(ub)) {
+      return(0)
+    }
     y <- df(x, df1 = df1, df2 = df2)
     y[x < ub] <- 0
     y
@@ -766,12 +790,12 @@ plot.prob_fdist <- function(x, type = "values", ...) {
 
   ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(dat, aes_string(x = "x")) +
+  plt <- ggplot(dat, aes(x = .data$x)) +
     stat_function(fun = df_line, geom = "line") +
     stat_function(fun = df_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = df_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = df_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
-    geom_vline(xintercept = vlines, color = "black", linetype = "dashed", size = 0.5) +
+    geom_vline(xintercept = vlines, color = "black", linetype = "dashed", linewidth = 0.5) +
     labs(x = "", y = "")
 
   sshhr(plt)
@@ -784,7 +808,7 @@ plot.prob_fdist <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_fdist}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_fdist}} to calculate results
 #' @seealso \code{\link{plot.prob_fdist}} to plot results
 #'
@@ -798,7 +822,9 @@ summary.prob_fdist <- function(object, type = "values", ...) {
   cat("Distribution: F\n")
 
   mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
+  if (!is.null(mess)) {
+    return(mess)
+  }
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
@@ -807,7 +833,7 @@ summary.prob_fdist <- function(object, type = "values", ...) {
   cat("Df 2        :", df2, "\n")
   m <- if (df2 > 2) round(df2 / (df2 - 2), dec) else "NA"
   variance <- if (df2 > 4) {
-    round((2 * df2 ^ 2 * (df1 + df2 - 2)) / (df1 * (df2 - 2) ^ 2 * (df2 - 4)), dec)
+    round((2 * df2^2 * (df1 + df2 - 2)) / (df1 * (df2 - 2)^2 * (df2 - 4)), dec)
   } else {
     "NA"
   }
@@ -877,16 +903,13 @@ summary.prob_fdist <- function(object, type = "values", ...) {
 #'
 #' @seealso \code{\link{summary.prob_chisq}} to summarize results
 #' @seealso \code{\link{plot.prob_chisq}} to plot results
-#' 
+#'
 #' @examples
 #' prob_chisq(df = 1, ub = 3.841)
 #'
 #' @export
-prob_chisq <- function(
-  df, lb = NA, ub = NA, plb = NA,
-  pub = NA, dec = 3
-) {
-
+prob_chisq <- function(df, lb = NA, ub = NA, plb = NA,
+                       pub = NA, dec = 3) {
   if (!is_not(lb) && lb < 0) lb <- 0
   if (!is_not(ub) && ub < 0) ub <- 0
 
@@ -938,7 +961,7 @@ prob_chisq <- function(
 #' @param x Return value from \code{\link{prob_chisq}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_chisq}} to calculate results
 #' @seealso \code{\link{summary.prob_chisq}} to summarize results
 #'
@@ -946,11 +969,14 @@ prob_chisq <- function(
 #' result <- prob_chisq(df = 1, ub = 3.841)
 #' plot(result, type = "values")
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.prob_chisq <- function(x, type = "values", ...) {
-
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(" ")
+  if (!is.null(x[[mess]])) {
+    return(" ")
+  }
 
   if (type == "values") {
     lb <- x$lb
@@ -981,14 +1007,18 @@ plot.prob_chisq <- function(x, type = "values", ...) {
   }
 
   dchisq_lb <- function(x) {
-    if (is.na(lb)) return(0)
+    if (is.na(lb)) {
+      return(0)
+    }
     y <- dchisq(x, df = df)
     y[x > lb] <- 0
     y
   }
 
   dchisq_ub <- function(x) {
-    if (is.na(ub)) return(0)
+    if (is.na(ub)) {
+      return(0)
+    }
     y <- dchisq(x, df = df)
     y[x < ub] <- 0
     y
@@ -999,12 +1029,12 @@ plot.prob_chisq <- function(x, type = "values", ...) {
 
   ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(dat, aes_string(x = "x")) +
+  plt <- ggplot(dat, aes(x = .data$x)) +
     stat_function(fun = stats::dchisq, args = list(df = df)) +
     stat_function(fun = dchisq_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dchisq_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dchisq_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
-    geom_vline(xintercept = vlines, color = "black", linetype = "dashed", size = 0.5) +
+    geom_vline(xintercept = vlines, color = "black", linetype = "dashed", linewidth = 0.5) +
     labs(x = "", y = "")
 
   sshhr(plt)
@@ -1017,7 +1047,7 @@ plot.prob_chisq <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_chisq}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_chisq}} to calculate results
 #' @seealso \code{\link{plot.prob_chisq}} to plot results
 #'
@@ -1031,7 +1061,9 @@ summary.prob_chisq <- function(object, type = "values", ...) {
   cat("Distribution: Chi-squared\n")
 
   mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
+  if (!is.null(mess)) {
+    return(mess)
+  }
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
@@ -1103,16 +1135,13 @@ summary.prob_chisq <- function(object, type = "values", ...) {
 #'
 #' @seealso \code{\link{summary.prob_unif}} to summarize results
 #' @seealso \code{\link{plot.prob_unif}} to plot results
-#' 
+#'
 #' @examples
 #' prob_unif(min = 0, max = 1, ub = 0.3)
 #'
 #' @export
-prob_unif <- function(
-  min, max, lb = NA, ub = NA,
-  plb = NA, pub = NA, dec = 3
-) {
-
+prob_unif <- function(min, max, lb = NA, ub = NA,
+                      plb = NA, pub = NA, dec = 3) {
   if (min > max) {
     mess_values <- "\nThe maximum value must be larger than the minimum value"
     mess_probs <- "\nThe maximum value must be larger than the minimum value"
@@ -1153,7 +1182,7 @@ prob_unif <- function(
   v_lb <- qunif(plb, min, max) %>% round(dec)
 
   mean <- (max + min) / 2
-  stdev <- sqrt((max - min) ^ 2 / 12)
+  stdev <- sqrt((max - min)^2 / 12)
 
   as.list(environment()) %>% add_class("prob_unif")
 }
@@ -1168,15 +1197,19 @@ prob_unif <- function(
 #'
 #' @seealso \code{\link{prob_unif}} to calculate results
 #' @seealso \code{\link{summary.prob_unif}} to summarize results
-#' 
+#'
 #' @examples
 #' result <- prob_unif(min = 0, max = 1, ub = 0.3)
 #' plot(result, type = "values")
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.prob_unif <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(" ")
+  if (!is.null(x[[mess]])) {
+    return(" ")
+  }
 
   if (type == "values") {
     lb <- x$lb
@@ -1189,7 +1222,9 @@ plot.prob_unif <- function(x, type = "values", ...) {
   min <- x$min
   max <- x$max
 
-  if (min > max) return(" ")
+  if (min > max) {
+    return(" ")
+  }
 
   limits <- c(min, max)
   dunif_limit <- function(x) {
@@ -1199,30 +1234,36 @@ plot.prob_unif <- function(x, type = "values", ...) {
   }
 
   dunif_lb <- function(x) {
-    if (is.na(lb)) return(0)
+    if (is.na(lb)) {
+      return(0)
+    }
     y <- dunif(x, min = min, max = max)
     y[x > lb] <- 0
     y
   }
 
   dunif_ub <- function(x) {
-    if (is.na(ub)) return(0)
+    if (is.na(ub)) {
+      return(0)
+    }
     y <- dunif(x, min = min, max = max)
     y[x < ub] <- 0
     y
   }
 
-  dunif_lines <- c(ub, lb) %>% na.omit() %>% base::setdiff(c(min, max))
+  dunif_lines <- c(ub, lb) %>%
+    na.omit() %>%
+    base::setdiff(c(min, max))
   if (length(dunif_lines) == 0) dunif_lines <- c(-Inf, Inf)
 
   ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
   plt <- data.frame(x = limits, y = dunif(limits, limits[1], limits[2]), lb = lb, ub = ub) %>%
-    ggplot(aes_string(x = "x")) +
+    ggplot(aes(x = .data$x)) +
     stat_function(fun = dunif_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dunif_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dunif_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
-    geom_vline(xintercept = dunif_lines, color = "black", linetype = "dashed", size = 0.5) +
+    geom_vline(xintercept = dunif_lines, color = "black", linetype = "dashed", linewidth = 0.5) +
     geom_segment(aes(x = x[1], y = 0, xend = x[1], yend = y[1])) +
     geom_segment(aes(x = x[2], y = 0, xend = x[2], yend = y[2])) +
     geom_segment(aes(x = x[1], y = y[1], xend = x[2], yend = y[2])) +
@@ -1238,7 +1279,7 @@ plot.prob_unif <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_unif}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_unif}} to calculate results
 #' @seealso \code{\link{plot.prob_unif}} to plot results
 #'
@@ -1252,7 +1293,9 @@ summary.prob_unif <- function(object, type = "values", ...) {
   cat("Distribution: Uniform\n")
 
   mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
+  if (!is.null(mess)) {
+    return(mess)
+  }
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
@@ -1264,12 +1307,8 @@ summary.prob_unif <- function(object, type = "values", ...) {
   }
 
   if (type == "values") {
-    cat("Lower bound :", {
-      if (is.na(lb)) min else lb
-    }, "\n")
-    cat("Upper bound :", {
-      if (is.na(ub)) max else ub
-    }, "\n")
+    cat("Lower bound :", ifelse(is.na(lb), min, lb), "\n")
+    cat("Upper bound :", ifelse(is.na(ub), max, ub), "\n")
 
     if (!is.na(ub) || !is.na(lb)) {
       cat("\n")
@@ -1331,15 +1370,13 @@ summary.prob_unif <- function(object, type = "values", ...) {
 #'
 #' @seealso \code{\link{summary.prob_binom}} to summarize results
 #' @seealso \code{\link{plot.prob_binom}} to plot results
-#' 
+#'
 #' @examples
 #' prob_binom(n = 10, p = 0.3, ub = 3)
 #'
 #' @export
-prob_binom <- function(
-  n, p, lb = NA, ub = NA,
-  plb = NA, pub = NA, dec = 3
-) {
+prob_binom <- function(n, p, lb = NA, ub = NA,
+                       plb = NA, pub = NA, dec = 3) {
 
   ## making sure n is integer
   n <- as_integer(n)
@@ -1376,7 +1413,9 @@ prob_binom <- function(
   }
 
   if (!is.na(ub) && !is.na(lb)) {
-    p_int <- sum(dbinom(lb:ub, n, p)) %>% max(0) %>% round(dec)
+    p_int <- sum(dbinom(lb:ub, n, p)) %>%
+      max(0) %>%
+      round(dec)
   } else {
     p_int <- NA
   }
@@ -1414,7 +1453,9 @@ prob_binom <- function(
   }
 
   if (!is.na(pub) && !is.na(plb)) {
-    vp_int <- sum(dbinom(vlb:vub, n, p)) %>% max(0) %>% round(dec)
+    vp_int <- sum(dbinom(vlb:vub, n, p)) %>%
+      max(0) %>%
+      round(dec)
   } else {
     vp_int <- NA
   }
@@ -1446,16 +1487,19 @@ prob_binom <- function(
 #
 #' @seealso \code{\link{prob_binom}} to calculate results
 #' @seealso \code{\link{summary.prob_binom}} to summarize results
-#' 
+#'
 #' @examples
 #' result <- prob_binom(n = 10, p = 0.3, ub = 3)
 #' plot(result, type = "values")
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.prob_binom <- function(x, type = "values", ...) {
-
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(" ")
+  if (!is.null(x[[mess]])) {
+    return(" ")
+  }
 
   if (type == "values") {
     lb <- x$lb
@@ -1501,7 +1545,7 @@ plot.prob_binom <- function(x, type = "values", ...) {
 
   ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
+  plt <- ggplot(dat, aes(x = .data$x, y = .data$Probability, fill = .data$k)) +
     geom_bar(stat = "identity", alpha = 0.5) +
     labs(x = "") +
     scale_fill_manual(values = cols) +
@@ -1518,7 +1562,7 @@ plot.prob_binom <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_binom}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_binom}} to calculate results
 #' @seealso \code{\link{plot.prob_binom}} to plot results
 #'
@@ -1532,7 +1576,9 @@ summary.prob_binom <- function(object, type = "values", ...) {
   cat("Distribution: Binomial\n")
 
   mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
+  if (!is.null(mess)) {
+    return(mess)
+  }
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
@@ -1542,12 +1588,8 @@ summary.prob_binom <- function(object, type = "values", ...) {
   cat("St. dev     :", sqrt(n * p * (1 - p)) %>% round(dec), "\n")
 
   if (type == "values") {
-    cat("Lower bound :", {
-      if (is.na(lb)) "" else lb
-    }, "\n")
-    cat("Upper bound :", {
-      if (is.na(ub)) "" else ub
-    }, "\n")
+    cat("Lower bound :", ifelse(is.na(lb), "", lb), "\n")
+    cat("Upper bound :", ifelse(is.na(ub), "", ub), "\n")
 
     if (!is.na(ub) || !is.na(lb)) {
       cat("\n")
@@ -1631,19 +1673,17 @@ summary.prob_binom <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
-#' 
+#'
 #' @seealso \code{\link{summary.prob_disc}} to summarize results
 #' @seealso \code{\link{plot.prob_disc}} to plot results
 #'
 #' @examples
-#' prob_disc(v = 1:6, p = 1/6, pub = 0.95)
-#' prob_disc(v = 1:6, p = c(2/6, 2/6, 1/12, 1/12, 1/12, 1/12), pub = 0.95)
+#' prob_disc(v = 1:6, p = 1 / 6, pub = 0.95)
+#' prob_disc(v = 1:6, p = c(2 / 6, 2 / 6, 1 / 12, 1 / 12, 1 / 12, 1 / 12), pub = 0.95)
 #'
 #' @export
-prob_disc <- function(
-  v, p, lb = NA, ub = NA,
-  plb = NA, pub = NA, dec = 3
-) {
+prob_disc <- function(v, p, lb = NA, ub = NA,
+                      plb = NA, pub = NA, dec = 3) {
 
   # Think about adding an "expand.grid" setup so you can run this n times. e.g., rolling multiple dice
   # expand.grid(height = 1:6, weight = 1:6)
@@ -1685,7 +1725,12 @@ prob_disc <- function(
   ddisc <- function(b, df) filter(df, v == b)$p
   pdisc <- function(b, df) filter(df, v < b)$p %>% sum()
   ## consistent with http://www.stat.umn.edu/geyer/old/5101/rlook.html#qbinom
-  qdisc <- function(prob, df) mutate(df, p = cumsum(df$p)) %>% filter(p >= prob) %>% .$v %>% min()
+  qdisc <- function(prob, df) {
+    mutate(df, p = cumsum(df$p)) %>%
+      filter(p >= prob) %>%
+      .$v %>%
+      min()
+  }
 
   if (is.na(lb)) {
     p_elb <- p_lb <- lb <- NA
@@ -1777,19 +1822,22 @@ prob_disc <- function(
 #' @param x Return value from \code{\link{prob_disc}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
-#' 
+#'
 #' @seealso \code{\link{prob_disc}} to calculate results
 #' @seealso \code{\link{summary.prob_disc}} to summarize results
 #'
 #' @examples
-#' result <- prob_disc(v = 1:6, p = c(2/6, 2/6, 1/12, 1/12, 1/12, 1/12), pub = 0.95)
+#' result <- prob_disc(v = 1:6, p = c(2 / 6, 2 / 6, 1 / 12, 1 / 12, 1 / 12, 1 / 12), pub = 0.95)
 #' plot(result, type = "probs")
+#'
+#' @importFrom rlang .data
 #'
 #' @export
 plot.prob_disc <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(" ")
+  if (!is.null(x[[mess]])) {
+    return(" ")
+  }
 
   if (type == "values") {
     lb <- x$lb
@@ -1837,7 +1885,7 @@ plot.prob_disc <- function(x, type = "values", ...) {
 
   ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
+  plt <- ggplot(dat, aes(x = .data$x, y = .data$Probability, fill = .data$k)) +
     geom_bar(stat = "identity", alpha = 0.5) +
     labs(x = "") +
     scale_fill_manual(values = cols) +
@@ -1854,12 +1902,12 @@ plot.prob_disc <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_disc}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_disc}} to calculate results
 #' @seealso \code{\link{plot.prob_disc}} to plot results
 #'
 #' @examples
-#' result <- prob_disc(v = 1:6, p = c(2/6, 2/6, 1/12, 1/12, 1/12, 1/12), pub = 0.95)
+#' result <- prob_disc(v = 1:6, p = c(2 / 6, 2 / 6, 1 / 12, 1 / 12, 1 / 12, 1 / 12), pub = 0.95)
 #' summary(result, type = "probs")
 #'
 #' @export
@@ -1868,24 +1916,22 @@ summary.prob_disc <- function(object, type = "values", ...) {
   cat("Distribution : Discrete\n")
 
   mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
+  if (!is.null(mess)) {
+    return(mess)
+  }
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
   cat("Values       :", paste0(v, collapse = " "), "\n")
   cat("Probabilities:", paste0(round(p, dec), collapse = " "), "\n")
   m <- sum(v * p)
-  std <- sqrt(sum(p * (v - m) ^ 2))
+  std <- sqrt(sum(p * (v - m)^2))
   cat("Mean         :", round(m, dec), "\n")
   cat("St. dev      :", round(std, dec), "\n")
 
   if (type == "values") {
-    cat("Lower bound  :", {
-      if (is.na(lb)) "" else lb
-    }, "\n")
-    cat("Upper bound  :", {
-      if (is.na(ub)) "" else ub
-    }, "\n")
+    cat("Lower bound  :", ifelse(is.na(lb), "", lb), "\n")
+    cat("Upper bound  :", ifelse(is.na(ub), "", ub), "\n")
 
     if (!is.na(ub) || !is.na(lb)) {
       cat("\n")
@@ -1971,16 +2017,13 @@ summary.prob_disc <- function(object, type = "values", ...) {
 #'
 #' @seealso \code{\link{summary.prob_expo}} to summarize results
 #' @seealso \code{\link{plot.prob_expo}} to plot results
-#' 
+#'
 #' @examples
 #' prob_expo(rate = 1, ub = 2.996)
 #'
 #' @export
-prob_expo <- function(
-  rate, lb = NA, ub = NA,
-  plb = NA, pub = NA, dec = 3
-) {
-
+prob_expo <- function(rate, lb = NA, ub = NA,
+                      plb = NA, pub = NA, dec = 3) {
   if (!is_not(lb) && lb < 0) lb <- 0
   if (!is_not(ub) && ub < 0) ub <- 0
 
@@ -2029,7 +2072,7 @@ prob_expo <- function(
 #' @param x Return value from \code{\link{prob_expo}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_expo}} to calculate results
 #' @seealso \code{\link{summary.prob_expo}} to summarize results
 #'
@@ -2037,10 +2080,14 @@ prob_expo <- function(
 #' result <- prob_expo(rate = 1, ub = 2.996)
 #' plot(result, type = "values")
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.prob_expo <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(" ")
+  if (!is.null(x[[mess]])) {
+    return(" ")
+  }
 
   if (type == "values") {
     lb <- x$lb
@@ -2071,14 +2118,18 @@ plot.prob_expo <- function(x, type = "values", ...) {
   }
 
   dexp_lb <- function(x) {
-    if (is.na(lb)) return(0)
+    if (is.na(lb)) {
+      return(0)
+    }
     y <- dexp(x, rate = rate)
     y[x > lb] <- 0
     y
   }
 
   dexp_ub <- function(x) {
-    if (is.na(ub)) return(0)
+    if (is.na(ub)) {
+      return(0)
+    }
     y <- dexp(x, rate = rate)
     y[x < ub] <- 0
     y
@@ -2089,13 +2140,12 @@ plot.prob_expo <- function(x, type = "values", ...) {
 
   ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  # plt <- ggplot(data.frame(x=limits), aes_string(x="x")) +
-  plt <- ggplot(dat, aes_string(x = "x")) +
+  plt <- ggplot(dat, aes(x = .data$x)) +
     stat_function(fun = stats::dexp, args = list(rate = rate)) +
     stat_function(fun = dexp_limit, geom = "area", fill = "blue", alpha = 0.5, n = 501) +
     stat_function(fun = dexp_lb, geom = "area", fill = "red", alpha = 0.5, n = 501) +
     stat_function(fun = dexp_ub, geom = "area", fill = "red", alpha = 0.5, n = 501) +
-    geom_vline(xintercept = vlines, color = "black", linetype = "dashed", size = 0.5) +
+    geom_vline(xintercept = vlines, color = "black", linetype = "dashed", linewidth = 0.5) +
     labs(x = "", y = "")
 
   sshhr(plt)
@@ -2109,7 +2159,7 @@ plot.prob_expo <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_expo}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_expo}} to calculate results
 #' @seealso \code{\link{plot.prob_expo}} to plot results
 #'
@@ -2123,13 +2173,15 @@ summary.prob_expo <- function(object, type = "values", ...) {
   cat("Distribution: Exponential\n")
 
   mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
+  if (!is.null(mess)) {
+    return(mess)
+  }
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
   cat("Rate        :", rate, "\n")
   cat("Mean        :", round(1 / rate, dec), "\n")
-  cat("Variance    :", round(rate ^ -2, dec), "\n")
+  cat("Variance    :", round(rate^-2, dec), "\n")
 
   if (type == "values") {
     cat("Lower bound :", if (is.na(lb)) "0" else lb, "\n")
@@ -2191,7 +2243,7 @@ summary.prob_expo <- function(object, type = "values", ...) {
 #' @param plb Lower probability bound
 #' @param pub Upper probability bound
 #' @param dec Number of decimals to show
-#' 
+#'
 #' @seealso \code{\link{summary.prob_pois}} to summarize results
 #' @seealso \code{\link{plot.prob_pois}} to plot results
 #'
@@ -2199,11 +2251,8 @@ summary.prob_expo <- function(object, type = "values", ...) {
 #' prob_pois(lambda = 1, ub = 3)
 #'
 #' @export
-prob_pois <- function(
-  lambda, lb = NA, ub = NA,
-  plb = NA, pub = NA, dec = 3
-) {
-
+prob_pois <- function(lambda, lb = NA, ub = NA,
+                      plb = NA, pub = NA, dec = 3) {
   if (lambda <= 0) mess_values <- "\nLambda must be positive"
 
   if (!is_not(lb) && lb < 0) lb <- 0
@@ -2234,7 +2283,9 @@ prob_pois <- function(
   }
 
   if (!is.na(ub) && !is.na(lb)) {
-    p_int <- sum(dpois(lb:ub, lambda)) %>% max(0) %>% round(dec)
+    p_int <- sum(dpois(lb:ub, lambda)) %>%
+      max(0) %>%
+      round(dec)
   } else {
     p_int <- NA
   }
@@ -2286,7 +2337,9 @@ prob_pois <- function(
   }
 
   if (!is.na(pub) && !is.na(plb)) {
-    vp_int <- sum(dpois(vlb:vub, lambda)) %>% max(0) %>% round(dec)
+    vp_int <- sum(dpois(vlb:vub, lambda)) %>%
+      max(0) %>%
+      round(dec)
   } else {
     vp_int <- NA
   }
@@ -2301,7 +2354,7 @@ prob_pois <- function(
 #' @param x Return value from \code{\link{prob_pois}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_pois}} to calculate results
 #' @seealso \code{\link{summary.prob_pois}} to summarize results
 #'
@@ -2309,10 +2362,14 @@ prob_pois <- function(
 #' result <- prob_pois(lambda = 1, ub = 3)
 #' plot(result, type = "values")
 #'
+#' @importFrom rlang .data
+#'
 #' @export
 plot.prob_pois <- function(x, type = "values", ...) {
   mess <- paste0("mess_", type)
-  if (!is.null(x[[mess]])) return(" ")
+  if (!is.null(x[[mess]])) {
+    return(" ")
+  }
 
   if (type == "values") {
     lb <- x$lb
@@ -2366,7 +2423,7 @@ plot.prob_pois <- function(x, type = "values", ...) {
 
   ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
   ## and R Graphics Cookbook
-  plt <- ggplot(dat, aes_string(x = "x", y = "Probability", fill = "k")) +
+  plt <- ggplot(dat, aes(x = .data$x, y = .data$Probability, fill = .data$k)) +
     geom_bar(stat = "identity", alpha = 0.5) +
     labs(x = "") +
     scale_fill_manual(values = cols) +
@@ -2383,7 +2440,7 @@ plot.prob_pois <- function(x, type = "values", ...) {
 #' @param object Return value from \code{\link{prob_pois}}
 #' @param type Probabilities ("probs") or values ("values")
 #' @param ... further arguments passed to or from other methods
-#' 
+#'
 #' @seealso \code{\link{prob_pois}} to calculate results
 #' @seealso \code{\link{plot.prob_pois}} to plot results
 #'
@@ -2397,7 +2454,9 @@ summary.prob_pois <- function(object, type = "values", ...) {
   cat("Distribution: Poisson\n")
 
   mess <- object[[paste0("mess_", type)]]
-  if (!is.null(mess)) return(mess)
+  if (!is.null(mess)) {
+    return(mess)
+  }
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
 
@@ -2406,12 +2465,8 @@ summary.prob_pois <- function(object, type = "values", ...) {
   cat("Variance    :", lambda, "\n")
 
   if (type == "values") {
-    cat("Lower bound :", {
-      if (is.na(lb)) "" else lb
-    }, "\n")
-    cat("Upper bound :", {
-      if (is.na(ub)) "" else ub
-    }, "\n")
+    cat("Lower bound :", ifelse(is.na(lb), "", lb), "\n")
+    cat("Upper bound :", ifelse(is.na(ub), "", ub), "\n")
 
     if (!is.na(ub) || !is.na(lb)) {
       cat("\n")

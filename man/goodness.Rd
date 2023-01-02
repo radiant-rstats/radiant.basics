@@ -37,7 +37,7 @@ See \url{https://radiant-rstats.github.io/docs/basics/goodness.html} for an exam
 }
 \examples{
 goodness(newspaper, "Income") \%>\% str()
-goodness(newspaper, "Income", p = c(3/4, 1/4)) \%>\% str()
+goodness(newspaper, "Income", p = c(3 / 4, 1 / 4)) \%>\% str()
 table(select(newspaper, Income)) \%>\% goodness(tab = .)
 
 }

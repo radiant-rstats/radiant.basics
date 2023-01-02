@@ -144,23 +144,17 @@ observeEvent(input$cor_hcor, {
 
 cor_plot <- reactive({
   max(2, length(input$cor_vars)) %>%
-    {
-      list(plot_width = 400 + 75 * ., plot_height = 400 + 75 * .)
-    }
+    (function(x) list(plot_width = 400 + 75 * x, plot_height = 400 + 75 * x))
 })
 
 cor_plot_width <- function() {
   cor_plot() %>%
-    {
-      if (is.list(.)) .$plot_width else 650
-    }
+    (function(x) if (is.list(x)) x$plot_width else 650)
 }
 
 cor_plot_height <- function() {
   cor_plot() %>%
-    {
-      if (is.list(.)) .$plot_height else 650
-    }
+    (function(x) if (is.list(x)) x$plot_height else 650)
 }
 
 ## output is called from the main radiant ui.R

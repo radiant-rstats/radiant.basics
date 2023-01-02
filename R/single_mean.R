@@ -19,12 +19,9 @@
 #' @seealso \code{\link{plot.single_mean}} to plot results
 #'
 #' @export
-single_mean <- function(
-  dataset, var, comp_value = 0,
-  alternative = "two.sided", conf_lev = .95,
-  data_filter = "", envir = parent.frame()
-) {
-
+single_mean <- function(dataset, var, comp_value = 0,
+                        alternative = "two.sided", conf_lev = .95,
+                        data_filter = "", envir = parent.frame()) {
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   dataset <- get_data(dataset, var, filt = data_filter, na.rm = FALSE, envir = envir)
 
@@ -37,10 +34,12 @@ single_mean <- function(
     tidy()
 
   ## from http://www.cookbook-r.com/Graphs/Plotting_means_and_error_bars_(ggplot2)/
-  me_calc <- function(se, n, conf.lev = .95)
+  me_calc <- function(se, n, conf.lev = .95) {
     se * qt(conf.lev / 2 + .5, n - 1)
+  }
 
-  dat_summary <- summarise_all(dataset,
+  dat_summary <- summarise_all(
+    dataset,
     list(
       diff = ~ mean(., na.rm = TRUE) - comp_value,
       mean = ~ mean(., na.rm = TRUE),
@@ -69,7 +68,9 @@ single_mean <- function(
 #' @examples
 #' result <- single_mean(diamonds, "price")
 #' summary(result)
-#' diamonds %>% single_mean("price") %>% summary()
+#' diamonds %>%
+#'   single_mean("price") %>%
+#'   summary()
 #'
 #' @seealso \code{\link{single_mean}} to generate the results
 #' @seealso \code{\link{plot.single_mean}} to plot results
@@ -146,18 +147,20 @@ summary.single_mean <- function(object, dec = 3, ...) {
 #' @seealso \code{\link{single_mean}} to generate the result
 #' @seealso \code{\link{summary.single_mean}} to summarize results
 #'
+#' @importFrom rlang .data
+#'
 #' @export
-plot.single_mean <- function(
-  x, plots = "hist",
-  shiny = FALSE, custom = FALSE, ...
-) {
-
+plot.single_mean <- function(x, plots = "hist",
+                             shiny = FALSE, custom = FALSE, ...) {
   plot_list <- list()
   if ("hist" %in% plots) {
-    bw <- x$dataset %>% range(na.rm = TRUE) %>% diff() %>% divide_by(10)
+    bw <- x$dataset %>%
+      range(na.rm = TRUE) %>%
+      diff() %>%
+      divide_by(10)
 
     plot_list[[which("hist" == plots)]] <-
-      ggplot(x$dataset, aes_string(x = x$var)) +
+      ggplot(x$dataset, aes(x = .data[[x$var]])) +
       geom_histogram(fill = "blue", binwidth = bw, alpha = 0.5) +
       geom_vline(
         xintercept = x$comp_value,
@@ -183,16 +186,19 @@ plot.single_mean <- function(
     nr <- length(var)
 
     simdat <- replicate(1000, mean(sample(var, nr, replace = TRUE))) %>%
-      {(. - mean(.)) + x$comp_value} %>%
+      (function(z) (z - mean(z)) + x$comp_value) %>%
       as.data.frame(stringsAsFactors = FALSE) %>%
       set_colnames(x$var)
 
     cip <- ci_perc(simdat[[x$var]], x$alternative, x$conf_lev)
 
-    bw <- simdat %>% range() %>% diff() %>% divide_by(20)
+    bw <- simdat %>%
+      range() %>%
+      diff() %>%
+      divide_by(20)
 
     plot_list[[which("simulate" == plots)]] <-
-      ggplot(simdat, aes_string(x = x$var)) +
+      ggplot(simdat, aes(x = .data[[x$var]])) +
       geom_histogram(
         fill = "blue",
         binwidth = bw,
@@ -224,7 +230,7 @@ plot.single_mean <- function(
       if (length(plot_list) == 1) plot_list[[1]] else plot_list
     } else {
       patchwork::wrap_plots(plot_list, ncol = 1) %>%
-        {if (shiny) . else print(.)}
+        (function(x) if (shiny) x else print(x))
     }
   }
 }

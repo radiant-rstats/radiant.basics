@@ -22,13 +22,10 @@
 #' @seealso \code{\link{plot.compare_props}} to plot results
 #'
 #' @export
-compare_props <- function(
-  dataset, var1, var2, levs = "",
-  alternative = "two.sided", conf_lev = .95,
-  comb = "", adjust = "none", data_filter = "",
-  envir = parent.frame()
-) {
-
+compare_props <- function(dataset, var1, var2, levs = "",
+                          alternative = "two.sided", conf_lev = .95,
+                          comb = "", adjust = "none", data_filter = "",
+                          envir = parent.frame()) {
   df_name <- if (is_string(dataset)) dataset else deparse(substitute(dataset))
   vars <- c(var1, var2)
   dataset <- get_data(dataset, vars, filt = data_filter, na.rm = FALSE, envir = envir) %>%
@@ -48,7 +45,9 @@ compare_props <- function(
   lv <- levels(dataset[[var2]])
   if (levs != "") {
     if (levs %in% lv && lv[1] != levs) {
-      dataset[[var2]] %<>% as.character %>% as.factor() %>% relevel(levs)
+      dataset[[var2]] %<>% as.character %>%
+        as.factor() %>%
+        relevel(levs)
       lv <- levels(dataset[[var2]])
     }
   }
@@ -57,20 +56,20 @@ compare_props <- function(
   not_vary <- colnames(dataset)[summarise_all(dataset, does_vary) == FALSE]
   if (length(not_vary) > 0) {
     return(paste0("The following variable(s) show no variation. Please select other variables.\n\n** ", paste0(not_vary, collapse = ", "), " **") %>%
-             add_class("compare_props"))
+      add_class("compare_props"))
   }
 
   rn <- ""
   prop_input <- group_by_at(dataset, .vars = c(var1, var2)) %>%
     summarise(n = n()) %>%
-    spread(!! var2, "n") %>%
+    spread(!!var2, "n") %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
-    {
-      rn <<- .[[1]] %>% as.character()
-      select(., -1) %>%
+    (function(x) {
+      rn <<- x[[1]] %>% as.character()
+      select(x, -1) %>%
         as.matrix() %>%
         set_rownames(rn)
-    }
+    })
 
   prop_input[is.na(prop_input)] <- 0
 
@@ -118,8 +117,9 @@ compare_props <- function(
   res$sig_star <- sig_stars(res$p.value)
 
   ## from http://www.cookbook-r.com/Graphs/Plotting_props_and_error_bars_(ggplot2)/
-  me_calc <- function(se, conf.lev = .95)
+  me_calc <- function(se, conf.lev = .95) {
     se * qnorm(conf.lev / 2 + .5, lower.tail = TRUE)
+  }
 
   dat_summary <- data.frame(prop_input, check.names = FALSE, stringsAsFactors = FALSE) %>%
     mutate_if(is.numeric, as.integer) %>%
@@ -131,8 +131,8 @@ compare_props <- function(
       se = sqrt(p * (1 - p) / n),
       me = me_calc(se, conf_lev)
     ) %>%
-      set_rownames(rownames(prop_input)) %>%
-      rownames_to_column(var = var1)
+    set_rownames(rownames(prop_input)) %>%
+    rownames_to_column(var = var1)
 
   dat_summary[[var1]] %<>% factor(., levels = .)
   dat_summary <- suppressWarnings(left_join(dat_summary, n_miss_df, by = var1)) %>%
@@ -161,7 +161,9 @@ compare_props <- function(
 #'
 #' @export
 summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
-  if (is.character(object)) return(object)
+  if (is.character(object)) {
+    return(object)
+  }
 
   cat("Pairwise proportion comparisons\n")
   cat("Data      :", object$df_name, "\n")
@@ -202,7 +204,7 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
     res[, c("chisq.value", "ci_low", "ci_high")] %<>% format_df(dec, mark = ",")
 
     res$df[res_sim] <- "*1*"
-    res <- rename(res, !!! setNames(c("ci_low", "ci_high"), ci_perc))
+    res <- rename(res, !!!setNames(c("ci_low", "ci_high"), ci_perc))
   } else {
     res <- res[, c("Null hyp.", "Alt. hyp.", "diff", "p.value", "sig_star")]
   }
@@ -232,13 +234,14 @@ summary.compare_props <- function(object, show = FALSE, dec = 3, ...) {
 #' @seealso \code{\link{compare_props}} to calculate results
 #' @seealso \code{\link{summary.compare_props}} to summarize results
 #'
+#' @importFrom rlang .data
+#'
 #' @export
-plot.compare_props <- function(
-  x, plots = "bar", shiny = FALSE,
-  custom = FALSE, ...
-) {
-
-  if (is.character(x)) return(x)
+plot.compare_props <- function(x, plots = "bar", shiny = FALSE,
+                               custom = FALSE, ...) {
+  if (is.character(x)) {
+    return(x)
+  }
   v1 <- colnames(x$dataset)[1]
   v2 <- colnames(x$dataset)[-1]
   lev_name <- x$levs
@@ -248,7 +251,7 @@ plot.compare_props <- function(
   if ("bar" %in% plots) {
     ## use of `which` allows the user to change the order of the plots shown
     plot_list[[which("bar" == plots)]] <-
-      ggplot(x$dat_summary, aes_string(x = v1, y = "p", fill = v1)) +
+      ggplot(x$dat_summary, aes(x = .data[[v1]], y = .data$p, fill = .data[[v1]])) +
       geom_bar(stat = "identity", alpha = 0.5) +
       geom_errorbar(width = .1, aes(ymin = p - me, ymax = p + me)) +
       geom_errorbar(width = .05, aes(ymin = p - se, ymax = p + se), color = "blue") +
@@ -262,7 +265,7 @@ plot.compare_props <- function(
       summarise(count = n()) %>%
       group_by_at(.vars = v1) %>%
       mutate(perc = count / sum(count)) %>%
-      ggplot(aes_string(x = v1, y = "perc", fill = v2)) +
+      ggplot(aes(x = .data[[v1]], y = .data$perc, fill = .data[[v2]])) +
       geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
       scale_y_continuous(labels = scales::percent) +
       labs(y = paste0("Proportions per level of ", v1))
@@ -273,7 +276,7 @@ plot.compare_props <- function(
       if (length(plot_list) == 1) plot_list[[1]] else plot_list
     } else {
       patchwork::wrap_plots(plot_list, ncol = 1) %>%
-        {if (shiny) . else print(.)}
+        (function(x) if (isTRUE(shiny)) x else print(x))
     }
   }
 }

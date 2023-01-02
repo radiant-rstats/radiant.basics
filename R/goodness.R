@@ -13,18 +13,15 @@
 #'
 #' @examples
 #' goodness(newspaper, "Income") %>% str()
-#' goodness(newspaper, "Income", p = c(3/4, 1/4)) %>% str()
+#' goodness(newspaper, "Income", p = c(3 / 4, 1 / 4)) %>% str()
 #' table(select(newspaper, Income)) %>% goodness(tab = .)
 #'
 #' @seealso \code{\link{summary.goodness}} to summarize results
 #' @seealso \code{\link{plot.goodness}} to plot results
 #'
 #' @export
-goodness <- function(
-  dataset, var, p = NULL, tab = NULL,
-  data_filter = "", envir = parent.frame()
-) {
-
+goodness <- function(dataset, var, p = NULL, tab = NULL,
+                     data_filter = "", envir = parent.frame()) {
   if (is.table(tab)) {
     df_name <- deparse(substitute(tab))
     if (missing(var)) var <- "variable"
@@ -36,7 +33,6 @@ goodness <- function(
     tab <- table(dataset[[var]])
     tab[is.na(tab)] <- 0
     tab <- as.table(tab)
-
   }
   ## dataset not needed in summary or plot
   rm(dataset)
@@ -46,7 +42,10 @@ goodness <- function(
   } else if (is.numeric(p)) {
     if (length(p) == 1) p <- rep(p, length(tab))
   } else if (is.character(p)) {
-    p <- gsub(",", " ", p) %>% strsplit("\\s+") %>% unlist() %>% strsplit("/")
+    p <- gsub(",", " ", p) %>%
+      strsplit("\\s+") %>%
+      unlist() %>%
+      strsplit("/")
     asNum <- function(x) ifelse(length(x) > 1, as.numeric(x[1]) / as.numeric(x[2]), as.numeric(x[1]))
     p <- sshhr(sapply(p, asNum))
 
@@ -57,7 +56,6 @@ goodness <- function(
     lp <- length(p)
     lt <- length(tab)
     if (lt != lp && lt %% lp == 0) p <- rep(p, lt / lp)
-
   }
 
   if (!is.numeric(p) || sum(p) != 1) {
@@ -70,14 +68,16 @@ goodness <- function(
   cst <- sshhr(chisq.test(tab, p = p, correct = FALSE))
 
   ## adding the chi-sq table
-  cst$chi_sq <- with(cst, (observed - expected) ^ 2 / expected)
+  cst$chi_sq <- with(cst, (observed - expected)^2 / expected)
 
   res <- tidy(cst) %>%
     mutate(parameter = as.integer(parameter))
   elow <- sum(cst$expected < 5)
 
   if (elow > 0) {
-    res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>% tidy() %>% .$p.value
+    res$p.value <- chisq.test(cst$observed, simulate.p.value = TRUE, B = 2000) %>%
+      tidy() %>%
+      .$p.value
     res$parameter <- paste0("*", res$parameter, "*")
   }
 
@@ -98,14 +98,16 @@ goodness <- function(
 #' @examples
 #' result <- goodness(newspaper, "Income", c(.3, .7))
 #' summary(result, check = c("observed", "expected", "chi_sq"))
-#' goodness(newspaper, "Income", c(1/3, 2/3)) %>% summary("observed")
+#' goodness(newspaper, "Income", c(1 / 3, 2 / 3)) %>% summary("observed")
 #'
 #' @seealso \code{\link{goodness}} to calculate results
 #' @seealso \code{\link{plot.goodness}} to plot results
 #'
 #' @export
 summary.goodness <- function(object, check = "", dec = 2, ...) {
-  if (is.character(object)) return(object)
+  if (is.character(object)) {
+    return(object)
+  }
 
   cat("Goodness of fit test\n")
   cat("Data     :", object$df_name, "\n")
@@ -122,7 +124,10 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
   if ("observed" %in% check) {
     cat("\nObserved:\n")
     object$cst$observed %>%
-      {.["Total"] <- sum(.); .} %>%
+      (function(x) {
+        x["Total"] <- sum(x)
+        x
+      }) %>%
       format(big.mark = ",", scientific = FALSE) %>%
       print(quote = FALSE)
   }
@@ -130,7 +135,10 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
   if ("expected" %in% check) {
     cat("\nExpected: total x p\n")
     object$cst$expected %>%
-      {.["Total"] <- sum(.); .} %>%
+      (function(x) {
+        x["Total"] <- sum(x)
+        return(x)
+      }) %>%
       round(dec) %>%
       format(big.mark = ",", scientific = FALSE) %>%
       print(quote = FALSE)
@@ -139,7 +147,10 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
   if ("chi_sq" %in% check) {
     cat("\nContribution to chi-squared: (o - e)^2 / e\n")
     object$cst$chi_sq %>%
-      {.["Total"] <- sum(.); .} %>%
+      (function(x) {
+        x["Total"] <- sum(x)
+        return(x)
+      }) %>%
       round(dec) %>%
       format(big.mark = ",", scientific = FALSE) %>%
       print(quote = FALSE)
@@ -172,18 +183,19 @@ summary.goodness <- function(object, check = "", dec = 2, ...) {
 #' @examples
 #' result <- goodness(newspaper, "Income")
 #' plot(result, check = c("observed", "expected", "chi_sq"))
-#' goodness(newspaper, "Income") %>% plot(c("observed","expected"))
+#' goodness(newspaper, "Income") %>% plot(c("observed", "expected"))
 #'
 #' @seealso \code{\link{goodness}} to calculate results
 #' @seealso \code{\link{summary.goodness}} to summarize results
 #'
+#' @importFrom rlang .data
+#'
 #' @export
-plot.goodness <- function(
-  x, check = "", fillcol = "blue",
-  shiny = FALSE, custom = FALSE, ...
-) {
-
-  if (is.character(x)) return(x)
+plot.goodness <- function(x, check = "", fillcol = "blue",
+                          shiny = FALSE, custom = FALSE, ...) {
+  if (is.character(x)) {
+    return(x)
+  }
   plot_list <- list()
   if (radiant.data::is_empty(check)) check <- "observed"
 
@@ -196,7 +208,7 @@ plot.goodness <- function(
       . / sum(.)
     }
     plot_list[["observed"]] <-
-      ggplot(tab, aes_string(x = x$var, y = "Freq")) +
+      ggplot(tab, aes(x = .data[[x$var]], y = .data$Freq)) +
       geom_bar(stat = "identity", alpha = 0.5, fill = fillcol) +
       scale_y_continuous(labels = scales::percent) +
       labs(
@@ -211,9 +223,9 @@ plot.goodness <- function(
     tab <- as.data.frame(x$cst$expected, check.names = FALSE, stringsAsFactors = FALSE)
     colnames(tab)[1] <- "Freq"
     tab[[x$var]] <- factor(rownames(tab), levels = rownames(tab))
-    tab[["Freq"]] %<>% {. / sum(.)}
+    tab[["Freq"]] %<>% (function(x) x / sum(x))
     plot_list[["expected"]] <-
-      ggplot(tab, aes_string(x = x$var, y = "Freq")) +
+      ggplot(tab, aes(x = .data[[x$var]], y = .data$Freq)) +
       geom_bar(stat = "identity", alpha = 0.5, fill = fillcol) +
       scale_y_continuous(labels = scales::percent) +
       labs(
@@ -227,7 +239,7 @@ plot.goodness <- function(
     tab <- as.data.frame(x$cst$chi_sq, check.names = FALSE, stringsAsFactors = FALSE)
     colnames(tab)[1] <- x$var
     plot_list[["chi_sq"]] <-
-      ggplot(tab, aes_string(x = x$var, y = "Freq")) +
+      ggplot(tab, aes(x = .data[[x$var]], y = .data$Freq)) +
       geom_bar(stat = "identity", alpha = 0.5, fill = fillcol) +
       labs(
         title = paste("Contribtion to chi-squared for", x$var),
@@ -241,9 +253,9 @@ plot.goodness <- function(
     mult <- max(abs(tab$Freq)) / 5
     colnames(tab)[1] <- x$var
     plot_list[["dev_std"]] <-
-      ggplot(tab, aes_string(x = x$var, y = "Freq")) +
+      ggplot(tab, aes(x = .data[[x$var]], y = .data$Freq)) +
       geom_bar(stat = "identity", position = "dodge", alpha = 0.5, fill = fillcol) +
-      geom_hline(yintercept = c(-1.96, 1.96, -1.64, 1.64), color = "black", linetype = "longdash", size = .5) +
+      geom_hline(yintercept = c(-1.96, 1.96, -1.64, 1.64), color = "black", linetype = "longdash", linewidth = .5) +
       geom_text(x = 1, y = 2.11, label = "95%", vjust = 0) +
       geom_text(x = 1, y = 1.49, label = "90%", vjust = 1) +
       labs(
@@ -258,7 +270,7 @@ plot.goodness <- function(
       if (length(plot_list) == 1) plot_list[[1]] else plot_list
     } else {
       patchwork::wrap_plots(plot_list, ncol = 1) %>%
-        {if (shiny) . else print(.)}
+        (function(x) if (shiny) x else print(x))
     }
   }
 }

@@ -46,7 +46,7 @@ See \url{https://radiant-rstats.github.io/docs/basics/single_prop.html} for an e
 }
 \examples{
 single_prop(titanic, "survived") \%>\% str()
-single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5,  alternative = "less") \%>\% str()
+single_prop(titanic, "survived", lev = "Yes", comp_value = 0.5, alternative = "less") \%>\% str()
 
 }
 \seealso{

@@ -8,3 +8,4 @@ vignettes/
 _pkgdown.yml
 cran-comments.md
 radiant.basics.code-workspace
+^CRAN-SUBMISSION$

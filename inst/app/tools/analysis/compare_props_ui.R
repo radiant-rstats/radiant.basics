@@ -147,16 +147,12 @@ cp_plot <- reactive({
 
 cp_plot_width <- function() {
   cp_plot() %>%
-    {
-      if (is.list(.)) .$plot_width else 650
-    }
+    (function(x) if (is.list(x)) x$plot_width else 650)
 }
 
 cp_plot_height <- function() {
   cp_plot() %>%
-    {
-      if (is.list(.)) .$plot_height else 400
-    }
+    (function(x) if (is.list(x)) x$plot_height else 400)
 }
 
 # output is called from the main radiant ui.R

@@ -74,7 +74,7 @@ plot.clt <- function(x, stat = "sum", bins = 15, ...) {
     labs(x = paste0("Histogram of sample #", m))
 
   plot_list[[3]] <- visualize(sstat, xvar = "stat", bins = bins, custom = TRUE) +
-    labs(x = ifelse(stat == "Sum", "Histogram of sample sums", "Histogram of sample means"))
+    labs(x = ifelse(stat == "sum", "Histogram of sample sums", "Histogram of sample means"))
 
 
   plot_list[[4]] <- visualize(sstat, xvar = "stat", type = "density", custom = TRUE) +
@@ -82,7 +82,7 @@ plot.clt <- function(x, stat = "sum", bins = 15, ...) {
       mean = mean(sstat[[1]]),
       sd = sd(sstat[[1]])
     ), color = "black", size = 1) +
-    labs(x = ifelse(stat == "Sum", "Density of sample sums", "Density of sample means"))
+    labs(x = ifelse(stat == "sum", "Density of sample sums", "Density of sample means"))
 
   patchwork::wrap_plots(plot_list, ncol = 2) + patchwork::plot_annotation(title = glue("CLT: {x$dist} distribution"))
 }

@@ -28,7 +28,7 @@ See \url{https://radiant-rstats.github.io/docs/basics/goodness} for an example i
 \examples{
 result <- goodness(newspaper, "Income")
 plot(result, check = c("observed", "expected", "chi_sq"))
-goodness(newspaper, "Income") \%>\% plot(c("observed","expected"))
+goodness(newspaper, "Income") \%>\% plot(c("observed", "expected"))
 
 }
 \seealso{

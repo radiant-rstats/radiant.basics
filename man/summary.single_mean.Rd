@@ -22,7 +22,9 @@ See \url{https://radiant-rstats.github.io/docs/basics/single_mean.html} for an e
 \examples{
 result <- single_mean(diamonds, "price")
 summary(result)
-diamonds \%>\% single_mean("price") \%>\% summary()
+diamonds \%>\%
+  single_mean("price") \%>\%
+  summary()
 
 }
 \seealso{
