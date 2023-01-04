@@ -230,7 +230,7 @@ cm_available <- reactive({
 })
 
 compare_means_report <- function() {
-  if (radiant.data::is_empty(input$cm_var1) || radiant.data::is_empty(input$cm_var2)) {
+  if (is.empty(input$cm_var1) || is.empty(input$cm_var2)) {
     return(invisible())
   }
   figs <- FALSE

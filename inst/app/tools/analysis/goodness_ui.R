@@ -139,7 +139,7 @@ gd_available <- reactive({
 })
 
 goodness_report <- function() {
-  if (radiant.data::is_empty(input$gd_var)) {
+  if (is.empty(input$gd_var)) {
     return(invisible())
   }
   inp_out <- list("", "")

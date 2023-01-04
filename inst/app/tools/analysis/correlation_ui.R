@@ -239,11 +239,11 @@ correlation_report <- function() {
     return(invisible())
   }
   inp_out <- list("", "")
-  nrobs <- ifelse(radiant.data::is_empty(input$cor_nrobs), 1000, as_integer(input$cor_nrobs))
+  nrobs <- ifelse(is.empty(input$cor_nrobs), 1000, as_integer(input$cor_nrobs))
   inp_out[[1]] <- clean_args(cor_sum_inputs(), cor_sum_args[-1])
   inp_out[[2]] <- list(nrobs = nrobs)
 
-  if (!radiant.data::is_empty(input$cor_name)) {
+  if (!is.empty(input$cor_name)) {
     dataset <- fix_names(input$cor_name)
     if (input$cor_name != dataset) {
       updateTextInput(session, inputId = "cor_name", value = dataset)

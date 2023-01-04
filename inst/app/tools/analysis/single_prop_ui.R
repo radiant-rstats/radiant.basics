@@ -157,7 +157,7 @@ sp_available <- reactive({
 })
 
 single_prop_report <- function() {
-  if (radiant.data::is_empty(input$sp_var)) return(invisible())
+  if (is.empty(input$sp_var)) return(invisible())
   if (length(input$sp_plots) == 0) {
     figs <- FALSE
     outputs <- c("summary")

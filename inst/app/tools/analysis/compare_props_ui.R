@@ -216,7 +216,7 @@ cp_available <- reactive({
 })
 
 compare_props_report <- function() {
-  if (radiant.data::is_empty(input$cp_var1) || radiant.data::is_empty(input$cp_var2)) {
+  if (is.empty(input$cp_var1) || is.empty(input$cp_var2)) {
     return(invisible())
   }
   figs <- FALSE

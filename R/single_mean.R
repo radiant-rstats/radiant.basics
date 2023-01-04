@@ -79,7 +79,7 @@ single_mean <- function(dataset, var, comp_value = 0,
 summary.single_mean <- function(object, dec = 3, ...) {
   cat("Single mean test\n")
   cat("Data      :", object$df_name, "\n")
-  if (!radiant.data::is_empty(object$data_filter)) {
+  if (!is.empty(object$data_filter)) {
     cat("Filter    :", gsub("\\n", "", object$data_filter), "\n")
   }
   cat("Variable  :", object$var, "\n")

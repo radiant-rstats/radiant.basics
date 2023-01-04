@@ -7,8 +7,8 @@ pc_dist <- c(
 pc_type <- c("Values" = "values", "Probabilities" = "probs")
 
 make_pc_values_input <- function(lb, lb_init = NA, ub, ub_init = 0) {
-  if(!radiant.data::is_empty(r_state[[lb]])) ub_init <- NA
-  if(!radiant.data::is_empty(r_state[[ub]])) lb_init <- NA
+  if(!is.empty(r_state[[lb]])) ub_init <- NA
+  if(!is.empty(r_state[[ub]])) lb_init <- NA
   tags$table(
     tags$td(numericInput(lb, "Lower bound:", value = state_init(lb, lb_init))),
     tags$td(numericInput(ub, "Upper bound:", value = state_init(ub, ub_init)))
@@ -24,8 +24,8 @@ make_side_by_side <- function(a, b) {
 }
 
 make_pc_prob_input <- function(lb, lb_init = NA, ub, ub_init = 0.95) {
-  if(!radiant.data::is_empty(r_state[[lb]])) ub_init <- NA
-  if(!radiant.data::is_empty(r_state[[ub]])) lb_init <- NA
+  if(!is.empty(r_state[[lb]])) ub_init <- NA
+  if(!is.empty(r_state[[ub]])) lb_init <- NA
   make_side_by_side(
     numericInput(
       lb, "Lower bound:", value = state_init(lb, lb_init),
@@ -351,7 +351,7 @@ pc_plot_height <- function() 400
 
 pc_args <- reactive({
   pc_dist <- input$pc_dist
-  if (radiant.data::is_empty(pc_dist) || pc_dist == "norm") {
+  if (is.empty(pc_dist) || pc_dist == "norm") {
     as.list(formals(prob_norm))
   } else if (pc_dist == "lnorm") {
     as.list(formals(prob_lnorm))
@@ -377,7 +377,7 @@ pc_args <- reactive({
 ## list of function inputs selected by user
 pc_inputs <- reactive({
   pc_dist <- input$pc_dist
-  if (radiant.data::is_empty(pc_dist) || pc_dist == "norm") {
+  if (is.empty(pc_dist) || pc_dist == "norm") {
     pre <- "pc_"
   } else if (pc_dist == "lnorm") {
     pre <- "pcln_"
@@ -444,7 +444,7 @@ output$prob_calc <- renderUI({
 })
 
 pc_available <- reactive({
-  if (radiant.data::is_empty(input$pc_dist) || radiant.data::is_empty(input$pc_type)) {
+  if (is.empty(input$pc_dist) || is.empty(input$pc_type)) {
     ""
   } else {
     a <- "available"
@@ -477,7 +477,7 @@ pc_available <- reactive({
         a <- "Please provide a value for the degrees of freedom (> 0)"
       }
     } else if (input$pc_dist == "disc") {
-      if (radiant.data::is_empty(input$pcd_v) || radiant.data::is_empty(input$pcd_p)) {
+      if (is.empty(input$pcd_v) || is.empty(input$pcd_p)) {
         a <- "Please provide a set of values and probabilities.\nSeparate numbers using spaces (e.g., 1/2 1/2)"
       }
     } else if (input$pc_dist == "expo") {
@@ -503,13 +503,13 @@ pc_available <- reactive({
 })
 
 .summary_prob_calc <- reactive({
-  type <- if (radiant.data::is_empty(input$pc_type)) "values" else input$pc_type
+  type <- if (is.empty(input$pc_type)) "values" else input$pc_type
   summary(.prob_calc(), type = type)
 })
 
 .plot_prob_calc <- reactive({
   req(pc_available() == "available")
-  type <- if (radiant.data::is_empty(input$pc_type)) "values" else input$pc_type
+  type <- if (is.empty(input$pc_type)) "values" else input$pc_type
   plot(.prob_calc(), type = type)
 })
 

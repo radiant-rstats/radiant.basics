@@ -175,7 +175,7 @@ output$clt <- renderUI({
       ret <- "Please choose a probability between 0 and 1 for the binomial distribution"
     }
   }
-  if (radiant.data::is_empty(ret)) {
+  if (is.empty(ret)) {
     do.call(clt, clt_inputs())
   } else {
     ret
