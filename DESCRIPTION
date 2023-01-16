@@ -10,7 +10,7 @@ Description: The Radiant Basics menu includes interfaces for probability
     the functionality in 'radiant.data'.
 Depends:
     R (>= 4.0.0),
-    radiant.data (>= 1.4.4)
+    radiant.data (>= 1.5.0)
 Imports:
     ggplot2 (>= 2.2.1),
     scales (>= 0.4.0),
