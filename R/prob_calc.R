@@ -307,7 +307,7 @@ plot.prob_lnorm <- function(x, type = "values", ...) {
   sdlog <- x$sdlog
 
   # limits <- c(meanlog - 3 * sdlog, meanlog + 3 * sdlog)
-  limits <- c(0, meanlog + 3 * sdlog)
+  limits <- c(0, meanlog + ub * sdlog)
 
   dlnorm_limit <- function(x) {
     y <- dlnorm(x, meanlog = meanlog, sdlog = sdlog)
@@ -405,8 +405,8 @@ summary.prob_lnorm <- function(object, type = "values", ...) {
     pub <- if (is.na(pub)) 2 else pub
     plb <- if (is.na(plb)) -1 else plb
 
-    cat("Lower bound :", if (plb < 0) "0" else plb, "\n")
-    cat("Upper bound :", if (pub > 1) "1" else pub, "\n")
+    cat(paste0("Lower bound : ", if (plb < 0) "0" else plb, " (", v_lb, ")\n"))
+    cat(paste0("Upper bound : ", if (pub > 1) "1" else pub, " (", v_ub, ")\n"))
 
     if (pub <= 1 || plb >= 0) {
       cat("\n")
@@ -592,7 +592,6 @@ summary.prob_tdist <- function(object, type = "values", ...) {
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
   n <- df + 1
-
   cat("Df          :", df, "\n")
   cat("Mean        :", 0, "\n")
   cat("St. dev     :", ifelse(n > 2, round(n / (n - 2), dec), "NA"), "\n")
@@ -827,7 +826,6 @@ summary.prob_fdist <- function(object, type = "values", ...) {
   }
   env <- environment()
   ret <- sapply(names(object), function(x) assign(x, object[[x]], envir = env))
-
 
   cat("Df 1        :", df1, "\n")
   cat("Df 2        :", df2, "\n")
@@ -1477,6 +1475,46 @@ prob_binom <- function(n, p, lb = NA, ub = NA,
   as.list(environment()) %>% add_class("prob_binom")
 }
 
+
+make_colors_discrete <- function(ub, lb, x_range) {
+  colors <- factor(rep("blue", length(x_range)), levels = c("red", "green", "blue"))
+  if (!is.na(lb) & !is.na(ub)) {
+    colors[x_range == lb | x_range == ub] <- "green"
+    colors[x_range > lb & x_range < ub] <- "blue"
+    colors[x_range > ub | x_range < lb] <- "red"
+  } else if (!is.na(lb)) {
+    if (lb %in% x_range) colors[x_range == lb] <- "green"
+    colors[x_range > lb] <- "blue"
+    colors[x_range < lb] <- "red"
+  } else if (!is.na(ub)) {
+    if (ub %in% x_range) colors[x_range == ub] <- "green"
+    colors[x_range > ub] <- "red"
+    colors[x_range < ub] <- "blue"
+  } else {
+    colors[1:length(colors)] <- "blue"
+  }
+  return(colors)
+}
+
+make_bar_plot <- function(ub, lb, x_range, y_range) {
+  colors <- make_colors_discrete(ub, lb, x_range)
+  dat <- data.frame(x_range = x_range, y_range = y_range, colors = colors)
+
+  if (nrow(dat) < 40) {
+    # makes sure each bar has a label
+    dat <- dat %>% mutate(x_range = factor(x_range))
+  }
+
+  cols <- c(red = "red", green = "green", blue = "blue")
+  plt <- ggplot(dat, aes(x = .data$x_range, y = .data$y_range, fill = .data$colors)) +
+    geom_bar(stat = "identity", alpha = 0.5) +
+    labs(x = "", y = "Probability") +
+    scale_fill_manual(values = cols) +
+    theme(legend.position = "none")
+
+  sshhr(plt)
+}
+
 #' Plot method for the probability calculator (binomial)
 #'
 #' @details See \url{https://radiant-rstats.github.io/docs/basics/prob_calc.html} for an example in Radiant
@@ -1513,46 +1551,14 @@ plot.prob_binom <- function(x, type = "values", ...) {
   p <- x$p
 
   limits <- 0:n
-
-  k <- factor(rep("below", n + 1), levels = c("below", "equal", "above"))
-  if (!is_not(ub)) {
-    k[ub + 1] <- "equal"
-    if (!is.na(lb)) k[(lb:ub) + 1] <- "equal"
-    k[0:n > ub] <- "above"
-  } else if (!is_not(lb)) {
-    k[lb + 1] <- "equal"
-    k[0:n > lb] <- "above"
-  } else {
-    return(" ")
-  }
-
   dat <- data.frame(
-    x = as_factor(limits),
-    Probability = dbinom(limits, size = n, prob = p),
-    k = k,
+    x_range = limits,
+    y_range = dbinom(limits, size = n, prob = p),
     stringsAsFactors = FALSE
   ) %>%
-    filter(., .$Probability > 0.00001)
+    filter(., .$y_range > 0.00001)
 
-  if (nrow(dat) < 40) {
-    breaks <- dat$x
-  } else {
-    dx <- as_integer(dat$x)
-    breaks <- seq(min(dx), max(dx), length.out = 10) %>% round(0)
-  }
-
-  cols <- c(below = "red", equal = "blue", above = "black")
-
-  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
-  ## and R Graphics Cookbook
-  plt <- ggplot(dat, aes(x = .data$x, y = .data$Probability, fill = .data$k)) +
-    geom_bar(stat = "identity", alpha = 0.5) +
-    labs(x = "") +
-    scale_fill_manual(values = cols) +
-    theme(legend.position = "none") +
-    scale_x_discrete(breaks = breaks)
-
-  sshhr(plt)
+  make_bar_plot(ub, lb, dat$x_range, dat$y_range)
 }
 
 #' Summary method for the probability calculator (binomial)
@@ -1847,52 +1853,7 @@ plot.prob_disc <- function(x, type = "values", ...) {
     ub <- x$vub
   }
 
-  v <- x$v
-  p <- x$p
-
-  limits <- v
-
-  k <- factor(rep("below", length(v)), levels = c("below", "equal", "above"))
-  if (!is.empty(ub)) {
-    if (!is.na(lb)) {
-      k[v >= lb & v <= ub] <- "equal"
-    } else if (ub %in% v) {
-      k[v == ub] <- "equal"
-    }
-    k[v > ub] <- "above"
-  } else if (!is.empty(lb)) {
-    if (lb %in% v) k[v == lb] <- "equal"
-    k[v > lb] <- "above"
-  } else {
-    return(" ")
-  }
-
-  dat <- data.frame(
-    x = limits %>% as_factor(),
-    Probability = p,
-    k = k,
-    stringsAsFactors = FALSE
-  )
-
-  if (nrow(dat) < 30) {
-    breaks <- dat$x
-  } else {
-    dx <- as_integer(dat$x)
-    breaks <- seq(min(dx), max(dx), length.out = 10) %>% round(0)
-  }
-
-  cols <- c(below = "red", equal = "blue", above = "black")
-
-  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
-  ## and R Graphics Cookbook
-  plt <- ggplot(dat, aes(x = .data$x, y = .data$Probability, fill = .data$k)) +
-    geom_bar(stat = "identity", alpha = 0.5) +
-    labs(x = "") +
-    scale_fill_manual(values = cols) +
-    theme(legend.position = "none") +
-    scale_x_discrete(breaks = breaks)
-
-  sshhr(plt)
+  make_bar_plot(ub, lb, x$v, x$p)
 }
 
 #' Summary method for the probability calculator (discrete)
@@ -2393,44 +2354,14 @@ plot.prob_pois <- function(x, type = "values", ...) {
     n <- ub
   }
 
-  k <- factor(rep("below", n + 1), levels = c("below", "equal", "above"))
-  if (!is_not(ub)) {
-    k[ub + 1] <- "equal"
-    if (!is.na(lb)) k[(lb:ub) + 1] <- "equal"
-    k[0:n > ub] <- "above"
-  } else if (!is_not(lb)) {
-    k[lb + 1] <- "equal"
-    k[0:n > lb] <- "above"
-  } else {
-    return(" ")
-  }
-
   dat <- data.frame(
-    x = limits %>% as_factor(),
-    Probability = dpois(limits, lambda),
-    k = k,
+    x_range = limits,
+    y_range = dpois(limits, lambda),
     stringsAsFactors = FALSE
-  ) %>% filter(., .$Probability > 0.00001)
+  ) %>% filter(., .$y_range > 0.00001)
 
-  if (nrow(dat) < 40) {
-    breaks <- dat$x
-  } else {
-    dx <- as_integer(dat$x)
-    breaks <- seq(min(dx), max(dx), length.out = 10) %>% round(0)
-  }
+  make_bar_plot(ub, lb, dat$x_range, dat$y_range)
 
-  cols <- c(below = "red", equal = "blue", above = "black")
-
-  ## based on https://rstudio-pubs-static.s3.amazonaws.com/58753_13e35d9c089d4f55b176057235778679.html
-  ## and R Graphics Cookbook
-  plt <- ggplot(dat, aes(x = .data$x, y = .data$Probability, fill = .data$k)) +
-    geom_bar(stat = "identity", alpha = 0.5) +
-    labs(x = "") +
-    scale_fill_manual(values = cols) +
-    theme(legend.position = "none") +
-    scale_x_discrete(breaks = breaks)
-
-  sshhr(plt)
 }
 
 #' Summary method for the probability calculator (poisson)

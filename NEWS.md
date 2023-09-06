@@ -1,3 +1,9 @@
+# radiant.basics 1.6.0.0
+
+* Relabeled web app to "Radiant for R" to distinguish from "Radiant for Python"
+* Addressed package documentation issue connected to a change in roxygen2
+* Simplified and improved color assignment for discrete probability distributions in the probability calculator
+
 # radiant.basics 1.5.0.0
 
 * Improvements to screenshot feature. Navigation bar is omitted and the image is adjusted to the length of the UI.

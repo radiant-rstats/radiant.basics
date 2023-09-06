@@ -1,5 +1,20 @@
 ## Resubmission
 
+This is a resubmission. See NEWS.md for updates.
+
+## Test environments
+
+* macOS, R 4.3.1
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs, WARNINGs, or NOTEs. 
+
+# Previous cran-comments
+
+## Resubmission
+
 This is a resubmission. See NEWS.md for updates.  I also updated the dependency on radiant.data to 1.5.0.
 
 ## Test environments
@@ -11,7 +26,6 @@ This is a resubmission. See NEWS.md for updates.  I also updated the dependency 
 
 There were no ERRORs, WARNINGs, or NOTEs. 
 
-# Previous cran-comments
 
 ## Resubmission
 

@@ -11,7 +11,6 @@ globalVariables(c(
 #' radiant.basics
 #'
 #' @name radiant.basics
-#' @docType package
 #' @import radiant.data shiny ggplot2
 #' @importFrom dplyr mutate_all mutate_if summarise_all summarise_at funs rename bind_cols select filter group_by_at summarise arrange mutate count left_join
 #' @importFrom tidyr gather spread
