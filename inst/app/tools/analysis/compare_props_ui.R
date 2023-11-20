@@ -92,7 +92,7 @@ output$ui_cp_comb <- renderUI({
 
 
 output$ui_compare_props <- renderUI({
-  req(input$dataset)
+  # req(input$dataset)
   tagList(
     wellPanel(
       conditionalPanel(

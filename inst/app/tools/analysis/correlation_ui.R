@@ -81,7 +81,7 @@ output$ui_cor_name <- renderUI({
 run_refresh(cor_args, "cor", init = "vars", tabs = "tabs_correlation", label = "Calculate correlation", relabel = "Re-calculate correlations")
 
 output$ui_correlation <- renderUI({
-  req(input$dataset)
+  # req(input$dataset)
   tagList(
     conditionalPanel(
       condition = "input.tabs_correlation == 'Summary'",

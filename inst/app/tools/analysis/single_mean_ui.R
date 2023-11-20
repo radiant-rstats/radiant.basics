@@ -29,7 +29,7 @@ output$ui_sm_var <- renderUI({
 })
 
 output$ui_single_mean <- renderUI({
-  req(input$dataset)
+  # req(input$dataset)
   tagList(
     wellPanel(
       conditionalPanel(
@@ -113,7 +113,7 @@ sm_available <- reactive({
     "Please choose a comparison value"
   } else {
     "available"
-  } 
+  }
 })
 
 .single_mean <- reactive({
@@ -156,8 +156,8 @@ single_mean_report <- function() {
 }
 
 download_handler(
-  id = "dlp_single_mean", 
-  fun = download_handler_plot, 
+  id = "dlp_single_mean",
+  fun = download_handler_plot,
   fn = function() paste0(input$dataset, "_single_mean"),
   type = "png",
   caption = "Save single mean plot",

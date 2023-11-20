@@ -98,7 +98,7 @@ output$ui_cm_comb <- renderUI({
 
 
 output$ui_compare_means <- renderUI({
-  req(input$dataset)
+  # req(input$dataset)
   tagList(
     wellPanel(
       conditionalPanel(

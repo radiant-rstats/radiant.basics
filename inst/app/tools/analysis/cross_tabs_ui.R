@@ -15,8 +15,9 @@ ct_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   ct_args$data_filter <- if (input$show_filter) input$data_filter else ""
   ct_args$dataset <- input$dataset
-  for (i in r_drop(names(ct_args)))
+  for (i in r_drop(names(ct_args))) {
     ct_args[[i]] <- input[[paste0("ct_", i)]]
+  }
   ct_args
 })
 
@@ -32,7 +33,9 @@ output$ui_ct_var1 <- renderUI({
 })
 
 output$ui_ct_var2 <- renderUI({
-  if (not_available(input$ct_var1)) return()
+  if (not_available(input$ct_var1)) {
+    return()
+  }
   vars <- c("None" = "", groupable_vars())
 
   if (length(vars) > 0) vars <- vars[-which(vars == input$ct_var1)]
@@ -44,7 +47,7 @@ output$ui_ct_var2 <- renderUI({
 })
 
 output$ui_cross_tabs <- renderUI({
-  req(input$dataset)
+  # req(input$dataset)
   tagList(
     wellPanel(
       conditionalPanel(
@@ -71,11 +74,19 @@ ct_plot <- reactive({
   list(plot_width = 650, plot_height = 400 * max(length(input$ct_check), 1))
 })
 
-ct_plot_width <- function()
-  ct_plot() %>% {if (is.list(.)) .$plot_width else 650}
+ct_plot_width <- function() {
+  ct_plot() %>%
+    {
+      if (is.list(.)) .$plot_width else 650
+    }
+}
 
-ct_plot_height <- function()
-  ct_plot() %>% {if (is.list(.)) .$plot_height else 400}
+ct_plot_height <- function() {
+  ct_plot() %>%
+    {
+      if (is.list(.)) .$plot_height else 400
+    }
+}
 
 ## output is called from the main radiant ui.R
 output$cross_tabs <- renderUI({
@@ -107,7 +118,7 @@ output$cross_tabs <- renderUI({
 
 ct_available <- reactive({
   if (not_available(input$ct_var1) || not_available(input$ct_var2)) {
-    "This analysis requires two categorical variables. Both must have two or more levels.\nIf these variable types are not available please select another dataset.\n\n" %>% 
+    "This analysis requires two categorical variables. Both must have two or more levels.\nIf these variable types are not available please select another dataset.\n\n" %>%
       suggest_data("newspaper")
   } else {
     "available"
@@ -121,12 +132,16 @@ ct_available <- reactive({
 })
 
 .summary_cross_tabs <- reactive({
-  if (ct_available() != "available") return(ct_available())
+  if (ct_available() != "available") {
+    return(ct_available())
+  }
   summary(.cross_tabs(), check = input$ct_check)
 })
 
 .plot_cross_tabs <- reactive({
-  if (ct_available() != "available") return(ct_available())
+  if (ct_available() != "available") {
+    return(ct_available())
+  }
   validate(need(input$ct_check, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.cross_tabs(), check = input$ct_check, shiny = TRUE)
@@ -134,7 +149,9 @@ ct_available <- reactive({
 })
 
 cross_tabs_report <- function() {
-  if (is.empty(input$ct_var1) || is.empty(input$ct_var2)) return(invisible())
+  if (is.empty(input$ct_var1) || is.empty(input$ct_var2)) {
+    return(invisible())
+  }
   inp_out <- list("", "")
   if (length(input$ct_check) > 0) {
     outputs <- c("summary", "plot")
@@ -159,8 +176,8 @@ cross_tabs_report <- function() {
 }
 
 download_handler(
-  id = "dlp_cross_tabs", 
-  fun = download_handler_plot, 
+  id = "dlp_cross_tabs",
+  fun = download_handler_plot,
   fn = function() paste0(input$dataset, "_cross_tabs"),
   type = "png",
   caption = "Save cross-tabs plot",

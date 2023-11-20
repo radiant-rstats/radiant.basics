@@ -41,7 +41,7 @@ output$ui_gd_p <- renderUI({
 })
 
 output$ui_goodness <- renderUI({
-  req(input$dataset)
+  # req(input$dataset)
   tagList(
     wellPanel(
       conditionalPanel(

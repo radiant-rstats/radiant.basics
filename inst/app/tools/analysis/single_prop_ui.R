@@ -14,8 +14,9 @@ sp_inputs <- reactive({
   ## loop needed because reactive values don't allow single bracket indexing
   sp_args$data_filter <- if (input$show_filter) input$data_filter else ""
   sp_args$dataset <- input$dataset
-  for (i in r_drop(names(sp_args)))
+  for (i in r_drop(names(sp_args))) {
     sp_args[[i]] <- input[[paste0("sp_", i)]]
+  }
   sp_args
 })
 
@@ -31,7 +32,9 @@ output$ui_sp_var <- renderUI({
 
 output$up_sp_lev <- renderUI({
   req(available(input$sp_var))
-  levs <- .get_data()[[input$sp_var]] %>% as.factor() %>% levels()
+  levs <- .get_data()[[input$sp_var]] %>%
+    as.factor() %>%
+    levels()
 
   selectInput(
     "sp_lev", "Choose level:",
@@ -42,7 +45,7 @@ output$up_sp_lev <- renderUI({
 })
 
 output$ui_single_prop <- renderUI({
-  req(input$dataset)
+  # req(input$dataset)
   tagList(
     wellPanel(
       conditionalPanel(
@@ -94,11 +97,19 @@ sp_plot <- reactive({
   list(plot_width = 650, plot_height = 400 * max(length(input$sp_plots), 1))
 })
 
-sp_plot_width <- function()
-  sp_plot() %>% {if (is.list(.)) .$plot_width else 650}
+sp_plot_width <- function() {
+  sp_plot() %>%
+    {
+      if (is.list(.)) .$plot_width else 650
+    }
+}
 
-sp_plot_height <- function()
-  sp_plot() %>% {if (is.list(.)) .$plot_height else 400}
+sp_plot_height <- function() {
+  sp_plot() %>%
+    {
+      if (is.list(.)) .$plot_height else 400
+    }
+}
 
 ## output is called from the main radiant ui.R
 output$single_prop <- renderUI({
@@ -130,11 +141,14 @@ output$single_prop <- renderUI({
 sp_available <- reactive({
   if (not_available(input$sp_var)) {
     "This analysis requires a categorical variable. In none are available\nplease select another dataset.\n\n" %>% suggest_data("consider")
-  } else if (input$sp_comp_value %>% {is.na(.) | . > 1 | . <= 0}) {
+  } else if (input$sp_comp_value %>%
+    {
+      is.na(.) | . > 1 | . <= 0
+    }) {
     "Please choose a comparison value between 0 and 1"
   } else {
     "available"
-  } 
+  }
 })
 
 .single_prop <- reactive({
@@ -144,12 +158,16 @@ sp_available <- reactive({
 })
 
 .summary_single_prop <- reactive({
-  if (sp_available() != "available") return(sp_available())
+  if (sp_available() != "available") {
+    return(sp_available())
+  }
   summary(.single_prop())
 })
 
 .plot_single_prop <- reactive({
-  if (sp_available() != "available") return(sp_available())
+  if (sp_available() != "available") {
+    return(sp_available())
+  }
   validate(need(input$sp_plots, "\n\n\n           Nothing to plot. Please select a plot type"))
   withProgress(message = "Generating plots", value = 1, {
     plot(.single_prop(), plots = input$sp_plots, shiny = TRUE)
@@ -157,7 +175,9 @@ sp_available <- reactive({
 })
 
 single_prop_report <- function() {
-  if (is.empty(input$sp_var)) return(invisible())
+  if (is.empty(input$sp_var)) {
+    return(invisible())
+  }
   if (length(input$sp_plots) == 0) {
     figs <- FALSE
     outputs <- c("summary")
@@ -177,8 +197,8 @@ single_prop_report <- function() {
 }
 
 download_handler(
-  id = "dlp_single_prop", 
-  fun = download_handler_plot, 
+  id = "dlp_single_prop",
+  fun = download_handler_plot,
   fn = function() paste0(input$dataset, "_single_prop"),
   type = "png",
   caption = "Save single proportion plot",
