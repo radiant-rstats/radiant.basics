@@ -61,7 +61,7 @@ compare_props <- function(dataset, var1, var2, levs = "",
 
   rn <- ""
   prop_input <- group_by_at(dataset, .vars = c(var1, var2)) %>%
-    summarise(n = n()) %>%
+    summarise(n = n(), .groups = "drop") %>%
     spread(!!var2, "n") %>%
     as.data.frame(stringsAsFactors = FALSE) %>%
     (function(x) {
@@ -262,7 +262,7 @@ plot.compare_props <- function(x, plots = "bar", shiny = FALSE,
 
   if ("dodge" %in% plots) {
     plot_list[[which("dodge" == plots)]] <- group_by_at(x$dataset, .vars = c(v1, v2)) %>%
-      summarise(count = n()) %>%
+      summarise(count = n(), .groups = "drop") %>%
       group_by_at(.vars = v1) %>%
       mutate(perc = count / sum(count)) %>%
       ggplot(aes(x = .data[[v1]], y = .data$perc, fill = .data[[v2]])) +

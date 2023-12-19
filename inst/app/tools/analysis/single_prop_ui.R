@@ -99,16 +99,12 @@ sp_plot <- reactive({
 
 sp_plot_width <- function() {
   sp_plot() %>%
-    {
-      if (is.list(.)) .$plot_width else 650
-    }
+    (function(x) if (is.list(x)) x$plot_width else 650)
 }
 
 sp_plot_height <- function() {
   sp_plot() %>%
-    {
-      if (is.list(.)) .$plot_height else 400
-    }
+    (function(x) if (is.list(x)) x$plot_height else 400)
 }
 
 ## output is called from the main radiant ui.R
@@ -141,10 +137,7 @@ output$single_prop <- renderUI({
 sp_available <- reactive({
   if (not_available(input$sp_var)) {
     "This analysis requires a categorical variable. In none are available\nplease select another dataset.\n\n" %>% suggest_data("consider")
-  } else if (input$sp_comp_value %>%
-    {
-      is.na(.) | . > 1 | . <= 0
-    }) {
+  } else if (input$sp_comp_value %>% (function(x) is.na(x) | x > 1 | x <= 0)) {
     "Please choose a comparison value between 0 and 1"
   } else {
     "available"

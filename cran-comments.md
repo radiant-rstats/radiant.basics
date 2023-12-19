@@ -4,7 +4,7 @@ This is a resubmission. See NEWS.md for updates.
 
 ## Test environments
 
-* macOS, R 4.3.1
+* macOS, R 4.3.2
 * win-builder (devel)
 
 ## R CMD check results
@@ -12,6 +12,20 @@ This is a resubmission. See NEWS.md for updates.
 There were no ERRORs, WARNINGs, or NOTEs. 
 
 # Previous cran-comments
+
+## Resubmission
+
+This is a resubmission. See NEWS.md for updates.
+
+## Test environments
+
+* macOS, R 4.3.1
+* win-builder (devel)
+
+## R CMD check results
+
+There were no ERRORs, WARNINGs, or NOTEs. 
+
 
 ## Resubmission
 

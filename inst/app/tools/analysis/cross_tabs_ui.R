@@ -55,6 +55,7 @@ output$ui_cross_tabs <- renderUI({
         uiOutput("ui_ct_var1"),
         uiOutput("ui_ct_var2")
       ),
+      br(),
       checkboxGroupInput(
         "ct_check", NULL,
         choices = ct_check,
@@ -76,16 +77,12 @@ ct_plot <- reactive({
 
 ct_plot_width <- function() {
   ct_plot() %>%
-    {
-      if (is.list(.)) .$plot_width else 650
-    }
+    (function(x) if (is.list(x)) x$plot_width else 650)
 }
 
 ct_plot_height <- function() {
   ct_plot() %>%
-    {
-      if (is.list(.)) .$plot_height else 400
-    }
+    (function(x) if (is.list(x)) x$plot_height else 400)
 }
 
 ## output is called from the main radiant ui.R
